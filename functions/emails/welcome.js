@@ -1,5 +1,4 @@
-const TEMPLATE_ID = 'd-3541f72c3b33499bbd639a731bb72f94';
-const SUBJECT = 'Welcome to Hikearound';
+const TEMPLATE_ID = 'd-7d3af52d50034393ba95ce374003dd6c';
 
 exports.handler = function(senderData, user, sgMail) {
     const msg = {
@@ -10,8 +9,8 @@ exports.handler = function(senderData, user, sgMail) {
         },
         templateId: TEMPLATE_ID,
         dynamic_template_data: {
-            subject: SUBJECT,
-            name: user.displayName,
+            subject: user.name + ', welcome to Hikearound!',
+            name: user.name,
         },
     };
     return sgMail.send(msg);
