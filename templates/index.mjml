@@ -18,17 +18,25 @@
             }
             .email_section {
                 padding: 5px;
+                margin: 10px auto !important;
                 border: 1px solid #EEEEEE;
             }
             @media (max-width:480px) {
-                .email_body {
-                    padding: 0;
+                .email_body, .email_wrapper {
+                    padding: 0 !important;
                     background-color: #FFF;
                 }
                 .email_section {
                     padding: 0;
+                    margin: 0 auto !important;
                     border-radius: 0;
                     border: none;
+                }
+                .action_button {
+                    padding: 0 5px !important;
+                }
+                .footer_text, .body_text {
+                    padding: 10px 5px !important;
                 }
             }
             .action_button a {
@@ -38,7 +46,7 @@
                 background: #935DFF;
             }
             .action_button td:hover {
-                background: #7028FF;
+                background: #7028FF !important;
             }
         </mj-style>
         <mj-attributes>
@@ -47,15 +55,10 @@
         </mj-attributes>
     </mj-head>
     <mj-body css-class="email_body" width="600px">
-        <mj-wrapper>
             <mj-section css-class="email_section" background-color="#fff" border-radius="6px">
                 <mj-column width="100%">
                     <mj-image width="45px" src="https://tryhikearound.com/images/email/logo.png" href="https://tryhikearound.com"></mj-image>
-                    <mj-text>Hi {{name}},<br>Welcome to Hikearound!</mj-text>
-                    <!-- <mj-text>
-                        <a class="text-link" href="#">David Swain</a> and 6 others upvoted your answer to <a class="text-link" href="#">Who are some of the best startup lawyers in Silicon Valley?</a>
-                    </mj-text> -->
-                    <!-- <mj-divider border-color="#EEEEEE" border-width="3px" width="25%"></mj-divider> -->
+                    <mj-text css-class="body_text">Hi {{name}},<br>Welcome to Hikearound!</mj-text>
                     <mj-button css-class="action_button" background-color="#935DFF" border="1px solid #7028FF" align="center" color="#FFF" font-size="15px" font-weight="500" line-height="1.3" href="#" width="100%">
                         Confirm your email address
                     </mj-button>
@@ -64,6 +67,5 @@
                     </mj-text>
                 </mj-column>
             </mj-section>
-        </mj-wrapper>
     </mj-body>
 </mjml>
