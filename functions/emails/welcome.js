@@ -11,6 +11,7 @@ exports.handler = function(senderData, user, sgMail) {
         dynamic_template_data: {
             subject: user.name + ', welcome to Hikearound!',
             name: user.name,
+            token: user.token,
         },
     };
     return sgMail.send(msg);

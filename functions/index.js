@@ -13,10 +13,6 @@ const senderData = {
     email: 'no-reply@tryhikearound.com',
 };
 
-// exports.welcomeEmail = functions.auth.user().onCreate((user) => {
-//     return welcomeEmail.handler(senderData, user, sgMail);
-// });
-
 exports.welcomeEmail = functions.firestore
     .document('users/{uid}')
     .onCreate(async (change, context) => {
@@ -30,6 +26,7 @@ exports.welcomeEmail = functions.firestore
 
         const user = {
             name: extraData.name,
+            token: extraData.token,
             email: data.email,
         };
 
