@@ -1,13 +1,14 @@
 module.exports = {
     'extends': [
-        'prettier'
+        'airbnb',
+        'prettier',
     ],
     'parserOptions': {
         'ecmaVersion': 2017,
     },
     'plugins': [
         'promise',
-        'prettier'
+        'prettier',
     ],
     'rules': {
         'import/no-extraneous-dependencies': 'off',

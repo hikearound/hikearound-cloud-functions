@@ -9,7 +9,7 @@ exports.handler = function(senderData, user, sgMail) {
         },
         templateId: TEMPLATE_ID,
         dynamic_template_data: {
-            subject: user.name + ', welcome to Hikearound!',
+            subject: `${user.name}, welcome to Hikearound!`,
             name: user.name,
             token: user.token,
         },
