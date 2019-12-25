@@ -1,9 +1,16 @@
 <mjml>
     <mj-include path="./components/header.mjml" />
     <mj-body>
-        <mj-section css-class="email_section" background-color="#FFF" border-radius="6px">
+        <mj-section
+            css-class="email_section"
+            background-color="#FFF"
+            border-radius="6px"
+        >
             <mj-column width="100%">
-                <mj-image width="45px" src="https://tryhikearound.com/images/email/logo.png" href="https://tryhikearound.com"></mj-image>
+                <mj-image
+                    width="45px"
+                    src="https://tryhikearound.com/images/email/logo.png"
+                    href="https://tryhikearound.com" />
                 <mj-include path="./types/welcome.mjml" />
                 <mj-include path="./components/footer.mjml" />
             </mj-column>
