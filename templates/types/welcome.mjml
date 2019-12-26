@@ -1,5 +1,4 @@
-<mj-text
-    css-class="body_text">
+<mj-text css-class="body_text">
     Hi {{name}},<br>Welcome to Hikearound!
 </mj-text>
 <mj-button
@@ -12,6 +11,7 @@
     font-weight="500"
     line-height="1.3"
     href="https://tryhikearound.com/verify?token={{token}}"
-    width="100%">
+    width="100%"
+>
     Confirm your email address
 </mj-button>
