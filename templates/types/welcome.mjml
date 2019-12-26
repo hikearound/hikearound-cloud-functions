@@ -3,15 +3,7 @@
 </mj-text>
 <mj-button
     css-class="action_button"
-    background-color="#935DFF"
-    border="1px solid #7028FF"
-    align="center"
-    color="#FFF"
-    font-size="15px"
-    font-weight="500"
-    line-height="1.3"
     href="https://tryhikearound.com/verify?token={{token}}"
-    width="100%"
 >
     Confirm your email address
 </mj-button>
