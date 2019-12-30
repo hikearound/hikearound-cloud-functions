@@ -1,5 +1,6 @@
 module.exports = {
     'extends': [
+        'eslint:recommended',
         'airbnb',
         'prettier',
     ],
@@ -17,6 +18,11 @@ module.exports = {
     'globals': {
         'before': true,
         'after': true,
+    },
+    'settings': {
+        'react': {
+            'version': 'latest',
+        },
     },
     'rules': {
         'import/no-extraneous-dependencies': 'off',
