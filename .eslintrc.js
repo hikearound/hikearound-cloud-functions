@@ -9,7 +9,15 @@ module.exports = {
     'plugins': [
         'promise',
         'prettier',
+        'jest',
     ],
+    'env': {
+        'jest/globals': true,
+    },
+    'globals': {
+        'before': true,
+        'after': true,
+    },
     'rules': {
         'import/no-extraneous-dependencies': 'off',
         'func-names': 'off',

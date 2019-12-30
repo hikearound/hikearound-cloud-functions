@@ -1,0 +1,41 @@
+{
+  "scripts": {
+    "lint": "eslint .",
+    "serve": "firebase serve --only functions",
+    "shell": "firebase functions:shell",
+    "start": "npm run shell",
+    "deploy": "firebase deploy --only functions",
+    "logs": "firebase functions:log",
+    "test": "mocha --reporter spec"
+  },
+  "engines": {
+    "node": "10"
+  },
+  "dependencies": {
+    "@firebase/testing": "^0.16.4",
+    "@sendgrid/mail": "^6.4.0",
+    "dir-glob": "^2.0.0",
+    "firebase-admin": "^8.6.0",
+    "firebase-function-tools": "^1.1.1",
+    "firebase-functions": "^3.3.0",
+    "globby": "^8.0.0",
+    "handlebars": "^4.5.3",
+    "mjml": "^4.5.1"
+  },
+  "devDependencies": {
+    "eslint": "^5.12.0",
+    "eslint-config-airbnb": "^18.0.1",
+    "eslint-config-prettier": "^6.7.0",
+    "eslint-plugin-import": "^2.19.1",
+    "eslint-plugin-jest": "^23.2.0",
+    "eslint-plugin-jsx-a11y": "^6.2.3",
+    "eslint-plugin-prettier": "^3.1.2",
+    "eslint-plugin-promise": "^4.0.1",
+    "eslint-plugin-react": "^7.17.0",
+    "eslint-plugin-react-hooks": "^2.3.0",
+    "firebase-functions-test": "^0.1.6",
+    "mocha": "^6.2.2",
+    "prettier": "^1.19.1"
+  },
+  "private": true
+}
