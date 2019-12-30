@@ -4,12 +4,15 @@ const fs = require('fs');
 const path = require('path');
 
 exports.handler = function(senderData, user, sgMail) {
-    const mjmlTemplate = fs.readFileSync(
+    let mjmlTemplate = fs.readFileSync(
         `${__dirname}/../templates/base.mjml`,
         'utf8',
     );
 
-    const compiledTemplate = mjml2html(mjmlTemplate, {
+    mjmlTemplate = compile(mjmlTemplate);
+    mjmlTemplate = mjmlTemplate({ emailType: 'welcome' });
+
+    let html = mjml2html(mjmlTemplate, {
         filePath: path.join(__dirname, '/../templates/components'),
     });
 
@@ -18,8 +21,8 @@ exports.handler = function(senderData, user, sgMail) {
         token: user.token,
     };
 
-    const htmlTemplate = compile(compiledTemplate.html);
-    const html = htmlTemplate(context);
+    html = compile(html.html);
+    html = html(context);
 
     const msg = {
         to: user.email,

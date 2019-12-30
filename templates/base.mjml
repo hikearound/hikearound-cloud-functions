@@ -4,7 +4,7 @@
         <mj-section css-class="email_section">
             <mj-column width="100%">
                 <mj-include path="__dirname/../components/logo.mjml" />
-                <mj-include path="__dirname/../types/welcome.mjml" />
+                <mj-include path="__dirname/../types/{{emailType}}.mjml" />
                 <mj-include path="__dirname/../components/footer.mjml" />
             </mj-column>
         </mj-section>
