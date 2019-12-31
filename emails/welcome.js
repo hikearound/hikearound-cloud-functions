@@ -36,6 +36,7 @@ exports.handler = function(senderData, user, sgMail) {
             email: senderData.email,
         },
         subject: `${user.name}, welcome to Hikearound!`,
+        categories: ['Welcome'],
         html,
         text,
     };
