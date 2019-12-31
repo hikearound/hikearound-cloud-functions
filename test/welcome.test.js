@@ -1,5 +1,4 @@
 const firebase = require('@firebase/testing');
-const sgMail = require('@sendgrid/mail');
 const fs = require('fs');
 const welcomeEmail = require('../emails/welcome');
 
@@ -35,7 +34,7 @@ describe('Hikearound', () => {
             email: 'dugan.pat@gmail.com',
         };
 
-        welcomeEmail.handler(senderData, user, sgMail);
+        welcomeEmail.handler(senderData, user, undefined);
     });
 
     it('...should create a document in the user collection for new users', async () => {

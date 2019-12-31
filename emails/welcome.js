@@ -34,5 +34,9 @@ exports.handler = function(senderData, user, sgMail) {
         html,
     };
 
-    return sgMail.send(msg);
+    if (sgMail) {
+        return sgMail.send(msg);
+    }
+
+    return false;
 };
