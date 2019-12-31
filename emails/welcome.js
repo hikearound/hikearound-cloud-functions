@@ -24,10 +24,7 @@ exports.handler = function(senderData, user, sgMail) {
     html = compile(html.html);
     html = html(context);
 
-    const text = `
-        Hi ${context.name}, welcome to Hikearound!
-        Verify your email by visiting the following URL: https://tryhikearound.com/verify?token=${context.token}.
-    `;
+    const text = `Hi ${context.name}, welcome to Hikearound!\nVerify your email by visiting the following URL: https://tryhikearound.com/verify?token=${context.token}.`;
 
     const msg = {
         to: user.email,
