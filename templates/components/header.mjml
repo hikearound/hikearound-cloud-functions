@@ -1,5 +1,5 @@
 <mj-head>
-    <mj-include path="__dirname/../../styles/style.mjml" />
+    <mj-include path="__dirname/../../styles/style.min.mjml" />
     <mj-attributes>
         <mj-all
             font-family="-apple-system, system-ui, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif"

@@ -35,6 +35,8 @@
     "eslint-plugin-react": "^7.17.0",
     "eslint-plugin-react-hooks": "^2.3.0",
     "firebase-functions-test": "^0.1.6",
+    "less": "^3.10.3",
+    "less-plugin-clean-css": "^1.5.1",
     "mocha": "^6.2.2",
     "prettier": "^1.19.1"
   },
