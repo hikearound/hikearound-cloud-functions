@@ -14,6 +14,7 @@ exports.handler = function(senderData, user, sgMail) {
 
     let html = mjml2html(mjmlTemplate, {
         filePath: path.join(__dirname, '/../templates/components'),
+        minify: true,
     });
 
     const context = {
