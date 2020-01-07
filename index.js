@@ -7,6 +7,7 @@ sgMail.setApiKey(functions.config().sendgrid.key);
 
 const db = admin.firestore();
 const welcomeEmail = require('./emails/welcome');
+const map = require('./functions/map');
 
 const senderData = {
     name: 'Hikearound',
@@ -31,4 +32,19 @@ exports.welcomeEmail = functions.firestore
         };
 
         return welcomeEmail.handler(senderData, user, sgMail);
+    });
+
+exports.generateStaticMap = functions.firestore
+    .document('hikes/{hid}')
+    .onWrite(async (change, context) => {
+        const hikeXmlUrl = await db
+            .storage()
+            .ref(`hikes/${context.params.hid}.gpx`)
+            .getDownloadURL();
+
+        if (hikeXmlUrl) {
+            return map.generateStaticMap(hikeXmlUrl);
+        }
+
+        return false;
     });

@@ -1,6 +1,7 @@
 const firebase = require('@firebase/testing');
 const fs = require('fs');
 const welcomeEmail = require('../emails/welcome');
+const map = require('../functions/map');
 
 const projectId = 'hikearound';
 const rules = fs.readFileSync('firestore.rules', 'utf8');
@@ -47,5 +48,11 @@ describe('Hikearound', () => {
                     name: 'Pat',
                 }),
         );
+    });
+
+    it('...generate a static map URL', async () => {
+        const hikeXmlUrl =
+            'https://firebasestorage.googleapis.com/v0/b/hikearound-14dad.appspot.com/o/hikes%2FzvXj5WRBdxrlRTLm65SD%2Fhike.gpx?alt=media&token=6d747588-db4e-4931-a75e-c3e5874e5939';
+        map.generateStaticMap(hikeXmlUrl);
     });
 });
