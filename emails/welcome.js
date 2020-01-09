@@ -3,7 +3,7 @@ const mjml2html = require('mjml');
 const fs = require('fs');
 const path = require('path');
 
-exports.handler = async function(admin, uid, db, senderData, sgMail) {
+const getUserData = async function(db, uid, admin) {
     const userSnapshot = await db
         .collection('users')
         .doc(uid)
@@ -18,6 +18,10 @@ exports.handler = async function(admin, uid, db, senderData, sgMail) {
         email: data.email,
     };
 
+    return user;
+};
+
+const buildTemplate = function(user) {
     let mjmlTemplate = fs.readFileSync(
         `${__dirname}/../templates/base.mjml`,
         'utf8',
@@ -39,7 +43,11 @@ exports.handler = async function(admin, uid, db, senderData, sgMail) {
     html = compile(html.html);
     html = html(context);
 
-    const text = `Hi ${context.name}, welcome to Hikearound!\nVerify your email by visiting the following URL: https://tryhikearound.com/verify?token=${context.token}.`;
+    return html;
+};
+
+const buildEmail = function(user, senderData, html) {
+    const text = `Hi ${user.name}, welcome to Hikearound!\nVerify your email by visiting the following URL: https://tryhikearound.com/verify?token=${user.token}.`;
 
     const msg = {
         to: user.email,
@@ -52,6 +60,14 @@ exports.handler = async function(admin, uid, db, senderData, sgMail) {
         html,
         text,
     };
+
+    return msg;
+};
+
+exports.welcomeEmail = async function(admin, uid, db, senderData, sgMail) {
+    const user = await getUserData(db, uid, admin);
+    const html = buildTemplate(user);
+    const msg = buildEmail(user, senderData, html);
 
     if (sgMail) {
         return sgMail.send(msg);

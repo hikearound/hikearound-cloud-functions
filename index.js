@@ -14,7 +14,7 @@ sgMail.setApiKey(functions.config().sendgrid.key);
 const db = admin.firestore();
 const storage = admin.storage();
 
-const welcomeEmail = require('./emails/welcome');
+const welcome = require('./emails/welcome');
 const map = require('./functions/map');
 
 const senderData = {
@@ -25,7 +25,7 @@ const senderData = {
 exports.welcomeEmail = functions.firestore
     .document('users/{uid}')
     .onCreate(async (change, context) => {
-        return welcomeEmail.handler(
+        return welcome.welcomeEmail(
             admin,
             context.params.uid,
             db,
