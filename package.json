@@ -13,6 +13,7 @@
   },
   "dependencies": {
     "@firebase/testing": "^0.16.4",
+    "@google-cloud/storage": "^4.2.0",
     "@sendgrid/mail": "^6.4.0",
     "build-url": "^2.0.0",
     "dir-glob": "^2.2.2",
@@ -22,7 +23,9 @@
     "globby": "^8.0.2",
     "google-polyline": "^1.0.3",
     "handlebars": "^4.5.3",
+    "image-downloader": "^3.5.0",
     "mjml": "^4.5.1",
+    "moment": "^2.24.0",
     "typescript": "^3.7.4",
     "xml2js": "^0.4.23"
   },

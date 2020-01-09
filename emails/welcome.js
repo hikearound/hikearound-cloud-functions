@@ -3,7 +3,21 @@ const mjml2html = require('mjml');
 const fs = require('fs');
 const path = require('path');
 
-exports.handler = function(senderData, user, sgMail) {
+exports.handler = async function(admin, uid, db, senderData, sgMail) {
+    const userSnapshot = await db
+        .collection('users')
+        .doc(uid)
+        .get();
+
+    const data = await admin.auth().getUser(uid);
+    const extraData = userSnapshot.data();
+
+    const user = {
+        name: extraData.name,
+        token: extraData.token,
+        email: data.email,
+    };
+
     let mjmlTemplate = fs.readFileSync(
         `${__dirname}/../templates/base.mjml`,
         'utf8',

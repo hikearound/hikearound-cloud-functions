@@ -1,15 +1,40 @@
-const fetch = require('node-fetch');
+const fs = require('fs');
 const { parseString } = require('xml2js');
 const polyline = require('google-polyline');
 const buildUrl = require('build-url');
 const functions = require('firebase-functions');
+const download = require('image-downloader');
+const path = require('path');
+const os = require('os');
 
 const mapApi = 'https://maps.googleapis.com/maps/api/staticmap';
-const mapSize = '400x400';
+const mapSize = '600x300';
 const mapType = 'terrain';
+
+const gpxPath = path.join(os.tmpdir(), './hike.gpx');
+const imagePath = path.join(os.tmpdir(), './map.png');
 
 const pathWeight = '4';
 const pathColor = '935DFF';
+
+const getHikeData = async function(storage, hid) {
+    let hikeData = {};
+
+    await storage
+        .bucket()
+        .file(`hikes/${hid}/hike.gpx`)
+        .download({
+            destination: gpxPath,
+        });
+
+    const hikeGpx = fs.readFileSync(gpxPath);
+
+    parseString(hikeGpx, (err, result) => {
+        hikeData = JSON.parse(JSON.stringify(result));
+    });
+
+    return hikeData;
+};
 
 const setCenter = function(hikeMetaData) {
     const { maxlat, minlat, minlon, maxlon } = hikeMetaData;
@@ -52,25 +77,24 @@ const buildMapUrl = function(mapCenter, coordinates) {
     return mapUrl;
 };
 
-exports.generateStaticMap = async function(hikeXmlUrl) {
-    let hikeData = {};
+const saveMapImage = async function(mapUrl, storage, hid) {
+    await download.image({
+        url: mapUrl,
+        dest: imagePath,
+    });
 
-    await fetch(hikeXmlUrl)
-        .then((response) => response.text())
-        .then((response) => {
-            parseString(response, (err, result) => {
-                hikeData = JSON.parse(JSON.stringify(result));
-            });
-        });
+    await storage.bucket().upload(imagePath, {
+        destination: `images/maps/${hid}.png`,
+        metaData: { contentType: 'image/png' },
+    });
+};
 
+exports.generateStaticMap = async function(storage, hid) {
+    const hikeData = await getHikeData(storage, hid);
     const hikeMetaData = hikeData.gpx.metadata[0].bounds[0].$;
     const center = setCenter(hikeMetaData);
     const coordinates = plotCoordinates(hikeData);
     const mapUrl = buildMapUrl(center, coordinates);
 
-    if (mapUrl) {
-        return mapUrl;
-    }
-
-    return false;
+    return saveMapImage(mapUrl, storage, hid);
 };
