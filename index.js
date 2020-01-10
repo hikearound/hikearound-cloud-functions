@@ -46,7 +46,7 @@ exports.generateStaticMap = functions.firestore
     .document('hikes/{hid}')
     .onWrite(async (change, context) => {
         try {
-            return map.generateStaticMap(storage, context.params.hid);
+            return map.generateStaticMap(storage, context.params.hid, db);
         } catch (e) {
             sentry.captureException(e);
         }

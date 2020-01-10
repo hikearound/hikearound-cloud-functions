@@ -22,7 +22,7 @@ const getHikeData = async function(storage, hid) {
 
     await storage
         .bucket()
-        .file(`hikes/${hid}/hike.gpx`)
+        .file(`gpx/${hid}.gpx`)
         .download({
             destination: gpxPath,
         });
@@ -77,6 +77,13 @@ const buildMapUrl = function(mapCenter, coordinates) {
     return mapUrl;
 };
 
+const saveMapUrl = async function(db, hid, mapUrl) {
+    await db
+        .collection('hikes')
+        .doc(hid)
+        .set({ mapUrl }, { merge: true });
+};
+
 const saveMapImage = async function(mapUrl, storage, hid) {
     await download.image({
         url: mapUrl,
@@ -89,12 +96,15 @@ const saveMapImage = async function(mapUrl, storage, hid) {
     });
 };
 
-exports.generateStaticMap = async function(storage, hid) {
+exports.generateStaticMap = async function(storage, hid, db) {
     const hikeData = await getHikeData(storage, hid);
     const hikeMetaData = hikeData.gpx.metadata[0].bounds[0].$;
     const center = setCenter(hikeMetaData);
     const coordinates = plotCoordinates(hikeData);
-    const mapUrl = buildMapUrl(center, coordinates);
+    const mapUrl = await buildMapUrl(center, coordinates);
 
-    return saveMapImage(mapUrl, storage, hid);
+    saveMapUrl(db, hid, mapUrl);
+    saveMapImage(mapUrl, storage, hid);
+
+    return true;
 };
