@@ -1,8 +1,9 @@
 const functions = require('firebase-functions');
 const admin = require('firebase-admin');
 const sgMail = require('@sendgrid/mail');
-
 const serviceAccount = require('./service-account.json');
+const welcome = require('./emails/welcome');
+const map = require('./functions/map');
 
 admin.initializeApp({
     credential: admin.credential.cert(serviceAccount),
@@ -13,9 +14,6 @@ sgMail.setApiKey(functions.config().sendgrid.key);
 
 const db = admin.firestore();
 const storage = admin.storage();
-
-const welcome = require('./emails/welcome');
-const map = require('./functions/map');
 
 const senderData = {
     name: 'Hikearound',
