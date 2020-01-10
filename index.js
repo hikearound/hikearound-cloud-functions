@@ -1,6 +1,7 @@
 const functions = require('firebase-functions');
 const admin = require('firebase-admin');
 const sgMail = require('@sendgrid/mail');
+const sentry = require('@sentry/node');
 const serviceAccount = require('./service-account.json');
 const welcome = require('./emails/welcome');
 const map = require('./functions/map');
@@ -11,6 +12,10 @@ admin.initializeApp({
 });
 
 sgMail.setApiKey(functions.config().sendgrid.key);
+
+sentry.init({
+    dsn: 'https://9fb810b337f7498ab70662518aeddae2@sentry.io/1877771',
+});
 
 const db = admin.firestore();
 const storage = admin.storage();
@@ -23,17 +28,27 @@ const senderData = {
 exports.welcomeEmail = functions.firestore
     .document('users/{uid}')
     .onCreate(async (change, context) => {
-        return welcome.welcomeEmail(
-            admin,
-            context.params.uid,
-            db,
-            senderData,
-            sgMail,
-        );
+        try {
+            return welcome.welcomeEmail(
+                admin,
+                context.params.uid,
+                db,
+                senderData,
+                sgMail,
+            );
+        } catch (e) {
+            sentry.captureException(e);
+        }
+        return false;
     });
 
 exports.generateStaticMap = functions.firestore
     .document('hikes/{hid}')
     .onWrite(async (change, context) => {
-        return map.generateStaticMap(storage, context.params.hid);
+        try {
+            return map.generateStaticMap(storage, context.params.hid);
+        } catch (e) {
+            sentry.captureException(e);
+        }
+        return false;
     });

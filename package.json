@@ -15,6 +15,7 @@
     "@firebase/testing": "^0.16.5",
     "@google-cloud/storage": "^4.2.0",
     "@sendgrid/mail": "^6.4.0",
+    "@sentry/node": "^5.11.0",
     "build-url": "^2.0.0",
     "dir-glob": "^2.2.2",
     "firebase-admin": "^8.6.0",
