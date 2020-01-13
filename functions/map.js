@@ -36,7 +36,8 @@ const getHikeData = async function(storage, hid) {
     return hikeData;
 };
 
-const setCenter = function(hikeMetaData) {
+const setCenter = function(hikeData) {
+    const hikeMetaData = hikeData.gpx.metadata[0].bounds[0].$;
     const { maxlat, minlat, minlon, maxlon } = hikeMetaData;
 
     const lat = (parseFloat(maxlat) + parseFloat(minlat)) / 2;
@@ -98,8 +99,7 @@ const saveMapImage = async function(mapUrl, storage, hid) {
 
 exports.generateStaticMap = async function(storage, hid, db) {
     const hikeData = await getHikeData(storage, hid);
-    const hikeMetaData = hikeData.gpx.metadata[0].bounds[0].$;
-    const center = setCenter(hikeMetaData);
+    const center = setCenter(hikeData);
     const coordinates = plotCoordinates(hikeData);
     const mapUrl = await buildMapUrl(center, coordinates);
 
