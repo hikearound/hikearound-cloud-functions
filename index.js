@@ -5,6 +5,9 @@ const sentry = require('@sentry/node');
 const serviceAccount = require('./service-account.json');
 const welcome = require('./emails/welcome');
 const map = require('./functions/map');
+const digest = require('./emails/digest');
+
+const testData = undefined;
 
 admin.initializeApp({
     credential: admin.credential.cert(serviceAccount),
@@ -20,22 +23,12 @@ sentry.init({
 const db = admin.firestore();
 const storage = admin.storage();
 
-const senderData = {
-    name: 'Hikearound',
-    email: 'no-reply@tryhikearound.com',
-};
-
 exports.welcomeEmail = functions.firestore
     .document('users/{uid}')
     .onCreate(async (change, context) => {
+        const { uid } = context.params;
         try {
-            return welcome.welcomeEmail(
-                admin,
-                context.params.uid,
-                db,
-                senderData,
-                sgMail,
-            );
+            return welcome.welcomeEmail(admin, uid, db, sgMail, testData);
         } catch (e) {
             sentry.captureException(e);
         }
@@ -47,6 +40,18 @@ exports.generateStaticMap = functions.firestore
     .onWrite(async (change, context) => {
         try {
             return map.generateStaticMap(storage, context.params.hid, db);
+        } catch (e) {
+            sentry.captureException(e);
+        }
+        return false;
+    });
+
+exports.digestEmail = functions.pubsub
+    .schedule('every friday 09:00')
+    .timeZone('America/Los_Angeles')
+    .onRun(async () => {
+        try {
+            return digest.digestEmail(admin, db, sgMail, testData);
         } catch (e) {
             sentry.captureException(e);
         }
