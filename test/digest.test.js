@@ -4,8 +4,6 @@ const digest = require('../emails/digest');
 
 const projectId = 'hikearound';
 const rules = fs.readFileSync('firestore.rules', 'utf8');
-
-const admin = undefined;
 const sgMail = undefined;
 
 function authedApp(auth) {
@@ -43,6 +41,6 @@ describe('Every Friday at 9:00AM PST, Hikearound...', async () => {
             'https://firebasestorage.googleapis.com/v0/b/hikearound-14dad.appspot.com/o/images%2Fmaps%2FzvXj5WRBdxrlRTLm65SD.png?alt=media&token=aa122190-342e-431e-a342-ffa501dc0e3b';
 
         const db = authedApp({ uid: '1' });
-        digest.digestEmail(admin, db, sgMail, testData);
+        digest.digestEmail(db, sgMail, testData);
     });
 });

@@ -2,21 +2,33 @@ const { compile } = require('handlebars');
 const mjml2html = require('mjml');
 const fs = require('fs');
 const path = require('path');
+// const admin = require('firebase-admin');
+// const serviceAccount = require('../service-account.json');
 const { senderData } = require('../constants/email');
+const { admin } = require('../lib/fire');
 
-const listAllUsers = async function(nextPageToken, admin) {
+const userList = [];
+
+// admin.initializeApp({
+//     credential: admin.credential.cert(serviceAccount),
+//     storageBucket: 'hikearound-14dad.appspot.com',
+// });
+
+const buildEmailList = function(nextPageToken) {
     admin
         .auth()
         .listUsers(1000, nextPageToken)
         .then(function(listUsersResult) {
             listUsersResult.users.forEach(function(userRecord) {
-                /* eslint-disable-next-line */
-                console.log('user', userRecord.toJSON());
+                // console.log('user', userRecord.toJSON());
+                userList.push(userRecord.toJSON());
             });
             if (listUsersResult.pageToken) {
-                listAllUsers(listUsersResult.pageToken, admin);
+                buildEmailList(listUsersResult.pageToken);
             }
         });
+
+    return userList;
 };
 
 const buildTemplate = function(emailData) {
@@ -54,13 +66,13 @@ const buildEmail = function(emailData, html) {
     return msg;
 };
 
-exports.digestEmail = async function(admin, db, sgMail, testData) {
+exports.digestEmail = async function(db, sgMail, testData) {
     if (testData) {
         return buildTemplate(testData);
     }
 
     if (sgMail) {
-        const emailData = await listAllUsers(admin);
+        const emailData = await buildEmailList();
         const html = buildTemplate(emailData);
         const msg = buildEmail(emailData, html);
         return sgMail.send(msg);
