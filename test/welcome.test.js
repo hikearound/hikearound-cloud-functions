@@ -5,7 +5,6 @@ const welcome = require('../emails/welcome');
 const projectId = 'hikearound';
 const rules = fs.readFileSync('firestore.rules', 'utf8');
 
-const admin = undefined;
 const sgMail = undefined;
 
 function authedApp(auth) {
@@ -36,7 +35,7 @@ describe('When a user creates an account, Hikearound...', () => {
         const db = authedApp({ uid: '1' });
         const { uid } = testData;
 
-        welcome.welcomeEmail(admin, uid, db, sgMail, testData);
+        welcome.welcomeEmail(uid, db, sgMail, testData);
     });
 
     it('...should create a document in the user collection', async () => {

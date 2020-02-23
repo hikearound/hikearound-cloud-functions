@@ -6,22 +6,49 @@ const admin = require('firebase-admin');
 const { senderData } = require('../constants/email');
 
 const userList = [];
+const hid = 'zvXj5WRBdxrlRTLm65SD';
 
-const buildEmailList = function(nextPageToken) {
+const buildUserList = function(nextPageToken) {
     admin
         .auth()
         .listUsers(1000, nextPageToken)
         .then(function(listUsersResult) {
             listUsersResult.users.forEach(function(userRecord) {
-                // console.log('user', userRecord.toJSON());
+                /* eslint-disable-next-line */
+                console.log('user', userRecord.toJSON());
                 userList.push(userRecord.toJSON());
             });
             if (listUsersResult.pageToken) {
-                buildEmailList(listUsersResult.pageToken);
+                buildUserList(listUsersResult.pageToken);
             }
         });
 
     return userList;
+};
+
+const getMapUrl = async function(storage) {
+    const mapUrl = await storage
+        .bucket()
+        .file(`images/maps/${hid}.png`)
+        .getSignedUrl({
+            action: 'read',
+            expires: '01-01-2050',
+        });
+
+    return mapUrl;
+};
+
+const getHikeData = async function(storage, db) {
+    const hikeSnapshot = await db
+        .collection('hikes')
+        .doc(hid)
+        .get();
+
+    const emailData = hikeSnapshot.data();
+    const mapUrl = await getMapUrl(storage);
+    emailData.mapUrl = mapUrl;
+
+    return emailData;
 };
 
 const buildTemplate = function(emailData) {
@@ -59,13 +86,14 @@ const buildEmail = function(emailData, html) {
     return msg;
 };
 
-exports.digestEmail = async function(db, sgMail, testData) {
+exports.digestEmail = async function(storage, db, sgMail, testData) {
     if (testData) {
         return buildTemplate(testData);
     }
 
     if (sgMail) {
-        const emailData = await buildEmailList();
+        await buildUserList();
+        const emailData = await getHikeData(storage, db);
         const html = buildTemplate(emailData);
         const msg = buildEmail(emailData, html);
         return sgMail.send(msg);

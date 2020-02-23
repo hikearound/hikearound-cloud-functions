@@ -51,7 +51,7 @@ exports.digestEmail = functions.pubsub
     .timeZone('America/Los_Angeles')
     .onRun(async () => {
         try {
-            return digest.digestEmail(db, sgMail, testData);
+            return digest.digestEmail(storage, db, sgMail, testData);
         } catch (e) {
             sentry.captureException(e);
         }
