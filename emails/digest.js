@@ -48,6 +48,9 @@ const getHikeData = async function(storage, db) {
     const mapUrl = await getMapUrl(storage);
     emailData.mapUrl = mapUrl;
 
+    /* eslint-disable-next-line */
+    console.log(emailData);
+
     return emailData;
 };
 
