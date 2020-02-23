@@ -8,22 +8,19 @@ const { senderData } = require('../constants/email');
 const userList = [];
 const hid = 'zvXj5WRBdxrlRTLm65SD';
 
-const buildUserList = function(nextPageToken) {
-    admin
+const buildUserList = async function(nextPageToken) {
+    await admin
         .auth()
         .listUsers(1000, nextPageToken)
         .then(function(listUsersResult) {
-            listUsersResult.users.forEach(function(userRecord) {
-                /* eslint-disable-next-line */
-                console.log('user', userRecord.toJSON());
-                userList.push(userRecord.toJSON());
+            listUsersResult.users.forEach((user) => {
+                const userData = user.toJSON();
+                userList.push(userData);
             });
             if (listUsersResult.pageToken) {
                 buildUserList(listUsersResult.pageToken);
             }
         });
-
-    return userList;
 };
 
 const getMapUrl = async function(storage) {
@@ -35,21 +32,30 @@ const getMapUrl = async function(storage) {
             expires: '01-01-2050',
         });
 
-    return mapUrl;
+    return mapUrl[0];
 };
 
-const getHikeData = async function(storage, db) {
+const getEmailData = async function(storage, db, user) {
     const hikeSnapshot = await db
         .collection('hikes')
         .doc(hid)
         .get();
 
-    const emailData = hikeSnapshot.data();
-    const mapUrl = await getMapUrl(storage);
-    emailData.mapUrl = mapUrl;
+    const hike = hikeSnapshot.data();
+    const hikeMapUrl = await getMapUrl(storage);
 
-    /* eslint-disable-next-line */
-    console.log(emailData);
+    const emailData = {
+        hid,
+        hikeMapUrl,
+        name: user.displayName,
+        email: user.email,
+        hikeName: hike.name,
+        hikeLocation: hike.location,
+        hikeDistance: hike.distance,
+        hikeElevation: hike.elevation,
+        hikeRoute: hike.route,
+        hikeDescription: hike.description,
+    };
 
     return emailData;
 };
@@ -96,10 +102,13 @@ exports.digestEmail = async function(storage, db, sgMail, testData) {
 
     if (sgMail) {
         await buildUserList();
-        const emailData = await getHikeData(storage, db);
-        const html = buildTemplate(emailData);
-        const msg = buildEmail(emailData, html);
-        return sgMail.send(msg);
+        await userList.forEach(async function(user) {
+            const emailData = await getEmailData(storage, db, user);
+            const html = buildTemplate(emailData);
+            const msg = buildEmail(emailData, html);
+            sgMail.send(msg);
+        });
+        return true;
     }
 
     return false;
