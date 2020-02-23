@@ -8,6 +8,7 @@ firebase-debug.log*
 hike.gpx
 service-account.json
 .runtimeconfig.json
+lib
 
 # Firebase cache
 .firebase/
