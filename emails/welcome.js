@@ -2,9 +2,10 @@ const { compile } = require('handlebars');
 const mjml2html = require('mjml');
 const fs = require('fs');
 const path = require('path');
+const admin = require('firebase-admin');
 const { senderData } = require('../constants/email');
 
-const getUserData = async function(db, uid, admin) {
+const getUserData = async function(db, uid) {
     const userSnapshot = await db
         .collection('users')
         .doc(uid)
@@ -60,13 +61,13 @@ const buildEmail = function(emailData, html) {
     return msg;
 };
 
-exports.welcomeEmail = async function(admin, uid, db, sgMail, testData) {
+exports.welcomeEmail = async function(uid, db, sgMail, testData) {
     if (testData) {
         return buildTemplate(testData);
     }
 
     if (sgMail) {
-        const emailData = await getUserData(db, uid, admin);
+        const emailData = await getUserData(db, uid);
         const html = buildTemplate(emailData);
         const msg = buildEmail(emailData, html);
         return sgMail.send(msg);

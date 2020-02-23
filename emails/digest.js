@@ -2,17 +2,10 @@ const { compile } = require('handlebars');
 const mjml2html = require('mjml');
 const fs = require('fs');
 const path = require('path');
-// const admin = require('firebase-admin');
-// const serviceAccount = require('../service-account.json');
+const admin = require('firebase-admin');
 const { senderData } = require('../constants/email');
-const { admin } = require('../lib/fire');
 
 const userList = [];
-
-// admin.initializeApp({
-//     credential: admin.credential.cert(serviceAccount),
-//     storageBucket: 'hikearound-14dad.appspot.com',
-// });
 
 const buildEmailList = function(nextPageToken) {
     admin

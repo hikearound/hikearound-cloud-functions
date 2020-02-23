@@ -1,19 +1,18 @@
 const functions = require('firebase-functions');
-// const admin = require('firebase-admin');
+const admin = require('firebase-admin');
 const sgMail = require('@sendgrid/mail');
 const sentry = require('@sentry/node');
-// const serviceAccount = require('./service-account.json');
+const serviceAccount = require('./service-account.json');
 const welcome = require('./emails/welcome');
 const map = require('./functions/map');
 const digest = require('./emails/digest');
-const { admin } = require('./lib/fire');
 
 const testData = undefined;
 
-// admin.initializeApp({
-//     credential: admin.credential.cert(serviceAccount),
-//     storageBucket: 'hikearound-14dad.appspot.com',
-// });
+admin.initializeApp({
+    credential: admin.credential.cert(serviceAccount),
+    storageBucket: 'hikearound-14dad.appspot.com',
+});
 
 sgMail.setApiKey(functions.config().sendgrid.key);
 
@@ -29,7 +28,7 @@ exports.welcomeEmail = functions.firestore
     .onCreate(async (change, context) => {
         const { uid } = context.params;
         try {
-            return welcome.welcomeEmail(admin, uid, db, sgMail, testData);
+            return welcome.welcomeEmail(uid, db, sgMail, testData);
         } catch (e) {
             sentry.captureException(e);
         }
