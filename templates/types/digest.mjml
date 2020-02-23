@@ -10,7 +10,7 @@
 </mj-column>
 <mj-column width="100%" css-class="hike_info">
     <mj-text css-class="hike_info_text">
-        <span class="info_text_highlight">{{hikeName}}</span> is a hike located in <span class="info_text_highlight">{{hikeLocation}}</span>. It's a {{hikeDistance}}m {{hikeRoute}} with a net elevation gain of {{hikeElevation}}ft.
+        <span class="info_text_highlight">{{hikeName}}</span> is a hike located in <span class="info_text_highlight">{{hikeCity}}</span>. It's a {{hikeDistance}}m {{hikeRoute}} with a net elevation gain of {{hikeElevation}}ft.
         <p>{{hikeDescription}}</p>
     </mj-text>
 </mj-column>

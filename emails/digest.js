@@ -50,7 +50,7 @@ const getEmailData = async function(storage, db, user) {
         name: user.displayName,
         email: user.email,
         hikeName: hike.name,
-        hikeLocation: hike.location,
+        hikeCity: hike.city,
         hikeDistance: hike.distance,
         hikeElevation: hike.elevation,
         hikeRoute: hike.route,
