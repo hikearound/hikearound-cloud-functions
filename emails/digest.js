@@ -1,5 +1,6 @@
 const admin = require('firebase-admin');
 const sgMail = require('@sendgrid/mail');
+const nl2br = require('nl2br');
 const { senderData } = require('../constants/email');
 const { buildTemplate } = require('../utils/email');
 
@@ -38,6 +39,13 @@ const getMapUrl = async function() {
     return mapUrl[0];
 };
 
+const parseDescription = function(description) {
+    if (description.includes('\\n')) {
+        return nl2br(description);
+    }
+    return description;
+};
+
 const getEmailData = async function(user) {
     const hikeSnapshot = await db
         .collection('hikes')
@@ -46,6 +54,7 @@ const getEmailData = async function(user) {
 
     const hike = hikeSnapshot.data();
     const hikeMapUrl = await getMapUrl(storage);
+    const description = parseDescription(hike.description);
 
     const emailData = {
         hid,
@@ -57,7 +66,7 @@ const getEmailData = async function(user) {
         hikeDistance: hike.distance,
         hikeElevation: hike.elevation,
         hikeRoute: hike.route,
-        hikeDescription: hike.description,
+        hikeDescription: description,
     };
 
     return emailData;
