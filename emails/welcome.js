@@ -1,11 +1,12 @@
-const { compile } = require('handlebars');
-const mjml2html = require('mjml');
-const fs = require('fs');
-const path = require('path');
 const admin = require('firebase-admin');
+const sgMail = require('@sendgrid/mail');
 const { senderData } = require('../constants/email');
+const { buildTemplate } = require('../utils/email');
 
-const getUserData = async function(db, uid) {
+const emailType = 'welcome';
+const db = admin.firestore();
+
+const getUserData = async function(uid) {
     const userSnapshot = await db
         .collection('users')
         .doc(uid)
@@ -23,26 +24,6 @@ const getUserData = async function(db, uid) {
     return emailData;
 };
 
-const buildTemplate = function(emailData) {
-    let mjmlTemplate = fs.readFileSync(
-        `${__dirname}/../templates/base.mjml`,
-        'utf8',
-    );
-
-    mjmlTemplate = compile(mjmlTemplate);
-    mjmlTemplate = mjmlTemplate({ emailType: 'welcome' });
-
-    let html = mjml2html(mjmlTemplate, {
-        filePath: path.join(__dirname, '/../templates/components'),
-        minify: true,
-    });
-
-    html = compile(html.html);
-    html = html(emailData);
-
-    return html;
-};
-
 const buildEmail = function(emailData, html) {
     const text = `Hi ${emailData.name}, welcome to Hikearound!\nVerify your email by visiting the following URL: https://tryhikearound.com/verify?token=${emailData.token}.`;
 
@@ -53,7 +34,7 @@ const buildEmail = function(emailData, html) {
             email: senderData.email,
         },
         subject: `${emailData.name}, welcome to Hikearound!`,
-        categories: ['Welcome'],
+        categories: [emailType],
         html,
         text,
     };
@@ -61,17 +42,9 @@ const buildEmail = function(emailData, html) {
     return msg;
 };
 
-exports.welcomeEmail = async function(uid, db, sgMail, testData) {
-    if (testData) {
-        return buildTemplate(testData);
-    }
-
-    if (sgMail) {
-        const emailData = await getUserData(db, uid);
-        const html = buildTemplate(emailData);
-        const msg = buildEmail(emailData, html);
-        return sgMail.send(msg);
-    }
-
-    return false;
+exports.welcomeEmail = async function(uid) {
+    const emailData = await getUserData(uid);
+    const html = buildTemplate(emailData, emailType);
+    const msg = buildEmail(emailData, html);
+    return sgMail.send(msg);
 };

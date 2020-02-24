@@ -7,8 +7,6 @@ const welcome = require('./emails/welcome');
 const map = require('./functions/map');
 const digest = require('./emails/digest');
 
-const testData = undefined;
-
 admin.initializeApp({
     credential: admin.credential.cert(serviceAccount),
     storageBucket: 'hikearound-14dad.appspot.com',
@@ -20,15 +18,12 @@ sentry.init({
     dsn: 'https://9fb810b337f7498ab70662518aeddae2@sentry.io/1877771',
 });
 
-const db = admin.firestore();
-const storage = admin.storage();
-
 exports.welcomeEmail = functions.firestore
     .document('users/{uid}')
     .onCreate(async (change, context) => {
         const { uid } = context.params;
         try {
-            return welcome.welcomeEmail(uid, db, sgMail, testData);
+            return welcome.welcomeEmail(uid);
         } catch (e) {
             sentry.captureException(e);
         }
@@ -38,8 +33,9 @@ exports.welcomeEmail = functions.firestore
 exports.generateStaticMap = functions.firestore
     .document('hikes/{hid}')
     .onWrite(async (change, context) => {
+        const { hid } = context.params;
         try {
-            return map.generateStaticMap(storage, context.params.hid, db);
+            return map.generateStaticMap(hid);
         } catch (e) {
             sentry.captureException(e);
         }
@@ -51,7 +47,7 @@ exports.digestEmail = functions.pubsub
     .timeZone('America/Los_Angeles')
     .onRun(async () => {
         try {
-            return digest.digestEmail(storage, db, sgMail, testData);
+            return digest.digestEmail();
         } catch (e) {
             sentry.captureException(e);
         }

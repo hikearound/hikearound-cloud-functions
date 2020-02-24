@@ -1,12 +1,10 @@
 const firebase = require('@firebase/testing');
 const fs = require('fs');
-const digest = require('../emails/digest');
+const { buildTemplate } = require('../utils/email');
 
+const emailType = 'digest';
 const projectId = 'hikearound';
 const rules = fs.readFileSync('firestore.rules', 'utf8');
-
-const sgMail = undefined;
-const storage = undefined;
 
 function authedApp(auth) {
     return firebase.initializeTestApp({ projectId, auth }).firestore();
@@ -26,7 +24,7 @@ after(async () => {
 
 describe('Every Friday at 9:00AM PST, Hikearound...', async () => {
     it('...should send a digest email to all users with a verified email address', async () => {
-        const testData = {
+        const emailData = {
             name: 'Pat',
             email: 'dugan.pat@gmail.com',
             hid: 'zvXj5WRBdxrlRTLm65SD',
@@ -37,12 +35,12 @@ describe('Every Friday at 9:00AM PST, Hikearound...', async () => {
             hikeRoute: 'Loop',
         };
 
-        testData.hikeDescription =
+        emailData.hikeDescription =
             'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum erat arcu, posuere ac varius vel, viverra et lorem. Maecenas fringilla dignissim lobortis. Ut pharetra scelerisque eros, vitae pulvinar nisi pharetra quis.\n\nAliquam suscipit nec purus sit amet eleifend. Quisque quis turpis eget elit varius iaculis. Vivamus fermentum in quam eget vulputate. Aenean faucibus, ante nec fringilla faucibus, nunc ligula varius erat, non consequat elit diam vitae erat.';
-        testData.hikeMapUrl =
+        emailData.hikeMapUrl =
             'https://firebasestorage.googleapis.com/v0/b/hikearound-14dad.appspot.com/o/images%2Fmaps%2FzvXj5WRBdxrlRTLm65SD.png?alt=media&token=aa122190-342e-431e-a342-ffa501dc0e3b';
 
-        const db = authedApp({ uid: '1' });
-        digest.digestEmail(storage, db, sgMail, testData);
+        authedApp({ uid: '1' });
+        buildTemplate(emailData, emailType);
     });
 });

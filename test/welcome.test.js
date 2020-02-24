@@ -1,11 +1,10 @@
 const firebase = require('@firebase/testing');
 const fs = require('fs');
-const welcome = require('../emails/welcome');
+const { buildTemplate } = require('../utils/email');
 
+const emailType = 'welcome';
 const projectId = 'hikearound';
 const rules = fs.readFileSync('firestore.rules', 'utf8');
-
-const sgMail = undefined;
 
 function authedApp(auth) {
     return firebase.initializeTestApp({ projectId, auth }).firestore();
@@ -25,17 +24,15 @@ after(async () => {
 
 describe('When a user creates an account, Hikearound...', () => {
     it('...should build and send a welcome email with a verification link', async () => {
-        const testData = {
+        const emailData = {
             name: 'Pat',
             uid: '1',
             token: '1',
             email: 'dugan.pat@gmail.com',
         };
 
-        const db = authedApp({ uid: '1' });
-        const { uid } = testData;
-
-        welcome.welcomeEmail(uid, db, sgMail, testData);
+        authedApp({ uid: '1' });
+        buildTemplate(emailData, emailType);
     });
 
     it('...should create a document in the user collection', async () => {

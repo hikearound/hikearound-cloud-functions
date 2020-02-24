@@ -1,3 +1,4 @@
+const admin = require('firebase-admin');
 const fs = require('fs');
 const { parseString } = require('xml2js');
 const polyline = require('google-polyline');
@@ -6,6 +7,9 @@ const functions = require('firebase-functions');
 const download = require('image-downloader');
 const path = require('path');
 const os = require('os');
+
+const db = admin.firestore();
+const storage = admin.storage();
 
 const mapApi = 'https://maps.googleapis.com/maps/api/staticmap';
 const mapSize = '600x300';
@@ -17,7 +21,7 @@ const imagePath = path.join(os.tmpdir(), './map.png');
 const pathWeight = '4';
 const pathColor = '935DFF';
 
-const getHikeData = async function(storage, hid) {
+const getHikeData = async function(hid) {
     let hikeData = {};
 
     await storage
@@ -78,14 +82,14 @@ const buildMapUrl = function(mapCenter, coordinates) {
     return mapUrl;
 };
 
-const saveMapUrl = async function(db, hid, mapUrl) {
+const saveMapUrl = async function(hid, mapUrl) {
     await db
         .collection('hikes')
         .doc(hid)
         .set({ mapUrl }, { merge: true });
 };
 
-const saveMapImage = async function(mapUrl, storage, hid) {
+const saveMapImage = async function(mapUrl, hid) {
     await download.image({
         url: mapUrl,
         dest: imagePath,
@@ -97,14 +101,14 @@ const saveMapImage = async function(mapUrl, storage, hid) {
     });
 };
 
-exports.generateStaticMap = async function(storage, hid, db) {
-    const hikeData = await getHikeData(storage, hid);
+exports.generateStaticMap = async function(hid) {
+    const hikeData = await getHikeData(hid);
     const center = setCenter(hikeData);
     const coordinates = plotCoordinates(hikeData);
     const mapUrl = await buildMapUrl(center, coordinates);
 
-    saveMapUrl(db, hid, mapUrl);
-    saveMapImage(mapUrl, storage, hid);
+    saveMapUrl(hid, mapUrl);
+    saveMapImage(mapUrl, hid);
 
     return true;
 };

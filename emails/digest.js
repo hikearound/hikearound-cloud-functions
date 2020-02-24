@@ -1,12 +1,14 @@
-const { compile } = require('handlebars');
-const mjml2html = require('mjml');
-const fs = require('fs');
-const path = require('path');
 const admin = require('firebase-admin');
+const sgMail = require('@sendgrid/mail');
 const { senderData } = require('../constants/email');
+const { buildTemplate } = require('../utils/email');
+
+const db = admin.firestore();
+const storage = admin.storage();
 
 const userList = [];
 const hid = 'zvXj5WRBdxrlRTLm65SD';
+const emailType = 'digest';
 
 const buildUserList = async function(nextPageToken) {
     await admin
@@ -23,7 +25,7 @@ const buildUserList = async function(nextPageToken) {
         });
 };
 
-const getMapUrl = async function(storage) {
+const getMapUrl = async function() {
     const mapUrl = await storage
         .bucket()
         .file(`images/maps/${hid}.png`)
@@ -35,7 +37,7 @@ const getMapUrl = async function(storage) {
     return mapUrl[0];
 };
 
-const getEmailData = async function(storage, db, user) {
+const getEmailData = async function(user) {
     const hikeSnapshot = await db
         .collection('hikes')
         .doc(hid)
@@ -60,26 +62,6 @@ const getEmailData = async function(storage, db, user) {
     return emailData;
 };
 
-const buildTemplate = function(emailData) {
-    let mjmlTemplate = fs.readFileSync(
-        `${__dirname}/../templates/base.mjml`,
-        'utf8',
-    );
-
-    mjmlTemplate = compile(mjmlTemplate);
-    mjmlTemplate = mjmlTemplate({ emailType: 'digest' });
-
-    let html = mjml2html(mjmlTemplate, {
-        filePath: path.join(__dirname, '/../templates/components'),
-        minify: true,
-    });
-
-    html = compile(html.html);
-    html = html(emailData);
-
-    return html;
-};
-
 const buildEmail = function(emailData, html) {
     const msg = {
         to: emailData.email,
@@ -88,28 +70,22 @@ const buildEmail = function(emailData, html) {
             email: senderData.email,
         },
         subject: `${emailData.name}, check out this week's newest hikes.`,
-        categories: ['Digest'],
+        categories: [emailType],
         html,
     };
 
     return msg;
 };
 
-exports.digestEmail = async function(storage, db, sgMail, testData) {
-    if (testData) {
-        return buildTemplate(testData);
-    }
+exports.digestEmail = async function() {
+    await buildUserList();
 
-    if (sgMail) {
-        await buildUserList();
-        await userList.forEach(async function(user) {
-            const emailData = await getEmailData(storage, db, user);
-            const html = buildTemplate(emailData);
-            const msg = buildEmail(emailData, html);
-            sgMail.send(msg);
-        });
-        return true;
-    }
+    await userList.forEach(async function(user) {
+        const emailData = await getEmailData(user);
+        const html = buildTemplate(emailData, emailType);
+        const msg = buildEmail(emailData, html);
+        sgMail.send(msg);
+    });
 
-    return false;
+    return true;
 };
