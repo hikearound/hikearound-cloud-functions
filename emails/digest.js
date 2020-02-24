@@ -7,13 +7,14 @@ const db = admin.firestore();
 const storage = admin.storage();
 
 const userList = [];
+const tokenIterator = 1000;
 const hid = 'zvXj5WRBdxrlRTLm65SD';
 const emailType = 'digest';
 
 const buildUserList = async function(nextPageToken) {
     await admin
         .auth()
-        .listUsers(1000, nextPageToken)
+        .listUsers(tokenIterator, nextPageToken)
         .then(function(listUsersResult) {
             listUsersResult.users.forEach((user) => {
                 const userData = user.toJSON();
