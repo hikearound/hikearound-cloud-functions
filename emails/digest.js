@@ -78,7 +78,7 @@ const buildEmail = function(emailData, html) {
             name: senderData.name,
             email: senderData.email,
         },
-        subject: `${emailData.name}, check out this week's newest hikes.`,
+        subject: `Get ready for the weekend by checking out ${emailData.hikeName} and other hikes we think you might like.`,
         categories: [emailType],
         html,
     };
