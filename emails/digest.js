@@ -1,5 +1,6 @@
 const admin = require('firebase-admin');
 const sgMail = require('@sendgrid/mail');
+const moment = require('moment');
 const { senderData } = require('../constants/email');
 const { buildTemplate } = require('../utils/email');
 
@@ -8,7 +9,6 @@ const storage = admin.storage();
 
 const userList = [];
 const tokenIterator = 1000;
-const hid = 'zvXj5WRBdxrlRTLm65SD';
 const emailType = 'digest';
 
 const buildUserList = async function(nextPageToken) {
@@ -26,7 +26,33 @@ const buildUserList = async function(nextPageToken) {
         });
 };
 
-const getMapUrl = async function() {
+const checkForNewHikes = async function() {
+    const now = moment();
+    const newHikes = [];
+
+    const hikeRef = await db
+        .collection('hikes')
+        .orderBy('timestamp', 'desc')
+        .limit(5);
+
+    const querySnapshot = await hikeRef.get();
+
+    querySnapshot.forEach((hike) => {
+        if (hike.exists) {
+            const hikeData = hike.data() || {};
+            const dateCreated = moment(hikeData.timestamp.toDate());
+            const daysOld = now.diff(dateCreated, 'days');
+
+            if (daysOld <= 7) {
+                newHikes.push(hike.id);
+            }
+        }
+    });
+
+    return newHikes;
+};
+
+const getMapUrl = async function(hid) {
     const mapUrl = await storage
         .bucket()
         .file(`images/maps/${hid}.png`)
@@ -45,14 +71,14 @@ const parseDescription = function(description) {
     return description;
 };
 
-const getEmailData = async function(user) {
+const getEmailData = async function(user, hid) {
     const hikeSnapshot = await db
         .collection('hikes')
         .doc(hid)
         .get();
 
     const hike = hikeSnapshot.data();
-    const hikeMapUrl = await getMapUrl(storage);
+    const hikeMapUrl = await getMapUrl(hid);
     const description = parseDescription(hike.description);
 
     const emailData = {
@@ -88,13 +114,19 @@ const buildEmail = function(emailData, html) {
 
 exports.digestEmail = async function() {
     await buildUserList();
+    const newHikes = await checkForNewHikes();
 
-    await userList.forEach(async function(user) {
-        const emailData = await getEmailData(user);
-        const html = buildTemplate(emailData, emailType);
-        const msg = buildEmail(emailData, html);
-        sgMail.send(msg);
-    });
+    if (newHikes.length > 0) {
+        const hid = newHikes[0];
+
+        await userList.forEach(async function(user) {
+            const emailData = await getEmailData(user, hid);
+            const html = buildTemplate(emailData, emailType);
+            const msg = buildEmail(emailData, html);
+
+            sgMail.send(msg);
+        });
+    }
 
     return true;
 };
