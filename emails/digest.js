@@ -1,6 +1,5 @@
 const admin = require('firebase-admin');
 const sgMail = require('@sendgrid/mail');
-const nl2br = require('nl2br');
 const { senderData } = require('../constants/email');
 const { buildTemplate } = require('../utils/email');
 
@@ -41,7 +40,7 @@ const getMapUrl = async function() {
 
 const parseDescription = function(description) {
     if (description.includes('\\n')) {
-        return nl2br(description);
+        return description.replace(/\\n/g, '\n');
     }
     return description;
 };
