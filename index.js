@@ -3,9 +3,6 @@ const admin = require('firebase-admin');
 const sgMail = require('@sendgrid/mail');
 const sentry = require('@sentry/node');
 const serviceAccount = require('./service-account.json');
-const welcome = require('./emails/welcome');
-const map = require('./functions/map');
-const digest = require('./emails/digest');
 
 admin.initializeApp({
     credential: admin.credential.cert(serviceAccount),
@@ -17,6 +14,10 @@ sgMail.setApiKey(functions.config().sendgrid.key);
 sentry.init({
     dsn: 'https://9fb810b337f7498ab70662518aeddae2@sentry.io/1877771',
 });
+
+const welcome = require('./emails/welcome');
+const map = require('./functions/map');
+const digest = require('./emails/digest');
 
 exports.welcomeEmail = functions.firestore
     .document('users/{uid}')
