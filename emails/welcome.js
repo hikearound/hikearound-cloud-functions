@@ -5,6 +5,7 @@ const { buildTemplate } = require('../utils/email');
 
 const emailType = 'welcome';
 const db = admin.firestore();
+const auth = admin.auth();
 
 const getUserData = async function(uid) {
     const userSnapshot = await db
@@ -12,7 +13,7 @@ const getUserData = async function(uid) {
         .doc(uid)
         .get();
 
-    const data = await admin.auth().getUser(uid);
+    const data = await auth.getUser(uid);
     const extraData = userSnapshot.data();
 
     const emailData = {

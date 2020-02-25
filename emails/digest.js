@@ -6,14 +6,14 @@ const { buildTemplate } = require('../utils/email');
 
 const db = admin.firestore();
 const storage = admin.storage();
+const auth = admin.auth();
 
 const userList = [];
 const tokenIterator = 1000;
 const emailType = 'digest';
 
 const buildUserList = async function(nextPageToken) {
-    await admin
-        .auth()
+    await auth
         .listUsers(tokenIterator, nextPageToken)
         .then(function(listUsersResult) {
             listUsersResult.users.forEach((user) => {
