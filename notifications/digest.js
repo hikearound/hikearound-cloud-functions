@@ -1,5 +1,5 @@
 const { Expo } = require('expo-server-sdk');
-const Sentry = require('@sentry/node');
+const sentry = require('@sentry/node');
 const admin = require('firebase-admin');
 
 const expo = new Expo();
@@ -43,7 +43,7 @@ const sendNotification = async function() {
                 );
                 tickets.push(...ticketChunk);
             } catch (error) {
-                Sentry.captureException(error);
+                sentry.captureException(error);
             }
         }
     })();
