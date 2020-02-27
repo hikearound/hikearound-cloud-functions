@@ -20,12 +20,14 @@ const buildTokenList = async function(uid) {
 
 const buildNotification = async function(data) {
     for (const token of pushTokens) {
-        notifications.push({
-            to: token,
-            sound: 'default',
-            body: data.subject,
-            data: { hid: data.hid },
-        });
+        if (Expo.isExpoPushToken(token)) {
+            notifications.push({
+                to: token,
+                sound: 'default',
+                body: data.subject,
+                data: { hid: data.hid },
+            });
+        }
     }
 };
 
