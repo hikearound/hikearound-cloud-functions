@@ -27,6 +27,7 @@ module.exports = {
     'rules': {
         'import/no-extraneous-dependencies': 'off',
         'func-names': 'off',
+        'no-restricted-syntax': 'off',
         'comma-dangle': ['error', 'always-multiline'],
         'no-await-in-loop': 'off',
         'no-param-reassign': 'off',
