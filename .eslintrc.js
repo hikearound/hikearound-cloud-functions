@@ -26,6 +26,8 @@ module.exports = {
     },
     'rules': {
         'import/no-extraneous-dependencies': 'off',
+        'guard-for-in': 'off',
+        'no-continue': 'off',
         'func-names': 'off',
         'no-restricted-syntax': 'off',
         'comma-dangle': ['error', 'always-multiline'],

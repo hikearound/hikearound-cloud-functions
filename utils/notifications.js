@@ -7,6 +7,8 @@ const db = admin.firestore();
 
 const pushTokens = [];
 const notifications = [];
+const tickets = [];
+const receiptIds = [];
 
 const buildTokenList = async function(uid) {
     const userSnapshot = await db
@@ -31,9 +33,8 @@ const buildNotification = async function(data) {
     }
 };
 
-const sendNotification = async function() {
+const sendNotifications = async function() {
     const chunks = expo.chunkPushNotifications(notifications);
-    const tickets = [];
 
     (async () => {
         for (const chunk of chunks) {
@@ -49,10 +50,49 @@ const sendNotification = async function() {
     })();
 };
 
+const buildReceiptList = async function() {
+    for (const ticket of tickets) {
+        if (ticket.id) {
+            receiptIds.push(ticket.id);
+        }
+    }
+};
+
+const checkReciepts = async function() {
+    const receiptIdChunks = expo.chunkPushNotificationReceiptIds(receiptIds);
+
+    (async () => {
+        for (const chunk of receiptIdChunks) {
+            try {
+                const receipts = await expo.getPushNotificationReceiptsAsync(
+                    chunk,
+                );
+
+                for (const receiptId in receipts) {
+                    const { status, message, details } = receipts[receiptId];
+                    if (status === 'ok') {
+                        continue;
+                    } else if (status === 'error') {
+                        if (details && details.error) {
+                            sentry.captureMessage(
+                                `Error code ${details.error} while sending the following notification: ${message}`,
+                            );
+                        }
+                    }
+                }
+            } catch (e) {
+                sentry.captureException(e);
+            }
+        }
+    })();
+};
+
 exports.send = async function(uid, data) {
     await buildTokenList(uid);
     await buildNotification(data);
-    await sendNotification();
+    await sendNotifications();
+    await buildReceiptList();
+    await checkReciepts();
 
     return true;
 };
