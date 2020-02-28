@@ -60,7 +60,6 @@ const buildReceiptList = async function() {
 
 const checkReciepts = async function() {
     const receiptIdChunks = expo.chunkPushNotificationReceiptIds(receiptIds);
-
     (async () => {
         for (const chunk of receiptIdChunks) {
             try {
@@ -70,14 +69,10 @@ const checkReciepts = async function() {
 
                 for (const receiptId in receipts) {
                     const { status, message, details } = receipts[receiptId];
-                    if (status === 'ok') {
-                        continue;
-                    } else if (status === 'error') {
-                        if (details && details.error) {
-                            sentry.captureMessage(
-                                `Error code ${details.error} while sending the following notification: ${message}`,
-                            );
-                        }
+                    if (status === 'error') {
+                        sentry.captureMessage(
+                            `Error code '${details.error}': ${message}`,
+                        );
                     }
                 }
             } catch (e) {
