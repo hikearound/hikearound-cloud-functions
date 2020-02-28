@@ -49,7 +49,7 @@ const sendNotification = async function() {
     })();
 };
 
-exports.digestNotification = async function(uid, data) {
+exports.send = async function(uid, data) {
     await buildTokenList(uid);
     await buildNotification(data);
     await sendNotification();

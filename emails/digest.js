@@ -1,7 +1,7 @@
 const admin = require('firebase-admin');
 const sgMail = require('@sendgrid/mail');
 const moment = require('moment');
-const digest = require('../notifications/digest');
+const notifications = require('../utils/notifications');
 const { senderData } = require('../constants/email');
 const { buildTemplate } = require('../utils/email');
 
@@ -127,7 +127,7 @@ exports.digestEmail = async function() {
             const msg = buildEmail(emailData, html);
 
             sgMail.send(msg);
-            digest.digestNotification(user.uid, emailData);
+            notifications.send(user.uid, emailData);
         });
     }
 
