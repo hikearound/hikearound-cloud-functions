@@ -42,8 +42,8 @@ const sendNotification = async function() {
                     chunk,
                 );
                 tickets.push(...ticketChunk);
-            } catch (error) {
-                sentry.captureException(error);
+            } catch (e) {
+                sentry.captureException(e);
             }
         }
     })();

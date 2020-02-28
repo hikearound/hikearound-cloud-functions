@@ -13,10 +13,10 @@
     "node": "10"
   },
   "dependencies": {
-    "@firebase/testing": "^0.16.11",
+    "@firebase/testing": "^0.16.12",
     "@google-cloud/storage": "^4.3.1",
     "@sendgrid/mail": "^6.5.3",
-    "@sentry/node": "^5.12.4",
+    "@sentry/node": "^5.13.0",
     "build-url": "^2.0.0",
     "dir-glob": "^2.2.2",
     "expo-server-sdk": "^3.4.0",
