@@ -114,6 +114,17 @@ const buildEmail = function(emailData, html) {
     return msg;
 };
 
+const sendNotification = function(uid, emailData) {
+    const notificationData = {
+        uid,
+        hid: emailData.hid,
+        title: 'Check out this weeks best hikes',
+        body:
+            'Start your weekend off right by checking out this weeks best new hikes.',
+    };
+    notifications.send(notificationData);
+};
+
 exports.digestEmail = async function() {
     await buildUserList();
     const newHikes = await checkForNewHikes();
@@ -127,7 +138,7 @@ exports.digestEmail = async function() {
             const msg = buildEmail(emailData, html);
 
             sgMail.send(msg);
-            notifications.send(user.uid, emailData);
+            sendNotification(user.uid, emailData);
         });
     }
 

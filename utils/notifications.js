@@ -26,7 +26,10 @@ const buildNotification = async function(data) {
             notifications.push({
                 to: token,
                 sound: 'default',
-                body: data.subject,
+                title: data.title,
+                body: data.body,
+                badge: 1,
+                priority: 'default',
                 data: { hid: data.hid },
             });
         }
@@ -66,9 +69,10 @@ const checkReciepts = async function() {
                 const receipts = await expo.getPushNotificationReceiptsAsync(
                     chunk,
                 );
-
                 for (const receiptId in receipts) {
                     const { status, message, details } = receipts[receiptId];
+                    /* eslint-disable-next-line */
+                    console.log(receipts[receiptId]);
                     if (status === 'error') {
                         sentry.captureMessage(
                             `Error code '${details.error}': ${message}`,
@@ -82,8 +86,8 @@ const checkReciepts = async function() {
     })();
 };
 
-exports.send = async function(uid, data) {
-    await buildTokenList(uid);
+exports.send = async function(data) {
+    await buildTokenList(data.uid);
     await buildNotification(data);
     await sendNotifications();
     await buildReceiptList();
