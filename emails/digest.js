@@ -82,10 +82,12 @@ const getEmailData = async function(user, hid) {
     const hike = hikeSnapshot.data();
     const hikeMapUrl = await getMapUrl(hid);
     const description = parseDescription(hike.description);
+    const upsell = `Get ready for the weekend by checking out ${hike.name} and other hikes we think you might like.`;
 
     const data = {
         hid,
         hikeMapUrl,
+        upsell,
         name: user.displayName,
         email: user.email,
         hikeName: hike.name,
@@ -106,7 +108,7 @@ const buildEmail = function(data, html) {
             name: senderData.name,
             email: senderData.email,
         },
-        subject: `Get ready for the weekend by checking out ${data.hikeName} and other hikes we think you might like.`,
+        subject: data.upsell,
         categories: [emailType],
         html,
     };
@@ -119,7 +121,7 @@ const sendNotification = function(uid, data) {
         uid,
         hid: data.hid,
         title: 'Check out this weeks best hikes',
-        body: `Start your weekend off right by checking out ${data.hikeName} and other hikes we think you might like.`,
+        body: data.upsell,
     };
     notifications.send(notificationData);
 };
