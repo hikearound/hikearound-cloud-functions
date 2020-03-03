@@ -82,33 +82,42 @@ const getEmailData = async function(user, hid) {
     const hike = hikeSnapshot.data();
     const hikeMapUrl = await getMapUrl(hid);
     const description = parseDescription(hike.description);
+
+    const title = 'Check out this weeks best hikes';
     const upsell = `Get ready for the weekend by checking out ${hike.name} and other hikes we think you might like.`;
 
-    const data = {
-        hid,
-        hikeMapUrl,
-        upsell,
-        name: user.displayName,
-        email: user.email,
-        hikeName: hike.name,
-        hikeCity: hike.city,
-        hikeDistance: hike.distance,
-        hikeElevation: hike.elevation,
-        hikeRoute: hike.route,
-        hikeDescription: description,
-    };
+    const data = { hid, hikeMapUrl };
+
+    // Notification data
+    data.notifBody = upsell;
+    data.notifTitle = title;
+
+    // Email data
+    data.emailSubject = upsell;
+    data.emailToAddress = user.email;
+
+    // User data
+    data.name = user.displayName;
+
+    // Hike data
+    data.hikeName = hike.name;
+    data.hikeCity = hike.city;
+    data.hikeDistance = hike.distance;
+    data.hikeElevation = hike.elevation;
+    data.hikeRoute = hike.route;
+    data.hikeDescription = description;
 
     return data;
 };
 
 const buildEmail = function(data, html) {
     const msg = {
-        to: data.email,
+        to: data.emailToAddress,
         from: {
             name: senderData.name,
             email: senderData.email,
         },
-        subject: data.upsell,
+        subject: data.emailSubject,
         categories: [emailType],
         html,
     };
@@ -120,8 +129,8 @@ const sendNotification = function(uid, data) {
     const notificationData = {
         uid,
         hid: data.hid,
-        title: 'Check out this weeks best hikes',
-        body: data.upsell,
+        title: data.notifTitle,
+        body: data.notifBody,
     };
     notifications.send(notificationData);
 };
