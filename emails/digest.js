@@ -117,10 +117,10 @@ const buildEmail = function(emailData, html) {
 const sendNotification = function(uid, emailData) {
     const notificationData = {
         uid,
+        hikeName: emailData.hikeName,
         hid: emailData.hid,
         title: 'Check out this weeks best hikes',
-        body:
-            'Start your weekend off right by checking out this weeks best new hikes.',
+        body: `Start your weekend off right by checking out ${emailData.hikeName} and other hikes we think you might like.`,
     };
     notifications.send(notificationData);
 };
