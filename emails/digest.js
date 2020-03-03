@@ -83,7 +83,7 @@ const getEmailData = async function(user, hid) {
     const hikeMapUrl = await getMapUrl(hid);
     const description = parseDescription(hike.description);
 
-    const emailData = {
+    const data = {
         hid,
         hikeMapUrl,
         name: user.displayName,
@@ -96,17 +96,17 @@ const getEmailData = async function(user, hid) {
         hikeDescription: description,
     };
 
-    return emailData;
+    return data;
 };
 
-const buildEmail = function(emailData, html) {
+const buildEmail = function(data, html) {
     const msg = {
-        to: emailData.email,
+        to: data.email,
         from: {
             name: senderData.name,
             email: senderData.email,
         },
-        subject: `Get ready for the weekend by checking out ${emailData.hikeName} and other hikes we think you might like.`,
+        subject: `Get ready for the weekend by checking out ${data.hikeName} and other hikes we think you might like.`,
         categories: [emailType],
         html,
     };
@@ -114,13 +114,12 @@ const buildEmail = function(emailData, html) {
     return msg;
 };
 
-const sendNotification = function(uid, emailData) {
+const sendNotification = function(uid, data) {
     const notificationData = {
         uid,
-        hikeName: emailData.hikeName,
-        hid: emailData.hid,
+        hid: data.hid,
         title: 'Check out this weeks best hikes',
-        body: `Start your weekend off right by checking out ${emailData.hikeName} and other hikes we think you might like.`,
+        body: `Start your weekend off right by checking out ${data.hikeName} and other hikes we think you might like.`,
     };
     notifications.send(notificationData);
 };
@@ -133,12 +132,12 @@ exports.digestEmail = async function() {
         const hid = newHikes[0];
 
         await userList.forEach(async function(user) {
-            const emailData = await getEmailData(user, hid);
-            const html = buildTemplate(emailData, emailType);
-            const msg = buildEmail(emailData, html);
+            const data = await getEmailData(user, hid);
+            const html = buildTemplate(data, emailType);
+            const msg = buildEmail(data, html);
 
             sgMail.send(msg);
-            sendNotification(user.uid, emailData);
+            sendNotification(user.uid, data);
         });
     }
 
