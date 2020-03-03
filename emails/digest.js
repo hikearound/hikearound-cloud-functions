@@ -10,6 +10,7 @@ const storage = admin.storage();
 const auth = admin.auth();
 
 const userList = [];
+const sentUserList = [];
 
 const tokenIterator = 1000;
 const emailType = 'digest';
@@ -143,12 +144,16 @@ exports.digestEmail = async function() {
         const hid = newHikes[0];
 
         await userList.forEach(async function(user) {
-            const data = await getEmailData(user, hid);
-            const html = buildTemplate(data, emailType);
-            const msg = buildEmail(data, html);
+            if (!sentUserList.includes(user.uid)) {
+                const data = await getEmailData(user, hid);
+                const html = buildTemplate(data, emailType);
+                const msg = buildEmail(data, html);
 
-            sgMail.send(msg);
-            sendNotification(user.uid, data);
+                sgMail.send(msg);
+                sendNotification(user.uid, data);
+
+                sentUserList.push(user.uid);
+            }
         });
     }
 
