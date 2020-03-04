@@ -15,9 +15,7 @@ const getToken = async function(uid) {
 };
 
 const updateUserRecord = async function(uid) {
-    const user = await auth.getUser(uid);
-
-    user.updateProfile({
+    auth.updateUser(uid, {
         emailVerified: true,
     });
 
@@ -38,7 +36,7 @@ const verifyToken = async function(idToken) {
 
 const deleteAuthDocument = async function(uid) {
     db.collection('auth')
-        .document(uid)
+        .doc(uid)
         .delete();
 };
 
