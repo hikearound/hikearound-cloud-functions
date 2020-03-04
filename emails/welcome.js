@@ -18,15 +18,16 @@ const getUserData = async function(uid) {
 
     const emailData = {
         name: extraData.name,
-        token: extraData.token,
+        idToken: extraData.idToken,
         email: data.email,
     };
 
+    emailData.uid = uid;
     return emailData;
 };
 
 const buildEmail = function(emailData, html) {
-    const text = `Hi ${emailData.name}, welcome to Hikearound!\nVerify your email by visiting the following URL: https://tryhikearound.com/verify?token=${emailData.token}.`;
+    const text = `Hi ${emailData.name}, welcome to Hikearound!\nVerify your email by visiting the following URL: https://tryhikearound.com/verify?uid=${emailData.uid}&idToken=${emailData.idToken}.`;
 
     const msg = {
         to: emailData.email,

@@ -15,9 +15,13 @@ sentry.init({
     dsn: 'https://9fb810b337f7498ab70662518aeddae2@sentry.io/1877771',
 });
 
+// Emails
 const welcome = require('./emails/welcome');
-const map = require('./functions/map');
 const digest = require('./emails/digest');
+
+// Functions
+const map = require('./functions/map');
+const verify = require('./functions/verify');
 
 exports.welcomeEmail = functions.firestore
     .document('users/{uid}')
@@ -49,6 +53,18 @@ exports.digestEmail = functions.pubsub
     .onRun(async () => {
         try {
             return digest.digestEmail();
+        } catch (e) {
+            sentry.captureException(e);
+        }
+        return false;
+    });
+
+exports.verifyEmailAddress = functions.firestore
+    .document('auth/{uid}')
+    .onCreate(async (change, context) => {
+        const { uid } = context.params;
+        try {
+            return verify.verifyEmailAddress(uid);
         } catch (e) {
             sentry.captureException(e);
         }
