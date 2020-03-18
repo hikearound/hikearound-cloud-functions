@@ -71,8 +71,6 @@ const checkReciepts = async function() {
                 );
                 for (const receiptId in receipts) {
                     const { status, message, details } = receipts[receiptId];
-                    /* eslint-disable-next-line */
-                    console.log(receipts[receiptId]);
                     if (status === 'error') {
                         sentry.captureMessage(
                             `Error code '${details.error}': ${message}`,
