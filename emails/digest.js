@@ -1,9 +1,8 @@
 const admin = require('firebase-admin');
-const sgMail = require('@sendgrid/mail');
 const moment = require('moment');
-const notifications = require('../utils/notifications');
 const { senderData } = require('../constants/email');
 const { buildTemplate } = require('../utils/email');
+const { maybeSendNotif, maybeSendEmail } = require('../utils/filter');
 
 const db = admin.firestore();
 const storage = admin.storage();
@@ -14,6 +13,7 @@ const sentUserList = [];
 
 const tokenIterator = 1000;
 const emailType = 'digest';
+const notifType = emailType;
 
 const buildUserList = async function(nextPageToken) {
     await auth
@@ -74,7 +74,7 @@ const parseDescription = function(description) {
     return description;
 };
 
-const getEmailData = async function(user, hid) {
+const buildEmailData = async function(user, hid) {
     const hikeSnapshot = await db
         .collection('hikes')
         .doc(hid)
@@ -111,6 +111,17 @@ const getEmailData = async function(user, hid) {
     return data;
 };
 
+const buildNotifData = function(uid, data) {
+    const notifData = {
+        uid,
+        hid: data.hid,
+        title: data.notifTitle,
+        body: data.notifBody,
+    };
+
+    return notifData;
+};
+
 const buildEmail = function(data, html) {
     const msg = {
         to: data.emailToAddress,
@@ -126,16 +137,6 @@ const buildEmail = function(data, html) {
     return msg;
 };
 
-const sendNotification = function(uid, data) {
-    const notificationData = {
-        uid,
-        hid: data.hid,
-        title: data.notifTitle,
-        body: data.notifBody,
-    };
-    notifications.send(notificationData);
-};
-
 exports.digestEmail = async function() {
     await buildUserList();
     const newHikes = await checkForNewHikes();
@@ -145,12 +146,14 @@ exports.digestEmail = async function() {
 
         await userList.forEach(async function(user) {
             if (!sentUserList.includes(user.uid)) {
-                const data = await getEmailData(user, hid);
-                const html = buildTemplate(data, emailType);
-                const msg = buildEmail(data, html);
+                const emailData = await buildEmailData(user, hid);
+                const notifData = buildNotifData(user.uid, emailData);
 
-                sgMail.send(msg);
-                sendNotification(user.uid, data);
+                const html = buildTemplate(emailData, emailType);
+                const msg = buildEmail(emailData, html);
+
+                await maybeSendEmail(user, emailType, msg);
+                await maybeSendNotif(user, notifType, notifData);
 
                 sentUserList.push(user.uid);
             }
