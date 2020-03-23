@@ -110,19 +110,19 @@ const buildData = async function(user, hid) {
     return data;
 };
 
-const buildNotif = function(user, data) {
-    const notif = {
+const buildNotif = async function(user, data) {
+    return {
         uid: user.uid,
         hid: data.hid,
         title: data.notifTitle,
         body: data.notifBody,
     };
-
-    return notif;
 };
 
-const buildEmail = function(data, html) {
-    const email = {
+const buildEmail = async function(data) {
+    const html = buildTemplate(data, type);
+
+    return {
         to: data.emailToAddress,
         from: {
             name: senderData.name,
@@ -132,8 +132,17 @@ const buildEmail = function(data, html) {
         categories: [type],
         html,
     };
+};
 
-    return email;
+const maybeSendDigest = async function(user, hid) {
+    const data = await buildData(user, hid);
+    const email = await buildEmail(data);
+    const notif = await buildNotif(user, data);
+
+    maybeSendEmail(user, type, email);
+    maybeSendNotif(user, type, notif);
+
+    sentUserList.push(user.uid);
 };
 
 exports.digestEmail = async function() {
@@ -143,18 +152,9 @@ exports.digestEmail = async function() {
     if (newHikes.length > 0) {
         const hid = newHikes[0];
 
-        await userList.forEach(async function(user) {
+        userList.forEach(async function(user) {
             if (!sentUserList.includes(user.uid)) {
-                const data = await buildData(user, hid);
-
-                const html = buildTemplate(data, type);
-                const email = buildEmail(data, html);
-                const notif = buildNotif(user, data);
-
-                await maybeSendEmail(user, type, email);
-                await maybeSendNotif(user, type, notif);
-
-                sentUserList.push(user.uid);
+                await maybeSendDigest(user, hid);
             }
         });
     }

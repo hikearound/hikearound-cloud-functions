@@ -7,7 +7,7 @@ const type = 'welcome';
 const db = admin.firestore();
 const auth = admin.auth();
 
-const getUserData = async function(uid) {
+const buildData = async function(uid) {
     const userSnapshot = await db
         .collection('users')
         .doc(uid)
@@ -26,10 +26,10 @@ const getUserData = async function(uid) {
     return data;
 };
 
-const buildEmail = function(data, html) {
-    const text = `Hi ${data.name}, welcome to Hikearound!\nVerify your email by visiting the following URL: https://tryhikearound.com/verify?uid=${data.uid}&idToken=${data.idToken}.`;
+const buildEmail = async function(data) {
+    const html = buildTemplate(data, type);
 
-    const email = {
+    return {
         to: data.email,
         from: {
             name: senderData.name,
@@ -38,15 +38,11 @@ const buildEmail = function(data, html) {
         subject: `${data.name}, welcome to Hikearound!`,
         categories: [type],
         html,
-        text,
     };
-
-    return email;
 };
 
 exports.welcomeEmail = async function(uid) {
-    const data = await getUserData(uid);
-    const html = buildTemplate(data, type);
-    const email = buildEmail(data, html);
+    const data = await buildData(uid);
+    const email = await buildEmail(data);
     return sgMail.send(email);
 };
