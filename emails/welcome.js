@@ -3,7 +3,7 @@ const sgMail = require('@sendgrid/mail');
 const { senderData } = require('../constants/email');
 const { buildTemplate } = require('../utils/email');
 
-const emailType = 'welcome';
+const type = 'welcome';
 const db = admin.firestore();
 const auth = admin.auth();
 
@@ -13,40 +13,40 @@ const getUserData = async function(uid) {
         .doc(uid)
         .get();
 
-    const data = await auth.getUser(uid);
+    const userData = await auth.getUser(uid);
     const extraData = userSnapshot.data();
 
-    const emailData = {
+    const data = {
         name: extraData.name,
         idToken: extraData.idToken,
-        email: data.email,
+        email: userData.email,
     };
 
-    emailData.uid = uid;
-    return emailData;
+    data.uid = uid;
+    return data;
 };
 
-const buildEmail = function(emailData, html) {
-    const text = `Hi ${emailData.name}, welcome to Hikearound!\nVerify your email by visiting the following URL: https://tryhikearound.com/verify?uid=${emailData.uid}&idToken=${emailData.idToken}.`;
+const buildEmail = function(data, html) {
+    const text = `Hi ${data.name}, welcome to Hikearound!\nVerify your email by visiting the following URL: https://tryhikearound.com/verify?uid=${data.uid}&idToken=${data.idToken}.`;
 
-    const msg = {
-        to: emailData.email,
+    const email = {
+        to: data.email,
         from: {
             name: senderData.name,
             email: senderData.email,
         },
-        subject: `${emailData.name}, welcome to Hikearound!`,
-        categories: [emailType],
+        subject: `${data.name}, welcome to Hikearound!`,
+        categories: [type],
         html,
         text,
     };
 
-    return msg;
+    return email;
 };
 
 exports.welcomeEmail = async function(uid) {
-    const emailData = await getUserData(uid);
-    const html = buildTemplate(emailData, emailType);
-    const msg = buildEmail(emailData, html);
-    return sgMail.send(msg);
+    const data = await getUserData(uid);
+    const html = buildTemplate(data, type);
+    const email = buildEmail(data, html);
+    return sgMail.send(email);
 };

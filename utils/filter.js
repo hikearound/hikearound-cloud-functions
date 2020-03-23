@@ -4,7 +4,7 @@ const notifications = require('./notifications');
 
 const db = admin.firestore();
 
-exports.maybeSendEmail = async function(user, emailType, msg) {
+exports.maybeSendEmail = async function(user, emailType, email) {
     const userSnapshot = await db
         .collection('users')
         .doc(user.uid)
@@ -14,13 +14,13 @@ exports.maybeSendEmail = async function(user, emailType, msg) {
     const emailEnabled = userData.emailNotifs.enabled;
 
     if (user.emailVerified && emailEnabled && emailType) {
-        sgMail.send(msg);
+        sgMail.send(email);
     }
 
     return false;
 };
 
-exports.maybeSendNotif = async function(user, notifType, data) {
+exports.maybeSendNotif = async function(user, notifType, notif) {
     const userSnapshot = await db
         .collection('users')
         .doc(user.uid)
@@ -30,7 +30,7 @@ exports.maybeSendNotif = async function(user, notifType, data) {
     const notifsEnabled = userData.pushNotifs.enabled;
 
     if (notifsEnabled && notifType) {
-        notifications.send(data);
+        notifications.send(notif);
     }
 
     return false;

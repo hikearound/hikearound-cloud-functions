@@ -12,8 +12,7 @@ const userList = [];
 const sentUserList = [];
 
 const tokenIterator = 1000;
-const emailType = 'digest';
-const notifType = emailType;
+const type = 'digest';
 
 const buildUserList = async function(nextPageToken) {
     await auth
@@ -74,7 +73,7 @@ const parseDescription = function(description) {
     return description;
 };
 
-const buildEmailData = async function(user, hid) {
+const buildData = async function(user, hid) {
     const hikeSnapshot = await db
         .collection('hikes')
         .doc(hid)
@@ -111,30 +110,30 @@ const buildEmailData = async function(user, hid) {
     return data;
 };
 
-const buildNotifData = function(user, data) {
-    const notifData = {
+const buildNotif = function(user, data) {
+    const notif = {
         uid: user.uid,
         hid: data.hid,
         title: data.notifTitle,
         body: data.notifBody,
     };
 
-    return notifData;
+    return notif;
 };
 
 const buildEmail = function(data, html) {
-    const msg = {
+    const email = {
         to: data.emailToAddress,
         from: {
             name: senderData.name,
             email: senderData.email,
         },
         subject: data.emailSubject,
-        categories: [emailType],
+        categories: [type],
         html,
     };
 
-    return msg;
+    return email;
 };
 
 exports.digestEmail = async function() {
@@ -146,14 +145,14 @@ exports.digestEmail = async function() {
 
         await userList.forEach(async function(user) {
             if (!sentUserList.includes(user.uid)) {
-                const emailData = await buildEmailData(user, hid);
-                const notifData = buildNotifData(user, emailData);
+                const data = await buildData(user, hid);
 
-                const html = buildTemplate(emailData, emailType);
-                const msg = buildEmail(emailData, html);
+                const html = buildTemplate(data, type);
+                const email = buildEmail(data, html);
+                const notif = buildNotif(user, data);
 
-                await maybeSendEmail(user, emailType, msg);
-                await maybeSendNotif(user, notifType, notifData);
+                await maybeSendEmail(user, type, email);
+                await maybeSendNotif(user, type, notif);
 
                 sentUserList.push(user.uid);
             }
