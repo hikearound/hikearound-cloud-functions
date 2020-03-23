@@ -111,9 +111,9 @@ const buildEmailData = async function(user, hid) {
     return data;
 };
 
-const buildNotifData = function(uid, data) {
+const buildNotifData = function(user, data) {
     const notifData = {
-        uid,
+        uid: user.uid,
         hid: data.hid,
         title: data.notifTitle,
         body: data.notifBody,
@@ -147,7 +147,7 @@ exports.digestEmail = async function() {
         await userList.forEach(async function(user) {
             if (!sentUserList.includes(user.uid)) {
                 const emailData = await buildEmailData(user, hid);
-                const notifData = buildNotifData(user.uid, emailData);
+                const notifData = buildNotifData(user, emailData);
 
                 const html = buildTemplate(emailData, emailType);
                 const msg = buildEmail(emailData, html);
