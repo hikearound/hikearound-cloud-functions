@@ -13,7 +13,7 @@ exports.buildTemplate = function(emailData, emailType) {
     mjmlTemplate = mjmlTemplate({ emailType });
 
     let html = mjml2html(mjmlTemplate, {
-        filePath: path.join(__dirname, '/../templates/components'),
+        filePath: path.join(__dirname, '../templates/components'),
         minify: true,
     });
 

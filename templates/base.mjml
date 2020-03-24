@@ -1,10 +1,10 @@
 <mjml>
-    <mj-include path="__dirname/../components/header.mjml" />
+    <mj-include path="__dirname/../header.mjml" />
     <mj-body>
         <mj-section css-class="email_section">
-            <mj-include path="__dirname/../components/logo.mjml" />
-            <mj-include path="__dirname/../types/{{emailType}}.mjml" />
-            <mj-include path="__dirname/../components/footer.mjml" />
+            <mj-include path="__dirname/../logo.mjml" />
+            <mj-include path="__dirname/../../types/{{emailType}}.mjml" />
+            <mj-include path="__dirname/../footer.mjml" />
         </mj-section>
     </mj-body>
 </mjml>
