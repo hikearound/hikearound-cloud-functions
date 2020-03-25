@@ -45,7 +45,7 @@
     "firebase-functions-test": "^0.1.6",
     "less": "^3.11.1",
     "less-plugin-clean-css": "^1.5.1",
-    "mocha": "^6.2.2",
+    "mocha": "^6.2.3",
     "prettier": "^1.19.1"
   },
   "private": true
