@@ -23,7 +23,7 @@ const digest = require('./notifications/digest');
 const map = require('./functions/map');
 const verify = require('./functions/verify');
 
-exports.welcomeEmail = functions.firestore
+exports.welcomeNotif = functions.firestore
     .document('users/{uid}')
     .onCreate(async (change, context) => {
         const { uid } = context.params;
@@ -35,7 +35,7 @@ exports.welcomeEmail = functions.firestore
         return false;
     });
 
-exports.digestEmail = functions.pubsub
+exports.digestNotif = functions.pubsub
     .schedule('every friday 09:00')
     .timeZone('America/Los_Angeles')
     .onRun(async () => {
