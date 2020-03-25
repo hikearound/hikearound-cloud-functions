@@ -23,7 +23,7 @@ after(async () => {
 });
 
 describe('Every Friday at 9:00AM PST, Hikearound...', async () => {
-    it('...should send a digest email to all users with a verified email address', async () => {
+    it('...should build and send a digest email to all users with a verified email address', async () => {
         const emailData = {
             name: 'Pat',
             email: 'dugan.pat@gmail.com',

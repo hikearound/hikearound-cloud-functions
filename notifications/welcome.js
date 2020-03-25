@@ -41,7 +41,7 @@ const buildEmail = async function(data) {
     };
 };
 
-exports.welcomeEmail = async function(uid) {
+exports.send = async function(uid) {
     const data = await buildData(uid);
     const email = await buildEmail(data);
     return sgMail.send(email);

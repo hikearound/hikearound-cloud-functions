@@ -15,9 +15,9 @@ sentry.init({
     dsn: 'https://9fb810b337f7498ab70662518aeddae2@sentry.io/1877771',
 });
 
-// Emails
-const welcome = require('./emails/welcome');
-const digest = require('./emails/digest');
+// Notifications
+const welcome = require('./notifications/welcome');
+const digest = require('./notifications/digest');
 
 // Functions
 const map = require('./functions/map');
@@ -28,7 +28,19 @@ exports.welcomeEmail = functions.firestore
     .onCreate(async (change, context) => {
         const { uid } = context.params;
         try {
-            return welcome.welcomeEmail(uid);
+            return welcome.send(uid);
+        } catch (e) {
+            sentry.captureException(e);
+        }
+        return false;
+    });
+
+exports.digestEmail = functions.pubsub
+    .schedule('every friday 09:00')
+    .timeZone('America/Los_Angeles')
+    .onRun(async () => {
+        try {
+            return digest.send();
         } catch (e) {
             sentry.captureException(e);
         }
@@ -41,18 +53,6 @@ exports.generateStaticMap = functions.firestore
         const { hid } = context.params;
         try {
             return map.generateStaticMap(hid);
-        } catch (e) {
-            sentry.captureException(e);
-        }
-        return false;
-    });
-
-exports.digestEmail = functions.pubsub
-    .schedule('every friday 09:00')
-    .timeZone('America/Los_Angeles')
-    .onRun(async () => {
-        try {
-            return digest.digestEmail();
         } catch (e) {
             sentry.captureException(e);
         }

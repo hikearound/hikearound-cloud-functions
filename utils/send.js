@@ -20,7 +20,7 @@ exports.maybeSendEmail = async function(user, emailType, email) {
     return false;
 };
 
-exports.maybeSendNotif = async function(user, notifType, notif) {
+exports.maybeSendPushNotif = async function(user, notifType, notif) {
     const userSnapshot = await db
         .collection('users')
         .doc(user.uid)

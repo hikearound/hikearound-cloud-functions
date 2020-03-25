@@ -2,7 +2,7 @@ const admin = require('firebase-admin');
 const moment = require('moment');
 const { senderData } = require('../constants/email');
 const { buildTemplate } = require('../utils/email');
-const { maybeSendNotif, maybeSendEmail } = require('../utils/filter');
+const { maybeSendPushNotif, maybeSendEmail } = require('../utils/send');
 
 const db = admin.firestore();
 const storage = admin.storage();
@@ -140,12 +140,12 @@ const maybeSendDigest = async function(user, hid) {
     const notif = await buildNotif(user, data);
 
     maybeSendEmail(user, type, email);
-    maybeSendNotif(user, type, notif);
+    maybeSendPushNotif(user, type, notif);
 
     sentUserList.push(user.uid);
 };
 
-exports.digestEmail = async function() {
+exports.send = async function() {
     await buildUserList();
     const newHikes = await checkForNewHikes();
 
