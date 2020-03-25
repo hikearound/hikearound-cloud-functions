@@ -2,24 +2,19 @@ const admin = require('firebase-admin');
 const sgMail = require('@sendgrid/mail');
 const { senderData } = require('../constants/email');
 const { buildTemplate } = require('../utils/email');
+const { getUserData } = require('../utils/user');
 
 const type = 'welcome';
-const db = admin.firestore();
 const auth = admin.auth();
 
 const buildData = async function(uid) {
-    const userSnapshot = await db
-        .collection('users')
-        .doc(uid)
-        .get();
-
-    const userData = await auth.getUser(uid);
-    const extraData = userSnapshot.data();
+    const user = await auth.getUser(uid);
+    const userData = await getUserData()(uid);
 
     const data = {
-        name: extraData.name,
-        idToken: extraData.idToken,
-        email: userData.email,
+        name: userData.name,
+        idToken: userData.idToken,
+        email: user.email,
     };
 
     data.uid = uid;

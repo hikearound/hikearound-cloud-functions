@@ -3,9 +3,8 @@ const moment = require('moment');
 const { senderData } = require('../constants/email');
 const { buildTemplate } = require('../utils/email');
 const { maybeSendPushNotif, maybeSendEmail } = require('../utils/send');
+const { getHikeData, getRecentHikes, getMapUrl } = require('../utils/hike');
 
-const db = admin.firestore();
-const storage = admin.storage();
 const auth = admin.auth();
 
 const userList = [];
@@ -31,15 +30,9 @@ const buildUserList = async function(nextPageToken) {
 const checkForNewHikes = async function() {
     const now = moment();
     const newHikes = [];
+    const recentHikes = await getRecentHikes();
 
-    const hikeRef = await db
-        .collection('hikes')
-        .orderBy('timestamp', 'desc')
-        .limit(5);
-
-    const querySnapshot = await hikeRef.get();
-
-    querySnapshot.forEach((hike) => {
+    recentHikes.forEach((hike) => {
         if (hike.exists) {
             const hikeData = hike.data() || {};
             const dateCreated = moment(hikeData.timestamp.toDate());
@@ -54,32 +47,16 @@ const checkForNewHikes = async function() {
     return newHikes;
 };
 
-const getMapUrl = async function(hid) {
-    const mapUrl = await storage
-        .bucket()
-        .file(`images/maps/${hid}.png`)
-        .getSignedUrl({
-            action: 'read',
-            expires: '01-01-2050',
-        });
-
-    return mapUrl[0];
-};
-
 const parseDescription = function(description) {
     if (description.includes('\\n')) {
         return description.replace(/\\n/g, '\n');
     }
+
     return description;
 };
 
 const buildData = async function(user, hid) {
-    const hikeSnapshot = await db
-        .collection('hikes')
-        .doc(hid)
-        .get();
-
-    const hike = hikeSnapshot.data();
+    const hike = await getHikeData(hid);
     const hikeMapUrl = await getMapUrl(hid);
     const description = parseDescription(hike.description);
 
