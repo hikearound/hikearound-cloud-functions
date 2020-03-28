@@ -4,9 +4,9 @@ const { getUserData } = require('./user');
 
 exports.maybeSendEmail = async function(user, emailType, email) {
     const userData = await getUserData(user.uid);
-    const emailEnabled = userData.emailNotifs.enabled;
+    const { enabled } = userData.notifs.email;
 
-    if (user.emailVerified && emailEnabled && emailType) {
+    if (user.emailVerified && enabled && emailType) {
         sgMail.send(email);
     }
 
@@ -15,9 +15,9 @@ exports.maybeSendEmail = async function(user, emailType, email) {
 
 exports.maybeSendPushNotif = async function(user, notifType, notif) {
     const userData = await getUserData(user.uid);
-    const notifsEnabled = userData.pushNotifs.enabled;
+    const { enabled } = userData.notifs.push;
 
-    if (notifsEnabled && notifType) {
+    if (enabled && notifType) {
         notifications.send(notif);
     }
 
