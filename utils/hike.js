@@ -3,16 +3,13 @@ const admin = require('firebase-admin');
 const db = admin.firestore();
 const storage = admin.storage();
 
-exports.getHikeData = async function(hid) {
-    const hikeSnapshot = await db
-        .collection('hikes')
-        .doc(hid)
-        .get();
+exports.getHikeData = async function (hid) {
+    const hikeSnapshot = await db.collection('hikes').doc(hid).get();
 
     return hikeSnapshot.data();
 };
 
-exports.getRecentHikes = async function() {
+exports.getRecentHikes = async function () {
     const hikeRef = await db
         .collection('hikes')
         .orderBy('timestamp', 'desc')
@@ -22,7 +19,7 @@ exports.getRecentHikes = async function() {
     return querySnapshot;
 };
 
-exports.getMapUrl = async function(hid) {
+exports.getMapUrl = async function (hid) {
     const mapUrl = await storage
         .bucket()
         .file(`images/maps/${hid}.png`)

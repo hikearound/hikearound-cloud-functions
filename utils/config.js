@@ -4,7 +4,7 @@ const functions = require('firebase-functions');
 const sentry = require('@sentry/node');
 const serviceAccount = require('../service-account.json');
 
-exports.initializeApp = function() {
+exports.initializeApp = function () {
     admin.initializeApp({
         credential: admin.credential.cert(serviceAccount),
         storageBucket: 'hikearound-14dad.appspot.com',
