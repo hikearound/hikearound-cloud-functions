@@ -7,7 +7,7 @@ const { getUserData } = require('../utils/user');
 const type = 'welcome';
 const auth = admin.auth();
 
-const buildData = async function(uid) {
+const buildData = async function (uid) {
     const user = await auth.getUser(uid);
     const userData = await getUserData()(uid);
 
@@ -21,7 +21,7 @@ const buildData = async function(uid) {
     return data;
 };
 
-const buildEmail = async function(data) {
+const buildEmail = async function (data) {
     const html = buildTemplate(data, type);
 
     return {
@@ -36,7 +36,7 @@ const buildEmail = async function(data) {
     };
 };
 
-exports.send = async function(uid) {
+exports.send = async function (uid) {
     const data = await buildData(uid);
     const email = await buildEmail(data);
     return sgMail.send(email);

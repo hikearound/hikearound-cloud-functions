@@ -10,17 +10,14 @@ const notifications = [];
 const tickets = [];
 const receiptIds = [];
 
-const buildTokenList = async function(uid) {
-    const userSnapshot = await db
-        .collection('users')
-        .doc(uid)
-        .get();
+const buildTokenList = async function (uid) {
+    const userSnapshot = await db.collection('users').doc(uid).get();
 
     const userData = userSnapshot.data();
     pushTokens.push(userData.notificationToken);
 };
 
-const buildNotification = async function(data) {
+const buildNotification = async function (data) {
     for (const token of pushTokens) {
         if (Expo.isExpoPushToken(token)) {
             notifications.push({
@@ -36,7 +33,7 @@ const buildNotification = async function(data) {
     }
 };
 
-const sendNotifications = async function() {
+const sendNotifications = async function () {
     const chunks = expo.chunkPushNotifications(notifications);
 
     (async () => {
@@ -53,7 +50,7 @@ const sendNotifications = async function() {
     })();
 };
 
-const buildReceiptList = async function() {
+const buildReceiptList = async function () {
     for (const ticket of tickets) {
         if (ticket.id) {
             receiptIds.push(ticket.id);
@@ -61,7 +58,7 @@ const buildReceiptList = async function() {
     }
 };
 
-const checkReciepts = async function() {
+const checkReciepts = async function () {
     const receiptIdChunks = expo.chunkPushNotificationReceiptIds(receiptIds);
     (async () => {
         for (const chunk of receiptIdChunks) {
@@ -84,7 +81,7 @@ const checkReciepts = async function() {
     })();
 };
 
-exports.send = async function(data) {
+exports.send = async function (data) {
     await buildTokenList(data.uid);
     await buildNotification(data);
     await sendNotifications();

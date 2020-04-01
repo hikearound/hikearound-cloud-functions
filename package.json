@@ -19,6 +19,7 @@
     "@sentry/node": "^5.15.4",
     "build-url": "^2.0.0",
     "dir-glob": "^2.2.2",
+    "eslint-plugin-jest": "^23.8.2",
     "expo-server-sdk": "^3.5.0",
     "firebase-admin": "^8.10.0",
     "firebase-function-tools": "^1.1.4",

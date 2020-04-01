@@ -38,10 +38,7 @@ describe('When a user creates an account, Hikearound...', () => {
     it('...should create a document in the user collection', async () => {
         const db = authedApp({ uid: '1' });
         await firebase.assertSucceeds(
-            db
-                .collection('users')
-                .doc('pat')
-                .set({ name: 'Pat' }),
+            db.collection('users').doc('pat').set({ name: 'Pat' }),
         );
     });
 });

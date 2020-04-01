@@ -21,15 +21,12 @@ const imagePath = path.join(os.tmpdir(), './map.png');
 const pathWeight = '4';
 const pathColor = '935DFF';
 
-const getHikeData = async function(hid) {
+const getHikeData = async function (hid) {
     let hikeData = {};
 
-    await storage
-        .bucket()
-        .file(`gpx/${hid}.gpx`)
-        .download({
-            destination: gpxPath,
-        });
+    await storage.bucket().file(`gpx/${hid}.gpx`).download({
+        destination: gpxPath,
+    });
 
     const hikeGpx = fs.readFileSync(gpxPath);
 
@@ -40,7 +37,7 @@ const getHikeData = async function(hid) {
     return hikeData;
 };
 
-const setCenter = function(hikeData) {
+const setCenter = function (hikeData) {
     const hikeMetaData = hikeData.gpx.metadata[0].bounds[0].$;
     const { maxlat, minlat, minlon, maxlon } = hikeMetaData;
 
@@ -50,7 +47,7 @@ const setCenter = function(hikeData) {
     return `${lat},${lng}`;
 };
 
-const plotCoordinates = function(hikeData) {
+const plotCoordinates = function (hikeData) {
     const coordinateCount = hikeData.gpx.rte[0].rtept.length;
     const coordinates = [];
 
@@ -65,7 +62,7 @@ const plotCoordinates = function(hikeData) {
     return coordinates;
 };
 
-const buildMapUrl = function(mapCenter, coordinates) {
+const buildMapUrl = function (mapCenter, coordinates) {
     const encodedPolyline = polyline.encode(coordinates);
     const mapPath = `color:0x${pathColor}FF|weight:${pathWeight}|enc:${encodedPolyline}`;
 
@@ -82,14 +79,11 @@ const buildMapUrl = function(mapCenter, coordinates) {
     return mapUrl;
 };
 
-const saveMapUrl = async function(hid, mapUrl) {
-    await db
-        .collection('hikes')
-        .doc(hid)
-        .set({ mapUrl }, { merge: true });
+const saveMapUrl = async function (hid, mapUrl) {
+    await db.collection('hikes').doc(hid).set({ mapUrl }, { merge: true });
 };
 
-const saveMapImage = async function(mapUrl, hid) {
+const saveMapImage = async function (mapUrl, hid) {
     await download.image({
         url: mapUrl,
         dest: imagePath,
@@ -101,7 +95,7 @@ const saveMapImage = async function(mapUrl, hid) {
     });
 };
 
-exports.generateStaticMap = async function(hid) {
+exports.generateStaticMap = async function (hid) {
     const hikeData = await getHikeData(hid);
     const center = setCenter(hikeData);
     const coordinates = plotCoordinates(hikeData);

@@ -3,7 +3,7 @@ const mjml2html = require('mjml');
 const fs = require('fs');
 const path = require('path');
 
-exports.buildTemplate = function(emailData, emailType) {
+exports.buildTemplate = function (emailData, emailType) {
     let mjmlTemplate = fs.readFileSync(
         `${__dirname}/../templates/base.mjml`,
         'utf8',

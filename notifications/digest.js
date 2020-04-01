@@ -13,10 +13,10 @@ const sentUserList = [];
 const tokenIterator = 1000;
 const type = 'digest';
 
-const buildUserList = async function(nextPageToken) {
+const buildUserList = async function (nextPageToken) {
     await auth
         .listUsers(tokenIterator, nextPageToken)
-        .then(function(listUsersResult) {
+        .then(function (listUsersResult) {
             listUsersResult.users.forEach((user) => {
                 const userData = user.toJSON();
                 userList.push(userData);
@@ -27,7 +27,7 @@ const buildUserList = async function(nextPageToken) {
         });
 };
 
-const checkForNewHikes = async function() {
+const checkForNewHikes = async function () {
     const now = moment();
     const newHikes = [];
     const recentHikes = await getRecentHikes();
@@ -47,7 +47,7 @@ const checkForNewHikes = async function() {
     return newHikes;
 };
 
-const parseDescription = function(description) {
+const parseDescription = function (description) {
     if (description.includes('\\n')) {
         return description.replace(/\\n/g, '\n');
     }
@@ -55,7 +55,7 @@ const parseDescription = function(description) {
     return description;
 };
 
-const buildData = async function(user, hid) {
+const buildData = async function (user, hid) {
     const hike = await getHikeData(hid);
     const hikeMapUrl = await getMapUrl(hid);
     const description = parseDescription(hike.description);
@@ -87,7 +87,7 @@ const buildData = async function(user, hid) {
     return data;
 };
 
-const buildNotif = async function(user, data) {
+const buildNotif = async function (user, data) {
     return {
         uid: user.uid,
         hid: data.hid,
@@ -96,7 +96,7 @@ const buildNotif = async function(user, data) {
     };
 };
 
-const buildEmail = async function(data) {
+const buildEmail = async function (data) {
     const html = buildTemplate(data, type);
 
     return {
@@ -111,7 +111,7 @@ const buildEmail = async function(data) {
     };
 };
 
-const maybeSendDigest = async function(user, hid) {
+const maybeSendDigest = async function (user, hid) {
     const data = await buildData(user, hid);
     const email = await buildEmail(data);
     const notif = await buildNotif(user, data);
@@ -122,14 +122,14 @@ const maybeSendDigest = async function(user, hid) {
     sentUserList.push(user.uid);
 };
 
-exports.send = async function() {
+exports.send = async function () {
     await buildUserList();
     const newHikes = await checkForNewHikes();
 
     if (newHikes.length > 0) {
         const hid = newHikes[0];
 
-        userList.forEach(async function(user) {
+        userList.forEach(async function (user) {
             if (!sentUserList.includes(user.uid)) {
                 await maybeSendDigest(user, hid);
             }
