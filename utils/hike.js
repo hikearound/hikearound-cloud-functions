@@ -5,7 +5,6 @@ const storage = admin.storage();
 
 exports.getHikeData = async function (hid) {
     const hikeSnapshot = await db.collection('hikes').doc(hid).get();
-
     return hikeSnapshot.data();
 };
 
