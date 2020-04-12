@@ -46,7 +46,7 @@
     "less": "^3.11.1",
     "less-plugin-clean-css": "^1.5.1",
     "mocha": "^7.1.1",
-    "prettier": "^2.0.2"
+    "prettier": "^2.0.4"
   },
   "private": true
 }
