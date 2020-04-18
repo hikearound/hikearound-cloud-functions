@@ -1,31 +1,12 @@
-const admin = require('firebase-admin');
 const moment = require('moment');
 const { senderData } = require('../constants/email');
 const { buildTemplate } = require('../utils/email');
 const { maybeSendPushNotif, maybeSendEmail } = require('../utils/send');
 const { getHikeData, getRecentHikes, getMapUrl } = require('../utils/hike');
+const { getUserList } = require('../utils/user');
 
-const auth = admin.auth();
-
-const userList = [];
 const sentUserList = [];
-
-const tokenIterator = 1000;
 const type = 'digest';
-
-const buildUserList = async function (nextPageToken) {
-    await auth
-        .listUsers(tokenIterator, nextPageToken)
-        .then(function (listUsersResult) {
-            listUsersResult.users.forEach((user) => {
-                const userData = user.toJSON();
-                userList.push(userData);
-            });
-            if (listUsersResult.pageToken) {
-                buildUserList(listUsersResult.pageToken);
-            }
-        });
-};
 
 const checkForNewHikes = async function () {
     const now = moment();
@@ -123,7 +104,7 @@ const maybeSendDigest = async function (user, hid) {
 };
 
 exports.send = async function () {
-    await buildUserList();
+    const userList = await getUserList();
     const newHikes = await checkForNewHikes();
 
     if (newHikes.length > 0) {
