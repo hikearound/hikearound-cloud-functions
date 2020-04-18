@@ -1,4 +1,5 @@
 const admin = require('firebase-admin');
+const moment = require('moment');
 
 const db = admin.firestore();
 const storage = admin.storage();
@@ -28,4 +29,24 @@ exports.getMapUrl = async function (hid) {
         });
 
     return mapUrl[0];
+};
+
+exports.getNewHikes = async function () {
+    const now = moment();
+    const newHikes = [];
+    const recentHikes = await exports.getRecentHikes();
+
+    recentHikes.forEach((hike) => {
+        if (hike.exists) {
+            const hikeData = hike.data() || {};
+            const dateCreated = moment(hikeData.timestamp.toDate());
+            const daysOld = now.diff(dateCreated, 'days');
+
+            if (daysOld <= 7) {
+                newHikes.push(hike.id);
+            }
+        }
+    });
+
+    return newHikes;
 };

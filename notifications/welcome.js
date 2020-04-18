@@ -9,7 +9,7 @@ const auth = admin.auth();
 
 const buildData = async function (uid) {
     const user = await auth.getUser(uid);
-    const userData = await getUserData()(uid);
+    const userData = await getUserData(uid);
 
     const data = {
         name: userData.name,

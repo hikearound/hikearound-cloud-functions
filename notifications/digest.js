@@ -1,40 +1,12 @@
-const moment = require('moment');
 const { senderData } = require('../constants/email');
 const { buildTemplate } = require('../utils/email');
 const { maybeSendPushNotif, maybeSendEmail } = require('../utils/send');
-const { getHikeData, getRecentHikes, getMapUrl } = require('../utils/hike');
+const { getHikeData, getNewHikes, getMapUrl } = require('../utils/hike');
 const { getUserList } = require('../utils/user');
+const { parseDescription } = require('../utils/helper');
 
 const sentUserList = [];
 const type = 'digest';
-
-const checkForNewHikes = async function () {
-    const now = moment();
-    const newHikes = [];
-    const recentHikes = await getRecentHikes();
-
-    recentHikes.forEach((hike) => {
-        if (hike.exists) {
-            const hikeData = hike.data() || {};
-            const dateCreated = moment(hikeData.timestamp.toDate());
-            const daysOld = now.diff(dateCreated, 'days');
-
-            if (daysOld <= 7) {
-                newHikes.push(hike.id);
-            }
-        }
-    });
-
-    return newHikes;
-};
-
-const parseDescription = function (description) {
-    if (description.includes('\\n')) {
-        return description.replace(/\\n/g, '\n');
-    }
-
-    return description;
-};
 
 const buildData = async function (user, hid) {
     const hike = await getHikeData(hid);
@@ -105,7 +77,7 @@ const maybeSendDigest = async function (user, hid) {
 
 exports.send = async function () {
     const userList = await getUserList();
-    const newHikes = await checkForNewHikes();
+    const newHikes = await getNewHikes();
 
     if (newHikes.length > 0) {
         const hid = newHikes[0];
