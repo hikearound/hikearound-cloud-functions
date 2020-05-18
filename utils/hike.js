@@ -12,7 +12,7 @@ exports.getHikeData = async function (hid) {
 exports.getRecentHikes = async function () {
     const hikeRef = await db
         .collection('hikes')
-        .orderBy('timestamp', 'desc')
+        .orderBy('dateCreated', 'desc')
         .limit(5);
 
     const querySnapshot = await hikeRef.get();
@@ -39,7 +39,7 @@ exports.getNewHikes = async function () {
     recentHikes.forEach((hike) => {
         if (hike.exists) {
             const hikeData = hike.data() || {};
-            const dateCreated = moment(hikeData.timestamp.toDate());
+            const dateCreated = moment(hikeData.dateCreated.toDate());
             const daysOld = now.diff(dateCreated, 'days');
 
             if (daysOld <= 7) {

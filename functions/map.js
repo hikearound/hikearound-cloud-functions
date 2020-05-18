@@ -80,7 +80,7 @@ const buildMapUrl = function (mapCenter, coordinates) {
 };
 
 const saveMapUrl = async function (hid, mapUrl) {
-    await db.collection('hikes').doc(hid).set({ mapUrl }, { merge: true });
+    await db.collection('maps').doc(hid).set({ url: mapUrl }, { merge: true });
 };
 
 const saveMapImage = async function (mapUrl, hid) {

@@ -38,7 +38,7 @@ exports.digestNotif = functions.pubsub
 
 exports.generateStaticMap = functions.firestore
     .document('hikes/{hid}')
-    .onWrite(async (change, context) => {
+    .onCreate(async (change, context) => {
         const { hid } = context.params;
         try {
             return map.generateStaticMap(hid);
