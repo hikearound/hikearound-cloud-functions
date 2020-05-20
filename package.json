@@ -27,8 +27,8 @@
     "handlebars": "^4.7.6",
     "image-downloader": "^3.6.0",
     "mjml": "^4.6.3",
-    "moment": "^2.25.3",
-    "typescript": "^3.9.2",
+    "moment": "^2.26.0",
+    "typescript": "^3.9.3",
     "xml2js": "^0.4.23"
   },
   "devDependencies": {
