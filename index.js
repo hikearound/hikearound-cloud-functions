@@ -11,6 +11,7 @@ const digest = require('./notifications/digest');
 // Functions
 const map = require('./functions/map');
 const verify = require('./functions/verify');
+const search = require('./functions/search');
 
 exports.welcomeNotif = functions.firestore
     .document('users/{uid}')
@@ -42,6 +43,18 @@ exports.generateStaticMap = functions.firestore
         const { hid } = context.params;
         try {
             return map.generateStaticMap(hid);
+        } catch (e) {
+            sentry.captureException(e);
+        }
+        return false;
+    });
+
+exports.indexSearchRecords = functions.firestore
+    .document('hikes/{hid}')
+    .onUpdate(async (change, context) => {
+        const { hid } = context.params;
+        try {
+            return search.indexRecords(hid);
         } catch (e) {
             sentry.captureException(e);
         }
