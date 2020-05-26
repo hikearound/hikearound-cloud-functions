@@ -1,25 +1,31 @@
 const admin = require('firebase-admin');
 const fs = require('fs');
 const { parseString } = require('xml2js');
-const polyline = require('google-polyline');
 const buildUrl = require('build-url');
-const functions = require('firebase-functions');
 const download = require('image-downloader');
 const path = require('path');
 const os = require('os');
+const { sign } = require('jwa')('ES256');
 
 const db = admin.firestore();
 const storage = admin.storage();
 
-const mapApi = 'https://maps.googleapis.com/maps/api/staticmap';
-const mapSize = '600x300';
-const mapType = 'terrain';
+const teamId = '2DS67Q47ES';
+const keyId = 'Q5YUQ678YQ';
+
+const baseUrl = 'https://snapshot.apple-mapkit.com';
+const mapApi = '/api/v1/snapshot';
+
+const size = '550x275';
+const colorScheme = 'light';
+const strokeColor = '935DFF';
+
+const scale = 2;
+const latModifier = 0.005;
+const lineWidth = 2;
 
 const gpxPath = path.join(os.tmpdir(), './hike.gpx');
 const imagePath = path.join(os.tmpdir(), './map.png');
-
-const pathWeight = '4';
-const pathColor = '935DFF';
 
 const getHikeData = async function (hid) {
     let hikeData = {};
@@ -47,36 +53,50 @@ const setCenter = function (hikeData) {
     return `${lat},${lng}`;
 };
 
-const plotCoordinates = function (hikeData) {
-    const coordinateCount = hikeData.gpx.trk[0].trkseg[0].trkpt.length;
-    const coordinates = [];
+const setSpan = function (hikeData) {
+    const hikeMetaData = hikeData.gpx.metadata[0].bounds[0].$;
+    const { maxlat, minlat, minlon, maxlon } = hikeMetaData;
 
-    for (let i = 0, len = coordinateCount; i < len; i += 1) {
-        const coordinate = hikeData.gpx.trk[0].trkseg[0].trkpt[i].$;
-        coordinates.push([
-            parseFloat(coordinate.lat),
-            parseFloat(coordinate.lon),
-        ]);
-    }
-
-    return coordinates;
+    return [maxlat - minlat + latModifier, maxlon - minlon];
 };
 
-const buildMapUrl = function (mapCenter, coordinates) {
-    const encodedPolyline = polyline.encode(coordinates);
-    const mapPath = `color:0x${pathColor}FF|weight:${pathWeight}|enc:${encodedPolyline}`;
+const setOverlay = function (hikeData) {
+    const pointCount = hikeData.gpx.trk[0].trkseg[0].trkpt.length;
+    let points = [];
 
+    for (let i = 0, len = pointCount; i < len; i += 1) {
+        if (i % 3 === 0) {
+            const coordinate = hikeData.gpx.trk[0].trkseg[0].trkpt[i].$;
+            points.push(`${coordinate.lat},${coordinate.lon}`);
+        }
+    }
+
+    points = points.slice(0, 120);
+
+    return [{ points, strokeColor, lineWidth }];
+};
+
+const generateSignature = function (url) {
+    const privateKey = fs.readFileSync(`${__dirname}/../mapkit.p8`, 'utf8');
+    return sign(url, privateKey);
+};
+
+const buildMapUrl = function (center, spn, overlay) {
     const mapUrl = buildUrl(mapApi, {
         queryParams: {
-            size: mapSize,
-            maptype: mapType,
-            center: mapCenter,
-            path: mapPath,
-            key: functions.config().googlemaps.key,
+            size,
+            teamId,
+            keyId,
+            scale,
+            colorScheme,
+            center,
+            spn,
+            overlays: JSON.stringify(overlay),
         },
     });
 
-    return mapUrl;
+    const signature = generateSignature(mapUrl);
+    return `${baseUrl}${mapUrl}&signature=${signature}`;
 };
 
 const saveMapUrl = async function (hid, mapUrl) {
@@ -98,8 +118,9 @@ const saveMapImage = async function (mapUrl, hid) {
 exports.generateStaticMap = async function (hid) {
     const hikeData = await getHikeData(hid);
     const center = setCenter(hikeData);
-    const coordinates = plotCoordinates(hikeData);
-    const mapUrl = await buildMapUrl(center, coordinates);
+    const spn = setSpan(hikeData);
+    const overlay = setOverlay(hikeData);
+    const mapUrl = await buildMapUrl(center, spn, overlay);
 
     saveMapUrl(hid, mapUrl);
     saveMapImage(mapUrl, hid);
