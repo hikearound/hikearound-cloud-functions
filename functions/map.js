@@ -72,7 +72,6 @@ const setOverlay = function (hikeData) {
     }
 
     points = points.slice(0, 120);
-
     return [{ points, strokeColor, lineWidth }];
 };
 
