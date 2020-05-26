@@ -72,7 +72,7 @@ const setOverlay = function (hikeData) {
     }
 
     points = points.slice(0, 120);
-    return [{ points, strokeColor, lineWidth }];
+    return JSON.stringify([{ points, strokeColor, lineWidth }]);
 };
 
 const generateSignature = function (url) {
@@ -80,7 +80,7 @@ const generateSignature = function (url) {
     return sign(url, privateKey);
 };
 
-const buildMapUrl = function (center, spn, overlay) {
+const buildMapUrl = function (center, spn, overlays) {
     const mapUrl = buildUrl(mapApi, {
         queryParams: {
             size,
@@ -90,7 +90,7 @@ const buildMapUrl = function (center, spn, overlay) {
             colorScheme,
             center,
             spn,
-            overlays: JSON.stringify(overlay),
+            overlays,
         },
     });
 
@@ -118,8 +118,8 @@ exports.generateStaticMap = async function (hid) {
     const hikeData = await getHikeData(hid);
     const center = setCenter(hikeData);
     const spn = setSpan(hikeData);
-    const overlay = setOverlay(hikeData);
-    const mapUrl = await buildMapUrl(center, spn, overlay);
+    const overlays = setOverlay(hikeData);
+    const mapUrl = await buildMapUrl(center, spn, overlays);
 
     saveMapUrl(hid, mapUrl);
     saveMapImage(mapUrl, hid);
