@@ -39,8 +39,8 @@ exports.getNewHikes = async function () {
     recentHikes.forEach((hike) => {
         if (hike.exists) {
             const hikeData = hike.data() || {};
-            const dateCreated = moment(hikeData.dateCreated.toDate());
-            const daysOld = now.diff(dateCreated, 'days');
+            const createdOn = moment(hikeData.createdOn.toDate());
+            const daysOld = now.diff(createdOn, 'days');
 
             if (daysOld <= 7) {
                 newHikes.push(hike.id);
