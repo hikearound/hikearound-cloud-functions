@@ -19,10 +19,10 @@ exports.getRecentHikes = async function () {
     return querySnapshot;
 };
 
-exports.getMapUrl = async function (hid) {
+exports.getMapUrl = async function (hid, scheme) {
     const mapUrl = await storage
         .bucket()
-        .file(`images/maps/${hid}.png`)
+        .file(`images/maps/${scheme}/${hid}.png`)
         .getSignedUrl({
             action: 'read',
             expires: '01-01-2050',

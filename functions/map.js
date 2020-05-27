@@ -17,7 +17,7 @@ const baseUrl = 'https://snapshot.apple-mapkit.com';
 const mapApi = '/api/v1/snapshot';
 
 const size = '550x275';
-const colorScheme = 'light';
+const colorSchemes = ['light', 'dark'];
 const strokeColor = '935DFF';
 
 const scale = 2;
@@ -80,7 +80,7 @@ const generateSignature = function (url) {
     return sign(url, privateKey);
 };
 
-const buildMapUrl = function (center, spn, overlays) {
+const buildMapUrl = function (center, spn, overlays, colorScheme) {
     const mapUrl = buildUrl(mapApi, {
         queryParams: {
             size,
@@ -98,18 +98,21 @@ const buildMapUrl = function (center, spn, overlays) {
     return `${baseUrl}${mapUrl}&signature=${signature}`;
 };
 
-const saveMapUrl = async function (hid, mapUrl) {
-    await db.collection('maps').doc(hid).set({ url: mapUrl }, { merge: true });
+const saveMapUrl = async function (hid, mapUrl, colorScheme) {
+    await db
+        .collection('maps')
+        .doc(hid)
+        .set({ [colorScheme]: mapUrl }, { merge: true });
 };
 
-const saveMapImage = async function (mapUrl, hid) {
+const saveMapImage = async function (mapUrl, hid, colorScheme) {
     await download.image({
         url: mapUrl,
         dest: imagePath,
     });
 
     await storage.bucket().upload(imagePath, {
-        destination: `images/maps/${hid}.png`,
+        destination: `images/maps/${colorScheme}/${hid}.png`,
         metaData: { contentType: 'image/png' },
     });
 };
@@ -119,10 +122,13 @@ exports.generateStaticMap = async function (hid) {
     const center = setCenter(hikeData);
     const spn = setSpan(hikeData);
     const overlays = setOverlay(hikeData);
-    const mapUrl = await buildMapUrl(center, spn, overlays);
 
-    saveMapUrl(hid, mapUrl);
-    saveMapImage(mapUrl, hid);
+    colorSchemes.forEach(async function (scheme) {
+        const mapUrl = await buildMapUrl(center, spn, overlays, scheme);
+
+        saveMapUrl(hid, mapUrl, scheme);
+        saveMapImage(mapUrl, hid, scheme);
+    });
 
     return true;
 };
