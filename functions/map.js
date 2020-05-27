@@ -24,9 +24,8 @@ const scale = 2;
 const latModifier = 0.005;
 const lineWidth = 2;
 
-const gpxPath = path.join(os.tmpdir(), './hike.gpx');
-
 const getHikeData = async function (hid) {
+    const gpxPath = path.join(os.tmpdir(), './hike.gpx');
     let hikeData = {};
 
     await storage.bucket().file(`gpx/${hid}.gpx`).download({
