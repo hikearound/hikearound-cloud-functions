@@ -12,7 +12,7 @@ exports.getHikeData = async function (hid) {
 exports.getRecentHikes = async function () {
     const hikeRef = await db
         .collection('hikes')
-        .orderBy('dateCreated', 'desc')
+        .orderBy('createdOn', 'desc')
         .limit(5);
 
     const querySnapshot = await hikeRef.get();

@@ -3,7 +3,7 @@ const { buildTemplate } = require('../utils/email');
 const { maybeSendPushNotif, maybeSendEmail } = require('../utils/send');
 const { getHikeData, getNewHikes, getMapUrl } = require('../utils/hike');
 const { getUserList } = require('../utils/user');
-const { parseDescription } = require('../utils/helper');
+const { parseDescription, truncateText } = require('../utils/helper');
 
 const sentUserList = [];
 const type = 'digest';
@@ -35,7 +35,7 @@ const buildData = async function (user, hid) {
     data.hikeDistance = hike.distance;
     data.hikeElevation = hike.elevation;
     data.hikeRoute = hike.route;
-    data.hikeDescription = description;
+    data.hikeDescription = truncateText(description, 200);
 
     return data;
 };
