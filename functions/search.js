@@ -15,29 +15,23 @@ const writeToIndex = async function (data, indexName) {
     });
 };
 
-const indexName = async function (hid) {
+const indexHike = async function (hid) {
     const hike = await getHikeData(hid);
+
     const data = {
-        id: hid,
+        objectID: hid,
         name: hike.name,
-    };
-
-    writeToIndex(data, 'hikeName');
-};
-
-const indexCity = async function (hid) {
-    const hike = await getHikeData(hid);
-    const data = {
-        id: hid,
         city: hike.city,
+        description: hike.description,
+        distance: hike.distance,
+        route: hike.route,
+        difficulty: hike.difficulty,
     };
 
-    writeToIndex(data, 'hikeCity');
+    writeToIndex(data, 'hikes');
 };
 
 exports.indexRecords = async function (hid) {
-    await indexName(hid);
-    await indexCity(hid);
-
+    await indexHike(hid);
     return true;
 };
