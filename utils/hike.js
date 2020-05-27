@@ -50,3 +50,13 @@ exports.getNewHikes = async function () {
 
     return newHikes;
 };
+
+exports.getRoute = function (route) {
+    route = route.toLowerCase();
+
+    if (route === 'out') {
+        return 'out & back';
+    }
+
+    return route;
+};

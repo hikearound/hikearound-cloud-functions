@@ -34,8 +34,8 @@ const buildData = async function (user, hid) {
     data.hikeCity = hike.city;
     data.hikeDistance = hike.distance;
     data.hikeElevation = hike.elevation;
-    data.hikeRoute = hike.route;
-    data.hikeDescription = truncateText(description, 200);
+    data.hikeRoute = hike.route.toLowerCase();
+    data.hikeDescription = truncateText(description, 300);
 
     return data;
 };
