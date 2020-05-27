@@ -25,7 +25,6 @@ const latModifier = 0.005;
 const lineWidth = 2;
 
 const gpxPath = path.join(os.tmpdir(), './hike.gpx');
-const imagePath = path.join(os.tmpdir(), './map.png');
 
 const getHikeData = async function (hid) {
     let hikeData = {};
@@ -106,6 +105,8 @@ const saveMapUrl = async function (hid, mapUrl, colorScheme) {
 };
 
 const saveMapImage = async function (mapUrl, hid, colorScheme) {
+    const imagePath = path.join(os.tmpdir(), `./map${colorScheme}.png`);
+
     await download.image({
         url: mapUrl,
         dest: imagePath,
