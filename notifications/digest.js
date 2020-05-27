@@ -1,9 +1,18 @@
 const { senderData } = require('../constants/email');
 const { buildTemplate } = require('../utils/email');
 const { maybeSendPushNotif, maybeSendEmail } = require('../utils/send');
-const { getHikeData, getNewHikes, getMapUrl } = require('../utils/hike');
+const {
+    getHikeData,
+    getNewHikes,
+    getMapUrl,
+    getRoute,
+} = require('../utils/hike');
 const { getUserList } = require('../utils/user');
-const { parseDescription, truncateText } = require('../utils/helper');
+const {
+    parseDescription,
+    truncateText,
+    getFirstName,
+} = require('../utils/helper');
 
 const sentUserList = [];
 const type = 'digest';
@@ -27,15 +36,15 @@ const buildData = async function (user, hid) {
     data.emailToAddress = user.email;
 
     // User data
-    data.name = user.displayName;
+    data.name = getFirstName(user.displayName);
 
     // Hike data
     data.hikeName = hike.name;
     data.hikeCity = hike.city;
     data.hikeDistance = hike.distance;
     data.hikeElevation = hike.elevation;
-    data.hikeRoute = hike.route.toLowerCase();
-    data.hikeDescription = truncateText(description, 300);
+    data.hikeRoute = getRoute(hike.route);
+    data.hikeDescription = truncateText(description, 350);
 
     return data;
 };

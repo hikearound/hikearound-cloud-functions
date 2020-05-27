@@ -2,6 +2,7 @@ exports.parseDescription = function (description) {
     if (description.includes('\\n')) {
         return description.replace(/\\n/g, '\n');
     }
+
     return description;
 };
 
@@ -15,4 +16,9 @@ exports.truncateText = function (text, truncationLength) {
     }
 
     return text;
+};
+
+exports.getFirstName = function (name) {
+    name = name.split(' ');
+    return name[0];
 };
