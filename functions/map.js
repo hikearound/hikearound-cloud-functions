@@ -60,16 +60,23 @@ const setSpan = function (hikeData) {
 
 const setOverlay = function (hikeData) {
     const pointCount = hikeData.gpx.trk[0].trkseg[0].trkpt.length;
-    let points = [];
+    const points = [];
+
+    let skipCoord = 3;
+    if (pointCount >= 360) {
+        skipCoord = 4;
+    }
 
     for (let i = 0, len = pointCount; i < len; i += 1) {
-        if (i % 3 === 0) {
+        if (i % skipCoord === 0) {
             const coordinate = hikeData.gpx.trk[0].trkseg[0].trkpt[i].$;
             points.push(`${coordinate.lat},${coordinate.lon}`);
         }
     }
 
-    points = points.slice(0, 120);
+    const coordinate = hikeData.gpx.trk[0].trkseg[0].trkpt[pointCount - 1].$;
+    points.push(`${coordinate.lat},${coordinate.lon}`);
+
     return JSON.stringify([{ points, strokeColor, lineWidth }]);
 };
 
