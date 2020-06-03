@@ -16,7 +16,7 @@ const keyId = 'Q5YUQ678YQ';
 const baseUrl = 'https://snapshot.apple-mapkit.com';
 const mapApi = '/api/v1/snapshot';
 
-const size = '550x275';
+const size = '575x300';
 const colorSchemes = ['light', 'dark'];
 const strokeColor = '935DFF';
 
