@@ -7,7 +7,7 @@ const path = require('path');
 const os = require('os');
 const { sign } = require('jwa')('ES256');
 const { ids, api, config } = require('../constants/map');
-const { setCenter, setSpan, getSkipCoord } = require('../utils/map');
+const { setCenter, setSpan, setOverlay } = require('../utils/map');
 
 const db = admin.firestore();
 const storage = admin.storage();
@@ -27,26 +27,6 @@ const getHikeData = async function (hid) {
     });
 
     return hikeData;
-};
-
-const setOverlay = function (hikeData) {
-    const points = [];
-
-    const pointCount = hikeData.gpx.trk[0].trkseg[0].trkpt.length;
-    const { strokeColor, lineWidth } = config;
-    const skipCoord = getSkipCoord(pointCount);
-
-    for (let i = 0, len = pointCount; i < len; i += 1) {
-        if (i % skipCoord === 0) {
-            const coordinate = hikeData.gpx.trk[0].trkseg[0].trkpt[i].$;
-            points.push(`${coordinate.lat},${coordinate.lon}`);
-        }
-    }
-
-    const coordinate = hikeData.gpx.trk[0].trkseg[0].trkpt[pointCount - 1].$;
-    points.push(`${coordinate.lat},${coordinate.lon}`);
-
-    return JSON.stringify([{ points, strokeColor, lineWidth }]);
 };
 
 const generateSignature = function (url) {
