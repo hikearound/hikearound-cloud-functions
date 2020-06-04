@@ -6,23 +6,11 @@ const download = require('image-downloader');
 const path = require('path');
 const os = require('os');
 const { sign } = require('jwa')('ES256');
+const { ids, api, config } = require('../constants/map');
+const { setCenter, setSpan, getSkipCoord } = require('../utils/map');
 
 const db = admin.firestore();
 const storage = admin.storage();
-
-const teamId = '2DS67Q47ES';
-const keyId = 'Q5YUQ678YQ';
-
-const baseUrl = 'https://snapshot.apple-mapkit.com';
-const mapApi = '/api/v1/snapshot';
-
-const size = '575x301';
-const colorSchemes = ['light', 'dark'];
-const strokeColor = '935DFF';
-
-const scale = 2;
-const latModifier = 0.005;
-const lineWidth = 2;
 
 const getHikeData = async function (hid) {
     const gpxPath = path.join(os.tmpdir(), './hike.gpx');
@@ -41,31 +29,12 @@ const getHikeData = async function (hid) {
     return hikeData;
 };
 
-const setCenter = function (hikeData) {
-    const hikeMetaData = hikeData.gpx.metadata[0].bounds[0].$;
-    const { maxlat, minlat, minlon, maxlon } = hikeMetaData;
-
-    const lat = (parseFloat(maxlat) + parseFloat(minlat)) / 2;
-    const lng = (parseFloat(maxlon) + parseFloat(minlon)) / 2;
-
-    return `${lat},${lng}`;
-};
-
-const setSpan = function (hikeData) {
-    const hikeMetaData = hikeData.gpx.metadata[0].bounds[0].$;
-    const { maxlat, minlat, minlon, maxlon } = hikeMetaData;
-
-    return [maxlat - minlat + latModifier, maxlon - minlon];
-};
-
 const setOverlay = function (hikeData) {
-    const pointCount = hikeData.gpx.trk[0].trkseg[0].trkpt.length;
     const points = [];
 
-    let skipCoord = 3;
-    if (pointCount >= 360) {
-        skipCoord = 4;
-    }
+    const pointCount = hikeData.gpx.trk[0].trkseg[0].trkpt.length;
+    const { strokeColor, lineWidth } = config;
+    const skipCoord = getSkipCoord(pointCount);
 
     for (let i = 0, len = pointCount; i < len; i += 1) {
         if (i % skipCoord === 0) {
@@ -86,7 +55,10 @@ const generateSignature = function (url) {
 };
 
 const buildMapUrl = function (center, spn, overlays, colorScheme) {
-    const mapUrl = buildUrl(mapApi, {
+    const { scale, size } = config;
+    const { teamId, keyId } = ids;
+
+    const mapUrl = buildUrl(api.map, {
         queryParams: {
             size,
             teamId,
@@ -100,7 +72,7 @@ const buildMapUrl = function (center, spn, overlays, colorScheme) {
     });
 
     const signature = generateSignature(mapUrl);
-    return `${baseUrl}${mapUrl}&signature=${signature}`;
+    return `${api.base}${mapUrl}&signature=${signature}`;
 };
 
 const saveMapUrl = async function (hid, mapUrl, colorScheme) {
@@ -130,7 +102,7 @@ exports.generateStaticMap = async function (hid) {
     const spn = setSpan(hikeData);
     const overlays = setOverlay(hikeData);
 
-    colorSchemes.forEach(async function (scheme) {
+    config.colorSchemes.forEach(async function (scheme) {
         const mapUrl = await buildMapUrl(center, spn, overlays, scheme);
 
         saveMapUrl(hid, mapUrl, scheme);
