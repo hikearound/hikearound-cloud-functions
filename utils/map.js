@@ -18,15 +18,11 @@ exports.setSpan = function (hikeData) {
 };
 
 exports.getSkipCoord = function (pointCount) {
-    let skipCoord = 3;
-
-    if (pointCount >= 360 && pointCount < 450) {
-        skipCoord = 4;
-    } else if (pointCount >= 450) {
-        skipCoord = 5;
+    if (pointCount <= 120) {
+        return 1;
     }
 
-    return skipCoord;
+    return Math.round(pointCount / 120) + 1;
 };
 
 exports.setOverlay = function (hikeData) {
