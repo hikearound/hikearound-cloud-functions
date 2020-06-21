@@ -35,7 +35,7 @@ const generateSignature = function (url) {
 };
 
 const buildMapUrl = function (center, spn, overlays, colorScheme) {
-    const { scale, size } = config;
+    const { scale, size, poi } = config;
     const { teamId, keyId } = ids;
 
     const mapUrl = buildUrl(api.map, {
@@ -48,6 +48,7 @@ const buildMapUrl = function (center, spn, overlays, colorScheme) {
             center,
             spn,
             overlays,
+            poi,
         },
     });
 

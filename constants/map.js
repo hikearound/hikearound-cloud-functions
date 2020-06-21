@@ -15,4 +15,5 @@ exports.config = {
     scale: 2,
     latModifier: 0.005,
     lineWidth: 2,
+    poi: 0,
 };
