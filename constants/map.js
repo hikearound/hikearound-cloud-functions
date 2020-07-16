@@ -13,7 +13,7 @@ exports.config = {
     colorSchemes: ['light', 'dark'],
     strokeColor: '935DFF',
     scale: 2,
-    latModifier: 0.005,
+    latModifier: 0.006,
     lineWidth: 2,
     poi: 0,
 };

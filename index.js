@@ -10,7 +10,6 @@ const digest = require('./notifications/digest');
 
 // Functions
 const map = require('./functions/map');
-const verify = require('./functions/verify');
 const search = require('./functions/search');
 
 exports.welcomeNotif = functions.firestore
@@ -55,18 +54,6 @@ exports.indexSearchRecords = functions.firestore
         const { hid } = context.params;
         try {
             return search.indexRecords(hid);
-        } catch (e) {
-            sentry.captureException(e);
-        }
-        return false;
-    });
-
-exports.verifyEmailAddress = functions.firestore
-    .document('auth/{uid}')
-    .onCreate(async (change, context) => {
-        const { uid } = context.params;
-        try {
-            return verify.verifyEmailAddress(uid);
         } catch (e) {
             sentry.captureException(e);
         }
