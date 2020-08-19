@@ -7,7 +7,7 @@ const {
     getMapUrl,
     getRoute,
 } = require('../utils/hike');
-const { getUserList } = require('../utils/user');
+const { getUserList, getUserData } = require('../utils/user');
 const {
     parseDescription,
     truncateText,
@@ -22,6 +22,7 @@ const buildData = async function (user, hid) {
     const lightMap = await getMapUrl(hid, 'light');
     const darkMap = await getMapUrl(hid, 'dark');
     const description = parseDescription(hike.description);
+    const userData = await getUserData(user.uid);
 
     const title = 'Check out this weeks best hikes';
     const upsell = `Get ready for the weekend by checking out ${hike.name} and other hikes we think you might like.`;
@@ -37,7 +38,8 @@ const buildData = async function (user, hid) {
     data.emailToAddress = user.email;
 
     // User data
-    data.name = getFirstName(user.displayName);
+    data.name = getFirstName(userData.name);
+    data.location = userData.lastKnownLocation.location;
 
     // Hike data
     data.hikeName = hike.name;
