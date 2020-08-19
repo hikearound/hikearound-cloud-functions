@@ -87,17 +87,18 @@ const maybeSendDigest = async function (user, hid) {
 
 exports.send = async function () {
     const userList = await getUserList();
-    const newHikes = await getNewHikes();
 
-    if (newHikes.length > 0) {
-        const hid = newHikes[0];
+    userList.forEach(async function (user) {
+        const newHikes = await getNewHikes(user.uid);
 
-        userList.forEach(async function (user) {
+        if (newHikes.length > 0) {
+            const hid = newHikes[0];
+
             if (!sentUserList.includes(user.uid)) {
                 await maybeSendDigest(user, hid);
             }
-        });
-    }
+        }
+    });
 
     return true;
 };

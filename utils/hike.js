@@ -1,5 +1,6 @@
 const admin = require('firebase-admin');
 const moment = require('moment');
+const { getUserData } = require('./user');
 
 const db = admin.firestore();
 const storage = admin.storage();
@@ -9,11 +10,13 @@ exports.getHikeData = async function (hid) {
     return hikeSnapshot.data();
 };
 
-exports.getRecentHikes = async function () {
+exports.getNearbyHikes = async function (range) {
     const hikeRef = await db
         .collection('hikes')
-        .orderBy('createdOn', 'desc')
-        .limit(5);
+        .where('geohash', '>=', range.lower)
+        .where('geohash', '<=', range.upper)
+        .orderBy('geohash')
+        .limit(20);
 
     const querySnapshot = await hikeRef.get();
     return querySnapshot;
@@ -31,12 +34,15 @@ exports.getMapUrl = async function (hid, scheme) {
     return mapUrl[0];
 };
 
-exports.getNewHikes = async function () {
+exports.getNewHikes = async function (uid) {
     const now = moment();
     const newHikes = [];
-    const recentHikes = await exports.getRecentHikes();
 
-    recentHikes.forEach((hike) => {
+    const userData = await getUserData(uid);
+    const { range } = userData.lastKnownLocation;
+    const nearbyHikes = await exports.getNearbyHikes(range);
+
+    nearbyHikes.forEach((hike) => {
         if (hike.exists) {
             const hikeData = hike.data() || {};
             const createdOn = moment(hikeData.createdOn.toDate());
