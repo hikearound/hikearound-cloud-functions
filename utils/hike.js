@@ -1,6 +1,5 @@
 const admin = require('firebase-admin');
 const moment = require('moment');
-const { getUserData } = require('./user');
 
 const db = admin.firestore();
 const storage = admin.storage();
