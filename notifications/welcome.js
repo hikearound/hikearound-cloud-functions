@@ -3,6 +3,7 @@ const sgMail = require('@sendgrid/mail');
 const { senderData } = require('../constants/email');
 const { buildTemplate } = require('../utils/email');
 const { getUserData } = require('../utils/user');
+const { getFirstName } = require('../utils/helper');
 
 const type = 'welcome';
 const auth = admin.auth();
@@ -12,7 +13,7 @@ const buildData = async function (uid) {
     const userData = await getUserData(uid);
 
     const data = {
-        name: userData.name,
+        name: getFirstName(userData.name),
         idToken: userData.idToken,
         email: user.email,
     };
