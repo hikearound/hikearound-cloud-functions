@@ -34,11 +34,10 @@ exports.getMapUrl = async function (hid, scheme) {
     return mapUrl[0];
 };
 
-exports.getNewHikes = async function (uid) {
+exports.getNewHikes = async function (userData) {
     const now = moment();
     const newHikes = [];
 
-    const userData = await getUserData(uid);
     const { range } = userData.lastKnownLocation;
     const nearbyHikes = await exports.getNearbyHikes(range);
 

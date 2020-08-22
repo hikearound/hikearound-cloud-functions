@@ -12,8 +12,8 @@ const receiptIds = [];
 
 const buildTokenList = async function (uid) {
     const userSnapshot = await db.collection('users').doc(uid).get();
-
     const userData = userSnapshot.data();
+
     pushTokens.push(userData.notificationToken.data);
 };
 
