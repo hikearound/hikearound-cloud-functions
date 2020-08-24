@@ -37,6 +37,7 @@ const buildData = async function (user, userData, hid) {
     data.emailToAddress = user.email;
 
     // User data
+    data.uid = user.uid;
     data.name = getFirstName(userData.name);
     data.location = userData.lastKnownLocation.location;
 
