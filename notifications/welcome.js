@@ -15,7 +15,7 @@ const buildData = async function (uid) {
     const data = {
         name: getFirstName(userData.name),
         token: encode(uid),
-        email: user.email,
+        emailToAddress: user.email,
         emailSubject: `${getFirstName(userData.name)}, welcome to Hikearound!`,
     };
 
@@ -28,5 +28,6 @@ const buildData = async function (uid) {
 exports.send = async function (uid) {
     const data = await buildData(uid);
     const email = await buildEmail(data, type);
+
     return sgMail.send(email);
 };
