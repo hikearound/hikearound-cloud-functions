@@ -1,5 +1,4 @@
-const { senderData } = require('../constants/email');
-const { buildTemplate } = require('../utils/email');
+const { buildEmail } = require('../utils/email');
 const { maybeSendPushNotif, maybeSendEmail } = require('../utils/send');
 const {
     getHikeData,
@@ -61,24 +60,9 @@ const buildNotif = async function (user, data) {
     };
 };
 
-const buildEmail = async function (data) {
-    const html = buildTemplate(data, type);
-
-    return {
-        to: data.emailToAddress,
-        from: {
-            name: senderData.name,
-            email: senderData.email,
-        },
-        subject: data.emailSubject,
-        categories: [type],
-        html,
-    };
-};
-
 const maybeSendDigest = async function (user, userData, hid) {
     const data = await buildData(user, userData, hid);
-    const email = await buildEmail(data);
+    const email = await buildEmail(data, type);
     const notif = await buildNotif(user, data);
 
     maybeSendEmail(user, type, email);

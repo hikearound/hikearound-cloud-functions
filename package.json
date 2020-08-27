@@ -26,6 +26,7 @@
     "firebase-functions": "^3.11.0",
     "handlebars": "^4.7.6",
     "image-downloader": "^3.6.0",
+    "js-base64": "^3.4.5",
     "jwa": "^2.0.0",
     "mjml": "^4.6.3",
     "moment": "^2.27.0",

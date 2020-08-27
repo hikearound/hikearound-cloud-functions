@@ -2,23 +2,35 @@ const { compile } = require('handlebars');
 const mjml2html = require('mjml');
 const fs = require('fs');
 const path = require('path');
+const { encode } = require('js-base64');
 const { unsubscribe } = require('../constants/email');
+const { senderData } = require('../constants/email');
 
-exports.getUnsubscribe = function (emailData, emailType) {
-    return `${unsubscribe.url}/?type=${emailType}&uid=${emailData.uid}`;
+exports.getUnsubscribeUrl = function (uid, type) {
+    const token = encode(uid);
+    return `${unsubscribe.url}?type=${type}&token=${token}`;
 };
 
-exports.buildTemplate = function (emailData, emailType) {
+exports.getUnsubscribeHeader = function (uid, type) {
+    const unsubscribeUrl = exports.getUnsubscribeUrl(uid, type);
+    return {
+        'List-Unsubscribe': `<mailto:${unsubscribe.email}?subject=uid:${uid},type:${type}>, <${unsubscribeUrl}>`,
+    };
+};
+
+exports.buildTemplate = function (data, type) {
+    const { uid } = data;
+
     let mjmlTemplate = fs.readFileSync(
         `${__dirname}/../templates/base.mjml`,
         'utf8',
     );
 
-    emailData.globalUnsubscribe = exports.getUnsubscribe(emailData, 'global');
-    emailData.typeUnsubscribe = exports.getUnsubscribe(emailData, emailType);
+    data.globalUnsubscribe = exports.getUnsubscribeUrl(uid, 'global');
+    data.typeUnsubscribe = exports.getUnsubscribeUrl(uid, type);
 
     mjmlTemplate = compile(mjmlTemplate);
-    mjmlTemplate = mjmlTemplate({ emailType });
+    mjmlTemplate = mjmlTemplate({ type });
 
     let html = mjml2html(mjmlTemplate, {
         filePath: path.join(__dirname, '../templates/components'),
@@ -26,7 +38,24 @@ exports.buildTemplate = function (emailData, emailType) {
     });
 
     html = compile(html.html);
-    html = html(emailData);
+    html = html(data);
 
     return html;
+};
+
+exports.buildEmail = async function (data, type) {
+    const html = exports.buildTemplate(data, type);
+    const unsubscribeHeader = exports.getUnsubscribeHeader(data.uid, type);
+
+    return {
+        to: data.emailToAddress,
+        from: {
+            name: senderData.name,
+            email: senderData.email,
+        },
+        subject: data.emailSubject,
+        categories: [type],
+        headers: unsubscribeHeader,
+        html,
+    };
 };

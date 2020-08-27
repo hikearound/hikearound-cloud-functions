@@ -5,4 +5,5 @@ exports.senderData = {
 
 exports.unsubscribe = {
     url: 'https://www.tryhikearound.com/unsubscribe',
+    email: 'unsubscribe@tryhikearound.com',
 };

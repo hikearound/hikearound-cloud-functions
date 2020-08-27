@@ -1,7 +1,7 @@
 const admin = require('firebase-admin');
 const sgMail = require('@sendgrid/mail');
-const { senderData } = require('../constants/email');
-const { buildTemplate } = require('../utils/email');
+const { encode } = require('js-base64');
+const { buildEmail } = require('../utils/email');
 const { getUserData } = require('../utils/user');
 const { getFirstName } = require('../utils/helper');
 
@@ -14,31 +14,17 @@ const buildData = async function (uid) {
 
     const data = {
         name: getFirstName(userData.name),
-        idToken: userData.idToken,
+        token: encode(uid),
         email: user.email,
+        emailSubject: `${getFirstName(userData.name)}, welcome to Hikearound!`,
     };
 
     data.uid = uid;
     return data;
 };
 
-const buildEmail = async function (data) {
-    const html = buildTemplate(data, type);
-
-    return {
-        to: data.email,
-        from: {
-            name: senderData.name,
-            email: senderData.email,
-        },
-        subject: `${data.name}, welcome to Hikearound!`,
-        categories: [type],
-        html,
-    };
-};
-
 exports.send = async function (uid) {
     const data = await buildData(uid);
-    const email = await buildEmail(data);
+    const email = await buildEmail(data, type);
     return sgMail.send(email);
 };
