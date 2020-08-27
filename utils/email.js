@@ -13,9 +13,7 @@ exports.getUnsubscribeUrl = function (uid, type) {
 
 exports.getUnsubscribeHeader = function (uid, type) {
     const unsubscribeUrl = exports.getUnsubscribeUrl(uid, type);
-    return {
-        'List-Unsubscribe': `<mailto:${unsubscribe.email}?subject=uid:${uid},type:${type}>, <${unsubscribeUrl}>`,
-    };
+    return `<mailto:${unsubscribe.email}?subject=uid:${uid},type:${type}>, <${unsubscribeUrl}>`;
 };
 
 exports.buildTemplate = function (data, type) {
@@ -48,14 +46,11 @@ exports.buildEmail = async function (data, type) {
     const unsubscribeHeader = exports.getUnsubscribeHeader(data.uid, type);
 
     return {
-        to: data.emailToAddress,
-        from: {
-            name: senderData.name,
-            email: senderData.email,
-        },
+        to: [data.emailToAddress],
+        from: senderData.nameAndAddress,
         subject: data.emailSubject,
-        categories: [type],
-        headers: unsubscribeHeader,
+        'o:tag': type,
+        'h:List-Unsubscribe': unsubscribeHeader,
         html,
     };
 };

@@ -1,9 +1,12 @@
 exports.senderData = {
-    name: 'Hikearound',
-    email: 'no-reply@tryhikearound.com',
+    nameAndAddress: 'Hikearound <no-reply@tryhikearound.com>',
 };
 
 exports.unsubscribe = {
     url: 'https://www.tryhikearound.com/unsubscribe',
     email: 'unsubscribe@tryhikearound.com',
+};
+
+exports.domain = {
+    default: 'mail.tryhikearound.com',
 };

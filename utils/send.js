@@ -1,13 +1,14 @@
-const sgMail = require('@sendgrid/mail');
+const { initializeMailgun } = require('./config');
 const notifications = require('./notifications');
 const { getUserData } = require('./user');
 
 exports.maybeSendEmail = async function (user, type, email) {
     const userData = await getUserData(user.uid);
     const { enabled } = userData.notifs.email;
+    const mg = initializeMailgun();
 
     if (user.emailVerified && enabled && type) {
-        sgMail.send(email);
+        mg.messages().send(email);
     }
 
     return false;

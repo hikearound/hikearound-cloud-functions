@@ -15,7 +15,7 @@
     "node": "10"
   },
   "dependencies": {
-    "@firebase/testing": "^0.16.14",
+    "@firebase/testing": "^0.20.11",
     "@google-cloud/storage": "^4.7.0",
     "@sendgrid/mail": "^6.5.5",
     "@sentry/node": "^5.22.0",
@@ -30,6 +30,7 @@
     "image-downloader": "^3.6.0",
     "js-base64": "^3.4.5",
     "jwa": "^2.0.0",
+    "mailgun-js": "^0.22.0",
     "mjml": "^4.6.3",
     "moment": "^2.27.0",
     "run-func": "^1.0.5",

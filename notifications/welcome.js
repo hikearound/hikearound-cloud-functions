@@ -1,6 +1,6 @@
 const admin = require('firebase-admin');
-const sgMail = require('@sendgrid/mail');
 const { encode } = require('js-base64');
+const { initializeMailgun } = require('../utils/config');
 const { buildEmail } = require('../utils/email');
 const { getUserData } = require('../utils/user');
 const { getFirstName } = require('../utils/helper');
@@ -28,6 +28,7 @@ const buildData = async function (uid) {
 exports.send = async function (uid) {
     const data = await buildData(uid);
     const email = await buildEmail(data, type);
+    const mg = initializeMailgun();
 
-    return sgMail.send(email);
+    return mg.messages().send(email);
 };
