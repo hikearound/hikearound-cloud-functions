@@ -3,7 +3,7 @@
     <mj-body>
         <mj-section css-class="email_section">
             <mj-include path="__dirname/../logo.mjml" />
-            <mj-include path="__dirname/../../types/{{emailType}}.mjml" />
+            <mj-include path="__dirname/../../types/{{type}}.mjml" />
             <mj-include path="__dirname/../footer.mjml" />
         </mj-section>
     </mj-body>

@@ -48,6 +48,9 @@ const buildData = async function (user, userData, hid) {
     data.hikeRoute = getRoute(hike.route);
     data.hikeDescription = truncateText(description, 350);
 
+    // Settings
+    data.includeTypeUnsubscribe = true;
+
     return data;
 };
 

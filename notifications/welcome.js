@@ -20,6 +20,8 @@ const buildData = async function (uid) {
     };
 
     data.uid = uid;
+    data.includeTypeUnsubscribe = false;
+
     return data;
 };
 

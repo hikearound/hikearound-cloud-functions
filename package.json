@@ -7,7 +7,9 @@
     "deploy": "firebase deploy --only functions",
     "logs": "firebase functions:log",
     "lint": "eslint .",
-    "test": "mocha --reporter spec"
+    "test": "mocha --reporter spec",
+    "buildWelcomeEmail": "run-func ./test/welcome.test.js buildEmail",
+    "buildDigestEmail": "run-func ./test/digest.test.js buildEmail"
   },
   "engines": {
     "node": "10"
@@ -16,7 +18,7 @@
     "@firebase/testing": "^0.16.14",
     "@google-cloud/storage": "^4.7.0",
     "@sendgrid/mail": "^6.5.5",
-    "@sentry/node": "^5.21.3",
+    "@sentry/node": "^5.22.0",
     "algoliasearch": "^4.4.0",
     "build-url": "^2.0.0",
     "dir-glob": "^2.2.2",
@@ -30,6 +32,7 @@
     "jwa": "^2.0.0",
     "mjml": "^4.6.3",
     "moment": "^2.27.0",
+    "run-func": "^1.0.5",
     "typescript": "^3.9.7",
     "xml2js": "^0.4.23"
   },
@@ -48,7 +51,7 @@
     "less": "^3.12.2",
     "less-plugin-clean-css": "^1.5.1",
     "mocha": "^7.2.0",
-    "prettier": "^2.0.5"
+    "prettier": "^2.1.1"
   },
   "private": true
 }
