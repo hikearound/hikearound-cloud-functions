@@ -18,8 +18,8 @@
     "@firebase/testing": "^0.20.11",
     "@google-cloud/storage": "^4.7.0",
     "@sendgrid/mail": "^6.5.5",
-    "@sentry/node": "^5.22.0",
-    "algoliasearch": "^4.4.0",
+    "@sentry/node": "^5.24.2",
+    "algoliasearch": "^4.5.1",
     "build-url": "^2.0.0",
     "dir-glob": "^2.2.2",
     "expo-server-sdk": "^3.5.1",
@@ -28,11 +28,11 @@
     "firebase-functions": "^3.11.0",
     "handlebars": "^4.7.6",
     "image-downloader": "^3.6.0",
-    "js-base64": "^3.4.5",
+    "js-base64": "^3.5.2",
     "jwa": "^2.0.0",
     "mailgun-js": "^0.22.0",
-    "mjml": "^4.6.3",
-    "moment": "^2.27.0",
+    "mjml": "^4.7.0",
+    "moment": "^2.28.0",
     "run-func": "^1.0.5",
     "typescript": "^3.9.7",
     "xml2js": "^0.4.23"
@@ -52,7 +52,7 @@
     "less": "^3.12.2",
     "less-plugin-clean-css": "^1.5.1",
     "mocha": "^7.2.0",
-    "prettier": "^2.1.1"
+    "prettier": "^2.1.2"
   },
   "private": true
 }

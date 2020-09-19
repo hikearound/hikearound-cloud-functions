@@ -7,6 +7,7 @@ config.initializeApp();
 // Notifications
 const welcome = require('./notifications/welcome');
 const digest = require('./notifications/digest');
+const reset = require('./notifications/reset');
 
 // Functions
 const map = require('./functions/map');
@@ -35,6 +36,16 @@ exports.digestNotif = functions.pubsub
         }
         return false;
     });
+
+exports.resetNotif = functions.https.onCall((data) => {
+    const { userEmail } = data;
+    try {
+        return reset.send(userEmail);
+    } catch (e) {
+        sentry.captureException(e);
+    }
+    return false;
+});
 
 exports.generateStaticMap = functions.firestore
     .document('hikes/{hid}')
