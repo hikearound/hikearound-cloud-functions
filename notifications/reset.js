@@ -1,5 +1,4 @@
 const admin = require('firebase-admin');
-const { encode } = require('js-base64');
 const { initializeMailgun } = require('../utils/config');
 const { buildEmail } = require('../utils/email');
 const { getUserData } = require('../utils/user');
@@ -18,14 +17,15 @@ const buildData = async function (userEmail) {
     }
 
     const userData = await getUserData(user.uid);
+    const token = await auth.createCustomToken(user.uid);
 
     const data = {
         name: getFirstName(userData.name),
         emailToAddress: user.email,
         emailSubject: `Reset your Hikearound password.`,
-        token: encode(user.uid),
     };
 
+    data.token = token;
     data.uid = user.uid;
     data.includeTypeUnsubscribe = false;
 

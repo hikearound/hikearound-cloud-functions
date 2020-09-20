@@ -12,6 +12,7 @@ const reset = require('./notifications/reset');
 // Functions
 const map = require('./functions/map');
 const search = require('./functions/search');
+const user = require('./functions/user');
 
 exports.welcomeNotif = functions.firestore
     .document('users/{uid}')
@@ -70,3 +71,13 @@ exports.indexSearchRecords = functions.firestore
         }
         return false;
     });
+
+exports.updatePassword = functions.https.onCall((data) => {
+    const { uid, password } = data;
+    try {
+        return user.updatePassword(uid, password);
+    } catch (e) {
+        sentry.captureException(e);
+    }
+    return false;
+});
