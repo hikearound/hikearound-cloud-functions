@@ -43,6 +43,7 @@ const buildData = async function (user, userData, hid) {
     // Hike data
     data.hikeName = hike.name;
     data.hikeCity = hike.city;
+    data.hikeState = hike.state;
     data.hikeDistance = hike.distance;
     data.hikeElevation = hike.elevation;
     data.hikeRoute = getRoute(hike.route);

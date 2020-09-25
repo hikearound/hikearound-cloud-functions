@@ -22,6 +22,7 @@ const indexHike = async function (hid) {
         objectID: hid,
         name: hike.name,
         city: hike.city,
+        state: hike.state,
         description: hike.description,
         distance: hike.distance,
         route: hike.route,
