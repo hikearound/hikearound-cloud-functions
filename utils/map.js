@@ -1,3 +1,4 @@
+const polyline = require('google-polyline');
 const { config } = require('../constants/map');
 
 exports.setCenter = function (hikeData) {
@@ -19,60 +20,35 @@ exports.setSpan = function (hikeData) {
     return [maxlat - minlat + config.latModifier, maxlon - minlon];
 };
 
-exports.getSkipCoord = function (pointCount) {
-    if (pointCount <= 120) {
-        return 1;
-    }
-
-    return Math.round(pointCount / 120) + 1;
-};
-
-exports.removeDuplicateCoordinates = function (coordinates) {
-    const cleanCoordinates = [];
-    const existingCoords = [];
-
-    const data = coordinates.gpx.trk[0].trkseg[0].trkpt;
-    const coordinateCount = data.length;
-
-    for (let i = 0, len = coordinateCount; i < len; i += 1) {
-        const coordinate = data[i].$;
-        const exists = existingCoords.includes(coordinate.lat);
-        const currentCoordinate = [`${coordinate.lat},${coordinate.lon}`];
-
-        if (!exists) {
-            cleanCoordinates.push(currentCoordinate.toString());
-            existingCoords.push(coordinate.lat);
-        }
-    }
-
-    return cleanCoordinates;
-};
-
 exports.setOverlay = function (hikeData) {
     const points = [];
 
-    const { coordinates, route } = hikeData;
-    const cleanCoordinates = exports.removeDuplicateCoordinates(coordinates);
-    const coordinateCount = cleanCoordinates.length;
+    const { coordinates } = hikeData;
+    const data = coordinates.gpx.trk[0].trkseg[0].trkpt;
+    const coordinateCount = data.length;
     const { strokeColor, lineWidth } = config;
-    const skipCoord = exports.getSkipCoord(coordinateCount);
 
     for (let i = 0, len = coordinateCount; i < len; i += 1) {
-        if (i % skipCoord === 0) {
-            const coordinate = cleanCoordinates[i];
-            points.push(coordinate);
-        }
+        const coordinate = data[i].$;
+
+        const currentCoordinate = [
+            parseFloat(coordinate.lat),
+            parseFloat(coordinate.lon),
+        ];
+        points.push(currentCoordinate);
     }
 
-    if (route === 'Loop') {
-        points.push(cleanCoordinates[0]);
-    }
+    const encodedPolyline = polyline.encode(points);
 
-    return JSON.stringify([{ points, strokeColor, lineWidth }]);
+    return JSON.stringify([
+        { points: encodedPolyline, strokeColor, lineWidth },
+    ]);
 };
 
-exports.setAnnotations = function (overlays) {
-    const point = JSON.parse(overlays)[0].points[0];
+exports.setAnnotations = function (hikeData) {
+    const { coordinates } = hikeData;
+    const data = coordinates.gpx.trk[0].trkseg[0].trkpt[0].$;
+    const point = `${data.lat},${data.lon}`;
 
     return JSON.stringify([
         {

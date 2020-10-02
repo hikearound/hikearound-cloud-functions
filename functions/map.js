@@ -14,7 +14,6 @@ const {
     setAnnotations,
     setImageArray,
 } = require('../utils/map');
-const { getHikeData } = require('../utils/hike');
 
 const db = admin.firestore();
 const storage = admin.storage();
@@ -23,7 +22,6 @@ const buildHikeData = async function (hid) {
     let coordinates = {};
 
     const gpxPath = path.join(os.tmpdir(), './hike.gpx');
-    const hike = await getHikeData(hid);
 
     await storage.bucket().file(`gpx/${hid}.gpx`).download({
         destination: gpxPath,
@@ -35,7 +33,7 @@ const buildHikeData = async function (hid) {
         coordinates = JSON.parse(JSON.stringify(result));
     });
 
-    return { coordinates, route: hike.route };
+    return { coordinates };
 };
 
 const generateSignature = function (url) {
@@ -100,7 +98,7 @@ exports.generateStaticMap = async function (hid) {
     const center = setCenter(hikeData);
     const spn = setSpan(hikeData);
     const overlays = setOverlay(hikeData);
-    const annotations = setAnnotations(overlays);
+    const annotations = setAnnotations(hikeData);
     const imgs = setImageArray();
 
     config.colorSchemes.forEach(async function (scheme) {
