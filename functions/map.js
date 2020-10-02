@@ -7,14 +7,23 @@ const path = require('path');
 const os = require('os');
 const { sign } = require('jwa')('ES256');
 const { ids, api, config } = require('../constants/map');
-const { setCenter, setSpan, setOverlay } = require('../utils/map');
+const {
+    setCenter,
+    setSpan,
+    setOverlay,
+    setAnnotations,
+    setImageArray,
+} = require('../utils/map');
+const { getHikeData } = require('../utils/hike');
 
 const db = admin.firestore();
 const storage = admin.storage();
 
-const getHikeData = async function (hid) {
+const buildHikeData = async function (hid) {
+    let coordinates = {};
+
     const gpxPath = path.join(os.tmpdir(), './hike.gpx');
-    let hikeData = {};
+    const hike = await getHikeData(hid);
 
     await storage.bucket().file(`gpx/${hid}.gpx`).download({
         destination: gpxPath,
@@ -23,10 +32,10 @@ const getHikeData = async function (hid) {
     const hikeGpx = fs.readFileSync(gpxPath);
 
     parseString(hikeGpx, (err, result) => {
-        hikeData = JSON.parse(JSON.stringify(result));
+        coordinates = JSON.parse(JSON.stringify(result));
     });
 
-    return hikeData;
+    return { coordinates, route: hike.route };
 };
 
 const generateSignature = function (url) {
@@ -34,7 +43,14 @@ const generateSignature = function (url) {
     return sign(url, privateKey);
 };
 
-const buildMapUrl = function (center, spn, overlays, colorScheme) {
+const buildMapUrl = function (
+    center,
+    spn,
+    overlays,
+    colorScheme,
+    annotations,
+    imgs,
+) {
     const { scale, size, poi } = config;
     const { teamId, keyId } = ids;
 
@@ -49,6 +65,8 @@ const buildMapUrl = function (center, spn, overlays, colorScheme) {
             spn,
             overlays,
             poi,
+            annotations,
+            imgs,
         },
     });
 
@@ -78,13 +96,22 @@ const saveMapImage = async function (mapUrl, hid, colorScheme) {
 };
 
 exports.generateStaticMap = async function (hid) {
-    const hikeData = await getHikeData(hid);
+    const hikeData = await buildHikeData(hid);
     const center = setCenter(hikeData);
     const spn = setSpan(hikeData);
     const overlays = setOverlay(hikeData);
+    const annotations = setAnnotations(overlays);
+    const imgs = setImageArray();
 
     config.colorSchemes.forEach(async function (scheme) {
-        const mapUrl = await buildMapUrl(center, spn, overlays, scheme);
+        const mapUrl = await buildMapUrl(
+            center,
+            spn,
+            overlays,
+            scheme,
+            annotations,
+            imgs,
+        );
 
         saveMapUrl(hid, mapUrl, scheme);
         saveMapImage(mapUrl, hid, scheme);

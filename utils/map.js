@@ -1,7 +1,8 @@
 const { config } = require('../constants/map');
 
 exports.setCenter = function (hikeData) {
-    const hikeMetaData = hikeData.gpx.metadata[0].bounds[0].$;
+    const { coordinates } = hikeData;
+    const hikeMetaData = coordinates.gpx.metadata[0].bounds[0].$;
     const { maxlat, minlat, minlon, maxlon } = hikeMetaData;
 
     const lat = (parseFloat(maxlat) + parseFloat(minlat)) / 2;
@@ -11,7 +12,8 @@ exports.setCenter = function (hikeData) {
 };
 
 exports.setSpan = function (hikeData) {
-    const hikeMetaData = hikeData.gpx.metadata[0].bounds[0].$;
+    const { coordinates } = hikeData;
+    const hikeMetaData = coordinates.gpx.metadata[0].bounds[0].$;
     const { maxlat, minlat, minlon, maxlon } = hikeMetaData;
 
     return [maxlat - minlat + config.latModifier, maxlon - minlon];
@@ -25,22 +27,69 @@ exports.getSkipCoord = function (pointCount) {
     return Math.round(pointCount / 120) + 1;
 };
 
-exports.setOverlay = function (hikeData) {
-    const points = [];
+exports.removeDuplicateCoordinates = function (coordinates) {
+    const cleanCoordinates = [];
+    const existingCoords = [];
 
-    const pointCount = hikeData.gpx.trk[0].trkseg[0].trkpt.length;
-    const { strokeColor, lineWidth } = config;
-    const skipCoord = exports.getSkipCoord(pointCount);
+    const data = coordinates.gpx.trk[0].trkseg[0].trkpt;
+    const coordinateCount = data.length;
 
-    for (let i = 0, len = pointCount; i < len; i += 1) {
-        if (i % skipCoord === 0) {
-            const coordinate = hikeData.gpx.trk[0].trkseg[0].trkpt[i].$;
-            points.push(`${coordinate.lat},${coordinate.lon}`);
+    for (let i = 0, len = coordinateCount; i < len; i += 1) {
+        const coordinate = data[i].$;
+        const exists = existingCoords.includes(coordinate.lat);
+        const currentCoordinate = [`${coordinate.lat},${coordinate.lon}`];
+
+        if (!exists) {
+            cleanCoordinates.push(currentCoordinate.toString());
+            existingCoords.push(coordinate.lat);
         }
     }
 
-    const coordinate = hikeData.gpx.trk[0].trkseg[0].trkpt[pointCount - 1].$;
-    points.push(`${coordinate.lat},${coordinate.lon}`);
+    return cleanCoordinates;
+};
+
+exports.setOverlay = function (hikeData) {
+    const points = [];
+
+    const { coordinates, route } = hikeData;
+    const cleanCoordinates = exports.removeDuplicateCoordinates(coordinates);
+    const coordinateCount = cleanCoordinates.length;
+    const { strokeColor, lineWidth } = config;
+    const skipCoord = exports.getSkipCoord(coordinateCount);
+
+    for (let i = 0, len = coordinateCount; i < len; i += 1) {
+        if (i % skipCoord === 0) {
+            const coordinate = cleanCoordinates[i];
+            points.push(coordinate);
+        }
+    }
+
+    if (route === 'Loop') {
+        points.push(cleanCoordinates[0]);
+    }
 
     return JSON.stringify([{ points, strokeColor, lineWidth }]);
+};
+
+exports.setAnnotations = function (overlays) {
+    const point = JSON.parse(overlays)[0].points[0];
+
+    return JSON.stringify([
+        {
+            point,
+            color: config.strokeColor,
+            markerStyle: 'balloon',
+            imgIdx: 0,
+        },
+    ]);
+};
+
+exports.setImageArray = function () {
+    return JSON.stringify([
+        {
+            url: config.logo.url,
+            height: config.logo.height,
+            width: config.logo.width,
+        },
+    ]);
 };
