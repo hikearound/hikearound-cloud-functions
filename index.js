@@ -60,12 +60,48 @@ exports.generateStaticMap = functions.firestore
         return false;
     });
 
-exports.indexSearchRecords = functions.firestore
+exports.indexHikeRecord = functions.firestore
     .document('hikes/{hid}')
     .onUpdate(async (change, context) => {
         const { hid } = context.params;
         try {
-            return search.indexRecords(hid);
+            return search.indexHikeRecord(hid);
+        } catch (e) {
+            sentry.captureException(e);
+        }
+        return false;
+    });
+
+exports.deleteHikeRecord = functions.firestore
+    .document('hikes/{hid}')
+    .onDelete(async (change, context) => {
+        const { hid } = context.params;
+        try {
+            return search.deleteHikeRecord(hid);
+        } catch (e) {
+            sentry.captureException(e);
+        }
+        return false;
+    });
+
+exports.indexUserRecord = functions.firestore
+    .document('users/{uid}')
+    .onUpdate(async (change, context) => {
+        const { uid } = context.params;
+        try {
+            return search.indexUserRecord(uid);
+        } catch (e) {
+            sentry.captureException(e);
+        }
+        return false;
+    });
+
+exports.deleteUserRecord = functions.firestore
+    .document('users/{uid}')
+    .onDelete(async (change, context) => {
+        const { uid } = context.params;
+        try {
+            return search.deleteUserRecord(uid);
         } catch (e) {
             sentry.captureException(e);
         }
