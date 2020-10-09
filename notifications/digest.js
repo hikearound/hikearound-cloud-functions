@@ -32,6 +32,7 @@ const buildData = async function (user, userData, hid) {
     data.notifTitle = title;
 
     // Email data
+    data.emailtype = type;
     data.emailSubject = upsell;
     data.emailToAddress = user.email;
 
