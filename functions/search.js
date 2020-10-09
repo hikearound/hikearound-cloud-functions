@@ -52,6 +52,7 @@ const indexUser = async function (uid) {
         objectID: uid,
         name: user.name,
         location: user.location,
+        photoURL: user.photoURL,
     };
 
     writeToIndex(data, 'users');
