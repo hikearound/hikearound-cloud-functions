@@ -20,7 +20,7 @@ const buildData = async function (uid) {
     };
 
     data.uid = uid;
-    data.emailtype = type;
+    data.emailType = type;
     data.includeTypeUnsubscribe = false;
 
     return data;

@@ -27,7 +27,7 @@ const buildData = async function (userEmail) {
 
     data.token = token;
     data.uid = user.uid;
-    data.emailtype = type;
+    data.emailType = type;
     data.includeTypeUnsubscribe = false;
 
     return data;
