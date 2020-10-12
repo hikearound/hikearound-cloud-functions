@@ -15,7 +15,7 @@ const buildTokenList = async function (uid) {
     const userData = userSnapshot.data();
 
     if (userData.notificationToken) {
-        pushTokens.push(userData.notificationToken.data);
+        pushTokens.push(userData.notificationToken);
     }
 };
 
