@@ -96,17 +96,15 @@ exports.indexUserRecord = functions.firestore
         return false;
     });
 
-exports.deleteUserRecord = functions.firestore
-    .document('users/{uid}')
-    .onDelete(async (change, context) => {
-        const { uid } = context.params;
-        try {
-            return search.deleteUserRecord(uid);
-        } catch (e) {
-            sentry.captureException(e);
-        }
-        return false;
-    });
+exports.deleteUserData = functions.auth.user().onDelete(async (deletedUser) => {
+    const { uid } = deletedUser;
+    try {
+        return user.deleteUserData(uid);
+    } catch (e) {
+        sentry.captureException(e);
+    }
+    return false;
+});
 
 exports.updatePassword = functions.https.onCall((data) => {
     const { uid, password } = data;

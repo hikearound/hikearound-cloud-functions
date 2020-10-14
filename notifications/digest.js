@@ -7,11 +7,7 @@ const {
     getRoute,
 } = require('../utils/hike');
 const { getUserList, getUserData } = require('../utils/user');
-const {
-    parseDescription,
-    truncateText,
-    getFirstName,
-} = require('../utils/helper');
+const { parseDescription, getFirstName } = require('../utils/helper');
 
 const sentUserList = [];
 const type = 'digest';
@@ -20,7 +16,6 @@ const buildData = async function (user, userData, hid) {
     const hike = await getHikeData(hid);
     const lightMap = await getMapUrl(hid, 'light');
     const darkMap = await getMapUrl(hid, 'dark');
-    const description = parseDescription(hike.description);
 
     const title = 'Check out this weeks best hikes';
     const upsell = `Get ready for the weekend by checking out ${hike.name} and other hikes we think you might like.`;
@@ -48,7 +43,7 @@ const buildData = async function (user, userData, hid) {
     data.hikeDistance = hike.distance;
     data.hikeElevation = hike.elevation;
     data.hikeRoute = getRoute(hike.route);
-    data.hikeDescription = truncateText(description, 350);
+    data.hikeDescription = parseDescription(hike.description);
 
     // Settings
     data.includeTypeUnsubscribe = true;
