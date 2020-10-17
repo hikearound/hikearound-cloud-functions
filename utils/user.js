@@ -1,4 +1,6 @@
 const admin = require('firebase-admin');
+const tools = require('firebase-tools');
+const functions = require('firebase-functions');
 const search = require('../functions/search');
 
 const db = admin.firestore();
@@ -12,7 +14,12 @@ exports.getUserData = async function (uid) {
 
 exports.deleteUserDocuments = async function (uid) {
     await db.collection('users').doc(uid).delete();
-    await db.collection('favoritedHikes').doc(uid).delete();
+    await tools.firestore.delete(`/favoritedHikes/${uid}`, {
+        project: process.env.GCLOUD_PROJECT,
+        recursive: true,
+        yes: true,
+        token: functions.config().fb.token,
+    });
 };
 
 exports.deleteUserRecord = async function (uid) {
@@ -27,7 +34,16 @@ exports.deleteUserImages = async function (uid) {
     ];
 
     userImages.map(async (image) => {
-        await storage.bucket().file(image).delete();
+        try {
+            await storage.bucket().file(image).getSignedUrl({
+                action: 'read',
+                expires: '01-01-2050',
+            });
+            await storage.bucket().file(image).delete();
+        } catch (e) {
+            // eslint-disable-next-line
+            console.log(e);
+        }
     });
 
     return true;
