@@ -12,7 +12,7 @@ exports.initializeApp = function () {
     });
 
     sentry.init({
-        dsn: 'https://9fb810b337f7498ab70662518aeddae2@sentry.io/1877771',
+        dsn: functions.config().sentry.dsn,
     });
 };
 

@@ -14,6 +14,7 @@ exports.getUserData = async function (uid) {
 
 exports.deleteUserDocuments = async function (uid) {
     await db.collection('users').doc(uid).delete();
+
     await tools.firestore.delete(`/favoritedHikes/${uid}`, {
         project: process.env.GCLOUD_PROJECT,
         recursive: true,
@@ -35,10 +36,6 @@ exports.deleteUserImages = async function (uid) {
 
     userImages.map(async (image) => {
         try {
-            await storage.bucket().file(image).getSignedUrl({
-                action: 'read',
-                expires: '01-01-2050',
-            });
             await storage.bucket().file(image).delete();
         } catch (e) {
             // eslint-disable-next-line
