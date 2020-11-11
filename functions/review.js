@@ -5,18 +5,17 @@ exports.addReviewToAverage = async function (rid) {
     const review = await getReviewData(rid);
     const hike = await getHikeData(review.hid);
 
-    let averageReview = 0;
-    let reviewCount = 0;
+    let average = 0;
+    let count = 0;
 
-    if (hike.averageReview && hike.reviewCount) {
-        averageReview = hike.averageReview;
-        reviewCount = hike.reviewCount;
+    if (hike.review) {
+        average = hike.review.average;
+        count = hike.review.count;
     }
 
     const reviewData = {
-        averageReview:
-            (reviewCount * averageReview + review.rating) / (reviewCount + 1),
-        reviewCount: reviewCount + 1,
+        average: (count * average + review.rating) / (count + 1),
+        count: count + 1,
     };
 
     await writeReviewData(review.hid, reviewData);
@@ -27,21 +26,20 @@ exports.updateAverageReview = async function (rid, snapshot) {
     const review = snapshot.after.data();
     const hike = await getHikeData(originalReview.hid);
 
-    let averageReview = 0;
+    let average = 0;
 
-    if (hike.reviewCount > 1) {
-        averageReview =
-            (hike.reviewCount * hike.averageReview - review.rating) /
-            (hike.reviewCount - 1);
+    if (hike.review.count > 1) {
+        average =
+            (hike.review.count * hike.review.average - originalReview.rating) /
+            (hike.review.count - 1);
     }
 
-    averageReview =
-        ((hike.reviewCount - 1) * averageReview + review.rating) /
-        hike.reviewCount;
+    average =
+        ((hike.review.count - 1) * average + review.rating) / hike.review.count;
 
     const reviewData = {
-        averageReview,
-        reviewCount: hike.reviewCount,
+        average,
+        count: hike.review.count,
     };
 
     await writeReviewData(review.hid, reviewData);
@@ -51,17 +49,17 @@ exports.removeReviewFromAverage = async function (snapshot) {
     const review = snapshot.data();
     const hike = await getHikeData(review.hid);
 
-    let averageReview = 0;
+    let average = 0;
 
-    if (hike.reviewCount > 1) {
-        averageReview =
-            (hike.reviewCount * hike.averageReview - review.rating) /
-            (hike.reviewCount - 1);
+    if (hike.review.count > 1) {
+        average =
+            (hike.review.count * hike.review.average - review.rating) /
+            (hike.review.count - 1);
     }
 
     const reviewData = {
-        averageReview,
-        reviewCount: hike.reviewCount - 1,
+        average,
+        count: hike.review.count - 1,
     };
 
     await writeReviewData(review.hid, reviewData);
