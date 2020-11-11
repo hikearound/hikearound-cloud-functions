@@ -13,6 +13,7 @@ const reset = require('./notifications/reset');
 const map = require('./functions/map');
 const search = require('./functions/search');
 const user = require('./functions/user');
+const review = require('./functions/review');
 
 exports.welcomeNotif = functions.firestore
     .document('users/{uid}')
@@ -115,3 +116,38 @@ exports.updatePassword = functions.https.onCall((data) => {
     }
     return false;
 });
+
+exports.addReviewToAverage = functions.firestore
+    .document('reviews/{rid}')
+    .onCreate(async (snapshot, context) => {
+        const { rid } = context.params;
+        try {
+            return review.addReviewToAverage(rid, snapshot);
+        } catch (e) {
+            sentry.captureException(e);
+        }
+        return false;
+    });
+
+exports.updateAverageReview = functions.firestore
+    .document('reviews/{rid}')
+    .onUpdate(async (snapshot, context) => {
+        const { rid } = context.params;
+        try {
+            return review.updateAverageReview(rid, snapshot);
+        } catch (e) {
+            sentry.captureException(e);
+        }
+        return false;
+    });
+
+exports.removeReviewFromAverage = functions.firestore
+    .document('reviews/{rid}')
+    .onDelete(async (snapshot) => {
+        try {
+            return review.removeReviewFromAverage(snapshot);
+        } catch (e) {
+            sentry.captureException(e);
+        }
+        return false;
+    });
