@@ -87,10 +87,10 @@ exports.deleteHikeRecord = functions.firestore
 
 exports.indexUserRecord = functions.firestore
     .document('users/{uid}')
-    .onUpdate(async (change, context) => {
+    .onUpdate(async (snapshot, context) => {
         const { uid } = context.params;
         try {
-            return search.indexUserRecord(uid);
+            return search.indexUserRecord(uid, snapshot);
         } catch (e) {
             sentry.captureException(e);
         }

@@ -1,14 +1,9 @@
-const functions = require('firebase-functions');
-const algoliasearch = require('algoliasearch');
 const sentry = require('@sentry/node');
+const { initializeAlgolia } = require('../utils/config');
 const { getHikeData } = require('../utils/hike');
-const { getUserData } = require('../utils/user');
-
-const appId = functions.config().algolia.id;
-const adminKey = functions.config().algolia.admin_key;
-const client = algoliasearch(appId, adminKey);
 
 const writeToIndex = async function (data, indexName) {
+    const client = initializeAlgolia();
     const index = client.initIndex(indexName);
 
     index.saveObjects([data]).catch((e) => {
@@ -19,6 +14,7 @@ const writeToIndex = async function (data, indexName) {
 };
 
 const deleteFromIndex = async function (objectID, indexName) {
+    const client = initializeAlgolia();
     const index = client.initIndex(indexName);
 
     index.deleteObject(objectID).catch((e) => {
@@ -45,9 +41,7 @@ const indexHike = async function (hid) {
     writeToIndex(data, 'hikes');
 };
 
-const indexUser = async function (uid) {
-    const user = await getUserData(uid);
-
+const indexUser = async function (uid, user) {
     const data = {
         objectID: uid,
         name: user.name,
@@ -66,8 +60,9 @@ exports.deleteHikeRecord = async function (hid) {
     await deleteFromIndex(hid, 'hikes');
 };
 
-exports.indexUserRecord = async function (uid) {
-    await indexUser(uid);
+exports.indexUserRecord = async function (uid, snapshot) {
+    const user = snapshot.after.data();
+    await indexUser(uid, user);
 };
 
 exports.deleteUserRecord = async function (uid) {
