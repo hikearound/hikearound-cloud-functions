@@ -67,8 +67,6 @@ const maybeSendDigest = async function (user, userData, hid) {
 
     maybeSendEmail(user, type, email);
     maybeSendPushNotif(user, type, notif);
-
-    sentUserList.push(user.uid);
 };
 
 exports.send = async function () {
@@ -84,6 +82,7 @@ exports.send = async function () {
                 const hid = newHikes[0];
 
                 if (!sentUserList.includes(user.uid)) {
+                    sentUserList.push(user.uid);
                     await maybeSendDigest(user, userData, hid);
                 }
             }

@@ -1,11 +1,9 @@
 exports.parseDescription = function (description) {
     if (description.includes('\\n')) {
         description = description.replace(/\\n/g, '\n');
-
-        return exports.truncateText(description, 350);
     }
 
-    return description;
+    return exports.truncateText(description, 350);
 };
 
 exports.truncateText = function (text, truncationLength) {
