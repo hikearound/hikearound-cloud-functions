@@ -1,18 +1,12 @@
-const admin = require('firebase-admin');
 const functions = require('firebase-functions');
 const algoliasearch = require('algoliasearch');
 const sentry = require('@sentry/node');
 const { getHikeData } = require('../utils/hike');
+const { getUserData } = require('../utils/user');
 
-const db = admin.firestore();
 const appId = functions.config().algolia.id;
 const adminKey = functions.config().algolia.admin_key;
 const client = algoliasearch(appId, adminKey);
-
-const getUserData = async function (uid) {
-    const userSnapshot = await db.collection('users').doc(uid).get();
-    return userSnapshot.data();
-};
 
 const writeToIndex = async function (data, indexName) {
     const index = client.initIndex(indexName);

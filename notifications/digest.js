@@ -60,6 +60,10 @@ const buildNotif = async function (user, data) {
     };
 };
 
+const markDigestAsSent = function (uid) {
+    sentUserList.push(uid);
+};
+
 const maybeSendDigest = async function (user, userData, hid) {
     const data = await buildData(user, userData, hid);
     const email = await buildEmail(data, type);
@@ -82,7 +86,7 @@ exports.send = async function () {
                 const hid = newHikes[0];
 
                 if (!sentUserList.includes(user.uid)) {
-                    sentUserList.push(user.uid);
+                    markDigestAsSent(user.uid);
                     await maybeSendDigest(user, userData, hid);
                 }
             }
