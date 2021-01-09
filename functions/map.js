@@ -21,7 +21,7 @@ const storage = admin.storage();
 const buildHikeData = async function (hid) {
     let coordinates = {};
 
-    const gpxPath = path.join(os.tmpdir(), './hike.gpx');
+    const gpxPath = path.join(os.tmpdir(), `./map_${hid}.gpx`);
 
     await storage.bucket().file(`gpx/${hid}.gpx`).download({
         destination: gpxPath,
@@ -80,7 +80,7 @@ const saveMapUrl = async function (hid, mapUrl, colorScheme) {
 };
 
 const saveMapImage = async function (mapUrl, hid, colorScheme) {
-    const imagePath = path.join(os.tmpdir(), `./map${colorScheme}.png`);
+    const imagePath = path.join(os.tmpdir(), `./map_${hid}_${colorScheme}.png`);
 
     await download.image({
         url: mapUrl,
