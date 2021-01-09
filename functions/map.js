@@ -62,9 +62,9 @@ const buildMapUrl = function (
             center,
             spn,
             overlays,
-            poi,
             annotations,
             imgs,
+            poi,
         },
     });
 

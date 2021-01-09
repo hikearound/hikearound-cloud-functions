@@ -54,7 +54,7 @@ exports.setAnnotations = function (hikeData) {
         {
             point,
             color: config.strokeColor,
-            markerStyle: 'balloon',
+            markerStyle: 'img',
             imgIdx: 0,
         },
     ]);
