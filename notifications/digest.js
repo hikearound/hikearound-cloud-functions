@@ -53,6 +53,7 @@ const buildData = async function (user, userData, hid) {
 
 const buildNotif = async function (user, data) {
     return {
+        type,
         uid: user.uid,
         hid: data.hid,
         title: data.notifTitle,
@@ -87,6 +88,11 @@ exports.send = async function () {
 
                 if (!sentUserList.includes(user.uid)) {
                     markDigestAsSent(user.uid);
+
+                    // if (user.uid === 'woEsITvCBDWiotEmNTJpLnyLU7r2') {
+                    //     await maybeSendDigest(user, userData, hid);
+                    // }
+
                     await maybeSendDigest(user, userData, hid);
                 }
             }

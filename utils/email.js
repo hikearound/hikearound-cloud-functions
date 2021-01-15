@@ -32,7 +32,6 @@ exports.buildTemplate = function (data, type) {
 
     let html = mjml2html(mjmlTemplate, {
         filePath: path.join(__dirname, '../templates/components'),
-        minify: true,
     });
 
     html = compile(html.html);

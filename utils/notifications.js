@@ -5,21 +5,24 @@ const admin = require('firebase-admin');
 const expo = new Expo();
 const db = admin.firestore();
 
-const pushTokens = [];
-const notifications = [];
-const tickets = [];
-const receiptIds = [];
-
 const buildTokenList = async function (uid) {
+    const pushTokens = [];
+
     const userSnapshot = await db.collection('users').doc(uid).get();
     const userData = userSnapshot.data();
 
     if (userData.notificationToken) {
-        pushTokens.push(userData.notificationToken);
+        if (!pushTokens.includes(userData.notificationToken)) {
+            pushTokens.push(userData.notificationToken);
+        }
     }
+
+    return pushTokens;
 };
 
-const buildNotification = async function (data) {
+const buildNotifications = async function (data, pushTokens) {
+    const notifications = [];
+
     for (const token of pushTokens) {
         if (Expo.isExpoPushToken(token)) {
             notifications.push({
@@ -29,13 +32,16 @@ const buildNotification = async function (data) {
                 body: data.body,
                 badge: 1,
                 priority: 'default',
-                data: { hid: data.hid },
+                data: { hid: data.hid, type: data.type },
             });
         }
     }
+
+    return notifications;
 };
 
-const sendNotifications = async function () {
+const sendNotifications = async function (notifications) {
+    const tickets = [];
     const chunks = expo.chunkPushNotifications(notifications);
 
     (async () => {
@@ -50,17 +56,21 @@ const sendNotifications = async function () {
             }
         }
     })();
+
+    return tickets;
 };
 
-const buildReceiptList = async function () {
+const buildReceiptList = async function (tickets) {
+    const receiptIds = [];
     for (const ticket of tickets) {
         if (ticket.id) {
             receiptIds.push(ticket.id);
         }
     }
+    return receiptIds;
 };
 
-const checkReciepts = async function () {
+const checkReciepts = async function (receiptIds) {
     const receiptIdChunks = expo.chunkPushNotificationReceiptIds(receiptIds);
     (async () => {
         for (const chunk of receiptIdChunks) {
@@ -84,11 +94,11 @@ const checkReciepts = async function () {
 };
 
 exports.send = async function (data) {
-    await buildTokenList(data.uid);
-    await buildNotification(data);
-    await sendNotifications();
-    await buildReceiptList();
-    await checkReciepts();
+    const pushTokens = await buildTokenList(data.uid);
+    const notifications = await buildNotifications(data, pushTokens);
+    const tickets = await sendNotifications(notifications);
+    const receiptIds = await buildReceiptList(tickets);
 
+    await checkReciepts(receiptIds);
     return true;
 };
