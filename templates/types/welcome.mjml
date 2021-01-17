@@ -1,13 +1,9 @@
 <mj-column width="100%">
-    <mj-text css-class="body_text">
-        Hi {{name}},<br>We're stoked you decided to join Hikearound! Please verify your email address so that each week we can send you the best new hikes we think you'll enjoy.
-        <div class="signature">Thanks,</div>
-        The Hikearound Team
-    </mj-text>
+    <mj-text css-class="body_text">{{{emailBody}}}</mj-text>
     <mj-button
         css-class="action_button"
         href="https://www.tryhikearound.com/verify?token={{token}}"
     >
-        Confirm your email address
+        {{emailCta}}
     </mj-button>
 </mj-column>
