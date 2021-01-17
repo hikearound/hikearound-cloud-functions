@@ -7,43 +7,53 @@ const {
     getRoute,
 } = require('../utils/hike');
 const { getUserList, getUserData } = require('../utils/user');
+const { initializeLang } = require('../utils/i18n');
 const { parseDescription, getFirstName } = require('../utils/helper');
 
 const sentUserList = [];
 const type = 'digest';
 
-const buildData = async function (user, userData, hid) {
+const buildData = async function (user, userData, hid, i18n) {
+    const data = {};
+
     const hike = await getHikeData(hid);
     const lightMap = await getMapUrl(hid, 'light');
     const darkMap = await getMapUrl(hid, 'dark');
 
-    const title = 'Check out this weeks best hikes';
-    const upsell = `Get ready for the weekend by checking out ${hike.name} and other hikes we think you might like.`;
+    // Shared data
+    data.hid = hid;
+    data.hike = hike;
+    data.lightMap = lightMap;
+    data.darkMap = darkMap;
+    data.uid = user.uid;
 
-    const data = { hid, lightMap, darkMap };
-
-    // Notification data
-    data.notifBody = upsell;
-    data.notifTitle = title;
+    // Notif data
+    data.notifTitle = i18n.t('notif.digest.title');
+    data.notifBody = i18n.t('notif.digest.body', { name: data.hike.name });
 
     // Email data
     data.emailType = type;
-    data.emailSubject = upsell;
     data.emailToAddress = user.email;
 
-    // User data
-    data.uid = user.uid;
-    data.name = getFirstName(userData.name);
-    data.location = userData.lastKnownLocation.location;
+    data.emailSubject = i18n.t('email.digest.subject', { name: hike.name });
+    data.emailCta = i18n.t('email.digest.cta');
+    data.emailHeading = i18n.t('common.hikes');
 
-    // Hike data
-    data.hikeName = hike.name;
-    data.hikeCity = hike.city;
-    data.hikeState = hike.state;
-    data.hikeDistance = hike.distance;
-    data.hikeElevation = hike.elevation;
-    data.hikeRoute = getRoute(hike.route);
-    data.hikeDescription = parseDescription(hike.description);
+    data.emailIntro = i18n.t('email.digest.intro', {
+        name: getFirstName(userData.name),
+        location: userData.lastKnownLocation.location,
+    });
+
+    data.emailBody = i18n.t('email.digest.body', {
+        hid,
+        name: hike.name,
+        city: hike.city,
+        state: hike.state,
+        distance: hike.distance,
+        elevation: hike.elevation,
+        route: getRoute(hike.route),
+        description: parseDescription(hike.description),
+    });
 
     // Settings
     data.includeTypeUnsubscribe = true;
@@ -51,27 +61,17 @@ const buildData = async function (user, userData, hid) {
     return data;
 };
 
-const buildNotif = async function (user, data) {
-    return {
-        type,
-        uid: user.uid,
-        hid: data.hid,
-        title: data.notifTitle,
-        body: data.notifBody,
-    };
-};
-
 const markDigestAsSent = function (uid) {
     sentUserList.push(uid);
 };
 
 const maybeSendDigest = async function (user, userData, hid) {
-    const data = await buildData(user, userData, hid);
-    const email = await buildEmail(data, type);
-    const notif = await buildNotif(user, data);
+    const i18n = initializeLang(userData.lang);
+    const data = await buildData(user, userData, hid, i18n);
+    const email = await buildEmail(data, type, i18n);
 
     maybeSendEmail(user, type, email);
-    maybeSendPushNotif(user, type, notif);
+    maybeSendPushNotif(user, type, data);
 };
 
 exports.send = async function () {

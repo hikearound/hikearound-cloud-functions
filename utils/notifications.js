@@ -28,8 +28,8 @@ const buildNotifications = async function (data, pushTokens) {
             notifications.push({
                 to: token,
                 sound: 'default',
-                title: data.title,
-                body: data.body,
+                title: data.notifTitle,
+                body: data.notifBody,
                 badge: 1,
                 priority: 'default',
                 data: { hid: data.hid, type: data.type },

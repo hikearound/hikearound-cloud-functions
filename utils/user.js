@@ -1,6 +1,7 @@
 const admin = require('firebase-admin');
 const tools = require('firebase-tools');
 const functions = require('firebase-functions');
+const sentry = require('@sentry/node');
 const search = require('../functions/search');
 
 const db = admin.firestore();
@@ -9,7 +10,13 @@ const storage = admin.storage();
 
 exports.getUserData = async function (uid) {
     const userSnapshot = await db.collection('users').doc(uid).get();
-    return userSnapshot.data();
+    const userData = userSnapshot.data();
+
+    if (!userData.lang) {
+        userData.lang = 'en';
+    }
+
+    return userData;
 };
 
 exports.deleteUserDocuments = async function (uid) {
@@ -38,8 +45,7 @@ exports.deleteUserImages = async function (uid) {
         try {
             await storage.bucket().file(image).delete();
         } catch (e) {
-            // eslint-disable-next-line
-            console.log(e);
+            sentry.captureException(e);
         }
     });
 

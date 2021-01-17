@@ -14,12 +14,12 @@ exports.maybeSendEmail = async function (user, type, email) {
     return false;
 };
 
-exports.maybeSendPushNotif = async function (user, type, notif) {
+exports.maybeSendPushNotif = async function (user, type, data) {
     const userData = await getUserData(user.uid);
     const { enabled } = userData.notifs.push;
 
     if (enabled && type) {
-        notifications.send(notif);
+        notifications.send(data);
     }
 
     return false;
