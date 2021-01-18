@@ -16,8 +16,8 @@ exports.getUnsubscribeHeader = function (uid, type) {
     return `<mailto:${unsubscribe.email}?subject=uid:${uid},type:${type}>, <${unsubscribeUrl}>`;
 };
 
-exports.buildTemplate = function (data, type, i18n) {
-    const { uid } = data;
+exports.buildTemplate = function (data, type) {
+    const { uid, t } = data;
 
     let mjmlTemplate = fs.readFileSync(
         `${__dirname}/../templates/base.mjml`,
@@ -25,12 +25,12 @@ exports.buildTemplate = function (data, type, i18n) {
     );
 
     data.unsubscribe = {
-        intro: i18n.t('email.common.footer.intro'),
-        type: i18n.t('email.common.footer.type', {
+        intro: t('email.common.footer.intro'),
+        type: t('email.common.footer.type', {
             type,
             url: exports.getUnsubscribeUrl(uid, type),
         }),
-        global: i18n.t('email.common.footer.global', {
+        global: t('email.common.footer.global', {
             url: exports.getUnsubscribeUrl(uid, 'global'),
         }),
     };
@@ -48,8 +48,8 @@ exports.buildTemplate = function (data, type, i18n) {
     return html;
 };
 
-exports.buildEmail = async function (data, type, i18n) {
-    const html = exports.buildTemplate(data, type, i18n);
+exports.buildEmail = async function (data, type) {
+    const html = exports.buildTemplate(data, type);
     const unsubscribeHeader = exports.getUnsubscribeHeader(data.uid, type);
 
     return {

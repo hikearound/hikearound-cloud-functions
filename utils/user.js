@@ -1,7 +1,6 @@
 const admin = require('firebase-admin');
 const tools = require('firebase-tools');
 const functions = require('firebase-functions');
-const sentry = require('@sentry/node');
 const search = require('../functions/search');
 
 const db = admin.firestore();
@@ -35,21 +34,7 @@ exports.deleteUserRecord = async function (uid) {
 };
 
 exports.deleteUserImages = async function (uid) {
-    const userImages = [
-        `images/users/${uid}.jpg`,
-        `images/users/covers/${uid}_750x750.jpg`,
-        `images/users/thumbnails/${uid}_200x200.jpg`,
-    ];
-
-    userImages.map(async (image) => {
-        try {
-            await storage.bucket().file(image).delete();
-        } catch (e) {
-            sentry.captureException(e);
-        }
-    });
-
-    return true;
+    await storage.bucket().file(`images/users/${uid}.jpg`).delete();
 };
 
 exports.getUserList = async function () {

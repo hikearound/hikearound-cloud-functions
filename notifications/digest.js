@@ -7,20 +7,22 @@ const {
     getRoute,
 } = require('../utils/hike');
 const { getUserList, getUserData } = require('../utils/user');
-const { initializeLang } = require('../utils/i18n');
+const { translate } = require('../utils/i18n');
 const { parseDescription, getFirstName } = require('../utils/helper');
 
 const sentUserList = [];
 const type = 'digest';
 
-const buildData = async function (user, userData, hid, i18n) {
+const buildData = async function (user, userData, hid) {
     const data = {};
 
     const hike = await getHikeData(hid);
     const lightMap = await getMapUrl(hid, 'light');
     const darkMap = await getMapUrl(hid, 'dark');
+    const t = translate(userData);
 
     // Shared data
+    data.t = t;
     data.hid = hid;
     data.hike = hike;
     data.lightMap = lightMap;
@@ -28,23 +30,23 @@ const buildData = async function (user, userData, hid, i18n) {
     data.uid = user.uid;
 
     // Notif data
-    data.notifTitle = i18n.t('notif.digest.title');
-    data.notifBody = i18n.t('notif.digest.body', { name: data.hike.name });
+    data.notifTitle = t('notif.digest.title');
+    data.notifBody = t('notif.digest.body', { name: data.hike.name });
 
     // Email data
     data.emailType = type;
     data.emailToAddress = user.email;
 
-    data.emailSubject = i18n.t('email.digest.subject', { name: hike.name });
-    data.emailCta = i18n.t('email.digest.cta');
-    data.emailHeading = i18n.t('common.hikes');
+    data.emailSubject = t('email.digest.subject', { name: hike.name });
+    data.emailCta = t('email.digest.cta');
+    data.emailHeading = t('common.hikes');
 
-    data.emailIntro = i18n.t('email.digest.intro', {
+    data.emailIntro = t('email.digest.intro', {
         name: getFirstName(userData.name),
         location: userData.lastKnownLocation.location,
     });
 
-    data.emailBody = i18n.t('email.digest.body', {
+    data.emailBody = t('email.digest.body', {
         hid,
         name: hike.name,
         city: hike.city,
@@ -66,9 +68,8 @@ const markDigestAsSent = function (uid) {
 };
 
 const maybeSendDigest = async function (user, userData, hid) {
-    const i18n = initializeLang(userData.lang);
-    const data = await buildData(user, userData, hid, i18n);
-    const email = await buildEmail(data, type, i18n);
+    const data = await buildData(user, userData, hid);
+    const email = await buildEmail(data, type);
 
     maybeSendEmail(user, type, email);
     maybeSendPushNotif(user, type, data);

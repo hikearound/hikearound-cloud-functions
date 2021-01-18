@@ -3,7 +3,7 @@ const { initializeMailgun } = require('../utils/config');
 const { buildEmail } = require('../utils/email');
 const { getUserData } = require('../utils/user');
 const { getFirstName } = require('../utils/helper');
-const { initializeLang } = require('../utils/i18n');
+const { translate } = require('../utils/i18n');
 
 const type = 'reset';
 const auth = admin.auth();
@@ -18,19 +18,20 @@ const buildData = async function (userEmail) {
     }
 
     const userData = await getUserData(user.uid);
-    const i18n = initializeLang(userData.lang);
     const token = await auth.createCustomToken(user.uid);
+    const t = translate(userData);
 
     const data = {
         emailToAddress: user.email,
-        emailSubject: i18n.t('email.reset.subject'),
-        emailCta: i18n.t('email.rest.cta'),
+        emailSubject: t('email.reset.subject'),
+        emailCta: t('email.rest.cta'),
     };
 
-    data.emailBody = i18n.t('email.reset.body', {
+    data.emailBody = t('email.reset.body', {
         name: getFirstName(userData.name),
     });
 
+    data.t = t;
     data.token = token;
     data.uid = user.uid;
     data.emailType = type;
