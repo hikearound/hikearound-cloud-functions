@@ -2,6 +2,9 @@ exports.translations = {
     common: {
         hikes: 'Hikes',
         continue: 'Continue Reading',
+        description: 'Description',
+        map: 'Trail Map',
+        gallery: 'Gallery',
     },
     notif: {
         digest: {
@@ -25,7 +28,7 @@ exports.translations = {
             subject:
                 'Get ready for the weekend by checking out {{name}} and other hikes we think you might like.',
             intro:
-                "Hi {{name}},<br>Here are some hikes we recently added near {{location}} that we think you'll enjoy.",
+                'Hi {{name}},<br>We recently added some hikes near {{location}} and this is one we think you might enjoy.',
             body:
                 '<a href="https://www.tryhikearound.com/hike/{{hid}}">{{name}}</a> is a hike located in {{city}}, {{state}}. It\'s a {{distance}} mile {{route}} with a net elevation gain of {{elevation}} feet.<p>{{description}} <a href="https://www.tryhikearound.com/hike/{{hid}}">Continue Reading</a></p>',
             cta: 'View Hike',

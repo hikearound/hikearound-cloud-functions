@@ -9,6 +9,14 @@ exports.getHikeData = async function (hid) {
     return hikeSnapshot.data();
 };
 
+exports.getHikeImageGallery = async function (hid) {
+    const gallerySnapshot = await db.collection('images').doc(hid).get();
+    const images = gallerySnapshot.data();
+    const count = Object.keys(images).length;
+
+    return { images, count };
+};
+
 exports.getNearbyHikes = async function (range) {
     const hikeRef = await db
         .collection('hikes')

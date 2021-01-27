@@ -2,6 +2,9 @@ exports.translations = {
     common: {
         hikes: 'Caminatas',
         continue: 'Sigue leyendo',
+        description: 'Descripción',
+        map: 'Mapa de senderos',
+        gallery: 'Galería',
     },
     notif: {
         digest: {

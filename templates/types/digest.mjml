@@ -2,20 +2,43 @@
     <mj-text css-class="body_text">{{{emailIntro}}}</mj-text>
 </mj-column>
 <mj-column width="100%" css-class="heading">
-    <mj-text css-class="heading_text">{{{emailHeading}}}</mj-text>
-</mj-column>
-<mj-column width="100%" css-class="hike_info">
-    <mj-text css-class="hike_info_text">{{{emailBody}}}</mj-text>
+    <mj-text css-class="heading_text">{{{emailHeading.map}}}</mj-text>
 </mj-column>
 <mj-column width="100%">
     <mj-image
         css-class="map light"
-        src="{{lightMap}}"
+        src="{{map.light.url}}"
         href="https://www.tryhikearound.com/hike/{{hid}}"
     />
     <mj-image
         css-class="map dark"
-        src="{{darkMap}}"
+        src="{{map.dark.url}}"
+        href="https://www.tryhikearound.com/hike/{{hid}}"
+    />
+</mj-column>
+<mj-column width="100%" css-class="heading">
+    <mj-text css-class="heading_text">{{{emailHeading.description}}}</mj-text>
+</mj-column>
+<mj-column width="100%" css-class="hike_info">
+    <mj-text css-class="hike_info_text">{{{emailBody}}}</mj-text>
+</mj-column>
+<mj-column width="100%" css-class="heading">
+    <mj-text css-class="heading_text">{{{emailHeading.gallery}}}</mj-text>
+</mj-column>
+<mj-column width="100%" css-class="gallery">
+    <mj-image
+        css-class="left"
+        src="{{gallery.[0].url}}"
+        href="https://www.tryhikearound.com/hike/{{hid}}"
+    />
+    <mj-image
+        css-class="middle"
+        src="{{gallery.[1].url}}"
+        href="https://www.tryhikearound.com/hike/{{hid}}"
+    />
+    <mj-image
+        css-class="right"
+        src="{{gallery.[2].url}}"
         href="https://www.tryhikearound.com/hike/{{hid}}"
     />
 </mj-column>

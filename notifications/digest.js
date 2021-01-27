@@ -2,6 +2,7 @@ const { buildEmail } = require('../utils/email');
 const { maybeSendPushNotif, maybeSendEmail } = require('../utils/send');
 const {
     getHikeData,
+    getHikeImageGallery,
     getNewHikes,
     getMapUrl,
     getRoute,
@@ -9,6 +10,7 @@ const {
 const { getUserList, getUserData } = require('../utils/user');
 const { translate } = require('../utils/i18n');
 const { parseDescription, getFirstName } = require('../utils/helper');
+const { buildImageArray } = require('../utils/image');
 
 const sentUserList = [];
 const type = 'digest';
@@ -16,18 +18,21 @@ const type = 'digest';
 const buildData = async function (user, userData, hid) {
     const data = {};
 
-    const hike = await getHikeData(hid);
-    const lightMap = await getMapUrl(hid, 'light');
-    const darkMap = await getMapUrl(hid, 'dark');
     const t = translate(userData);
+    const hike = await getHikeData(hid);
+    const { images, count } = await getHikeImageGallery(hid);
+
+    const mapLight = await getMapUrl(hid, 'light');
+    const mapDark = await getMapUrl(hid, 'dark');
 
     // Shared data
     data.t = t;
     data.hid = hid;
     data.hike = hike;
-    data.lightMap = lightMap;
-    data.darkMap = darkMap;
     data.uid = user.uid;
+
+    data.gallery = buildImageArray(images, count);
+    data.map = { light: { url: mapLight }, dark: { url: mapDark } };
 
     // Notif data
     data.notifTitle = t('notif.digest.title');
@@ -39,7 +44,12 @@ const buildData = async function (user, userData, hid) {
 
     data.emailSubject = t('email.digest.subject', { name: hike.name });
     data.emailCta = t('email.digest.cta');
-    data.emailHeading = t('common.hikes');
+
+    data.emailHeading = {
+        description: t('common.description'),
+        map: t('common.map'),
+        gallery: t('common.gallery'),
+    };
 
     data.emailIntro = t('email.digest.intro', {
         name: getFirstName(userData.name),
