@@ -10,27 +10,27 @@ const type = 'welcome';
 const auth = admin.auth();
 
 const buildData = async function (uid) {
+    const data = {};
+
     const user = await auth.getUser(uid);
     const userData = await getUserData(uid);
     const t = translate(userData);
     const token = encode(uid);
 
-    const data = {
-        emailToAddress: user.email,
-        emailSubject: t('email.welcome.subject', {
-            name: getFirstName(userData.name),
-        }),
-        emailCta: t('email.welcome.cta'),
-    };
+    data.email.toAddress = user.email;
+    data.email.subject = t('email.welcome.subject', {
+        name: getFirstName(userData.name),
+    });
 
-    data.emailBody = t('email.welcome.body', {
+    data.email.cta = t('email.welcome.cta');
+    data.email.body = t('email.welcome.body', {
         name: getFirstName(userData.name),
     });
 
     data.t = t;
     data.token = token;
     data.uid = uid;
-    data.emailType = type;
+    data.email.type = type;
     data.includeTypeUnsubscribe = false;
 
     return data;

@@ -20,10 +20,9 @@ const buildData = async function (user, userData, hid) {
 
     const t = translate(userData);
     const hike = await getHikeData(hid);
-    const { images, count } = await getHikeImageGallery(hid);
-
-    const mapLight = await getMapUrl(hid, 'light');
     const mapDark = await getMapUrl(hid, 'dark');
+    const mapLight = await getMapUrl(hid, 'light');
+    const { images, count } = await getHikeImageGallery(hid);
 
     // Shared data
     data.t = t;
@@ -35,28 +34,28 @@ const buildData = async function (user, userData, hid) {
     data.map = { light: { url: mapLight }, dark: { url: mapDark } };
 
     // Notif data
-    data.notifTitle = t('notif.digest.title');
-    data.notifBody = t('notif.digest.body', { name: data.hike.name });
+    data.notif.title = t('notif.digest.title');
+    data.notif.body = t('notif.digest.body', { name: data.hike.name });
 
     // Email data
-    data.emailType = type;
-    data.emailToAddress = user.email;
+    data.email.type = type;
+    data.email.toAddress = user.email;
 
-    data.emailSubject = t('email.digest.subject', { name: hike.name });
-    data.emailCta = t('email.digest.cta');
+    data.email.subject = t('email.digest.subject', { name: hike.name });
+    data.email.cta = t('email.digest.cta');
 
-    data.emailHeading = {
+    data.email.heading = {
         description: t('common.description'),
         map: t('common.map'),
         gallery: t('common.gallery'),
     };
 
-    data.emailIntro = t('email.digest.intro', {
+    data.email.intro = t('email.digest.intro', {
         name: getFirstName(userData.name),
         location: userData.lastKnownLocation.location,
     });
 
-    data.emailBody = t('email.digest.body', {
+    data.email.body = t('email.digest.body', {
         hid,
         name: hike.name,
         city: hike.city,

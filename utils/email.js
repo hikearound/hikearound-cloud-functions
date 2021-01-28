@@ -53,9 +53,9 @@ exports.buildEmail = async function (data, type) {
     const unsubscribeHeader = exports.getUnsubscribeHeader(data.uid, type);
 
     return {
-        to: [data.emailToAddress],
+        to: [data.email.toAddress],
         from: senderData.nameAndAddress,
-        subject: data.emailSubject,
+        subject: data.email.subject,
         'o:tag': type,
         'h:List-Unsubscribe': unsubscribeHeader,
         html,

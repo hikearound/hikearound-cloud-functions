@@ -9,6 +9,7 @@ const type = 'reset';
 const auth = admin.auth();
 
 const buildData = async function (userEmail) {
+    const data = {};
     let user;
 
     try {
@@ -21,20 +22,18 @@ const buildData = async function (userEmail) {
     const token = await auth.createCustomToken(user.uid);
     const t = translate(userData);
 
-    const data = {
-        emailToAddress: user.email,
-        emailSubject: t('email.reset.subject'),
-        emailCta: t('email.rest.cta'),
-    };
+    data.email.toAddress = user.email;
+    data.email.subject = t('email.reset.subject');
 
-    data.emailBody = t('email.reset.body', {
+    data.email.cta = t('email.rest.cta');
+    data.email.body = t('email.reset.body', {
         name: getFirstName(userData.name),
     });
 
     data.t = t;
     data.token = token;
     data.uid = user.uid;
-    data.emailType = type;
+    data.email.type = type;
     data.includeTypeUnsubscribe = false;
 
     return data;
