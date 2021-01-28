@@ -13,12 +13,10 @@ const { parseDescription, getFirstName } = require('../utils/helper');
 const { buildImageArray } = require('../utils/image');
 const { dataFormat } = require('../constants/notif');
 
-const sentUserList = [];
 const type = 'digest';
 
 const buildData = async function (user, userData, hid) {
     const data = dataFormat;
-
     const t = translate(userData);
     const hike = await getHikeData(hid);
     const { images, count } = await getHikeImageGallery(hid);
@@ -75,10 +73,6 @@ const buildData = async function (user, userData, hid) {
     return data;
 };
 
-const markDigestAsSent = function (uid) {
-    sentUserList.push(uid);
-};
-
 const maybeSendDigest = async function (user, userData, hid) {
     const data = await buildData(user, userData, hid);
     const email = await buildEmail(data, type);
@@ -94,20 +88,10 @@ exports.send = async function () {
         const userData = await getUserData(user.uid);
 
         if (userData.lastKnownLocation) {
-            const newHikes = await getNewHikes(userData);
+            const hikes = await getNewHikes(userData);
 
-            if (newHikes.length > 0) {
-                const hid = newHikes[0];
-
-                if (!sentUserList.includes(user.uid)) {
-                    markDigestAsSent(user.uid);
-
-                    // if (user.uid === 'woEsITvCBDWiotEmNTJpLnyLU7r2') {
-                    //     await maybeSendDigest(user, userData, hid);
-                    // }
-
-                    await maybeSendDigest(user, userData, hid);
-                }
+            if (hikes.length > 0) {
+                await maybeSendDigest(user, userData, hikes[0]);
             }
         }
     });
