@@ -1,6 +1,5 @@
 const admin = require('firebase-admin');
-const { initializeMailgun } = require('../utils/config');
-const { buildEmail } = require('../utils/email');
+const { sendEmail } = require('../utils/send');
 const { getUserData } = require('../utils/user');
 const { getFirstName } = require('../utils/helper');
 const { translate } = require('../utils/i18n');
@@ -43,12 +42,5 @@ const buildData = async function (userEmail) {
 
 exports.send = async function (userEmail) {
     const data = await buildData(userEmail);
-
-    if (data) {
-        const email = await buildEmail(data, type);
-        const mg = initializeMailgun();
-        return mg.messages().send(email);
-    }
-
-    return true;
+    await sendEmail(data, type);
 };

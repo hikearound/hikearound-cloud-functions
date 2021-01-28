@@ -1,6 +1,7 @@
 const { initializeMailgun } = require('./config');
 const notifications = require('./notifications');
 const { getUserData } = require('./user');
+const { buildEmail } = require('./email');
 
 exports.maybeSendEmail = async function (user, type, email) {
     const userData = await getUserData(user.uid);
@@ -23,4 +24,10 @@ exports.maybeSendPushNotif = async function (user, type, data) {
     }
 
     return false;
+};
+
+exports.sendEmail = async function (data, type) {
+    const email = await buildEmail(data, type);
+    const mg = initializeMailgun();
+    return mg.messages().send(email);
 };
