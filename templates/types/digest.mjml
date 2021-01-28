@@ -1,52 +1,5 @@
-<mj-column width="100%">
-    <mj-text css-class="body_text">{{{email.intro}}}</mj-text>
-</mj-column>
-<mj-column width="100%" css-class="heading">
-    <mj-text css-class="heading_text">{{{email.heading.map}}}</mj-text>
-</mj-column>
-<mj-column width="100%">
-    <mj-image
-        css-class="map light"
-        src="{{map.light.url}}"
-        href="https://www.tryhikearound.com/hike/{{hid}}"
-    />
-    <mj-image
-        css-class="map dark"
-        src="{{map.dark.url}}"
-        href="https://www.tryhikearound.com/hike/{{hid}}"
-    />
-</mj-column>
-<mj-column width="100%" css-class="heading">
-    <mj-text css-class="heading_text">{{{email.heading.description}}}</mj-text>
-</mj-column>
-<mj-column width="100%" css-class="hike_info">
-    <mj-text css-class="hike_info_text">{{{email.body}}}</mj-text>
-</mj-column>
-<mj-column width="100%" css-class="heading">
-    <mj-text css-class="heading_text">{{{email.heading.gallery}}}</mj-text>
-</mj-column>
-<mj-column width="100%" css-class="gallery">
-    <mj-image
-        css-class="left"
-        src="{{gallery.[0].url}}"
-        href="https://www.tryhikearound.com/hike/{{hid}}"
-    />
-    <mj-image
-        css-class="middle"
-        src="{{gallery.[1].url}}"
-        href="https://www.tryhikearound.com/hike/{{hid}}"
-    />
-    <mj-image
-        css-class="right"
-        src="{{gallery.[2].url}}"
-        href="https://www.tryhikearound.com/hike/{{hid}}"
-    />
-</mj-column>
-<mj-column width="100%">
-    <mj-button
-        css-class="action_button"
-        href="https://www.tryhikearound.com/hike/{{hid}}"
-    >
-        {{email.cta}}
-    </mj-button>
-</mj-column>
+<mj-include path="__dirname/../../components/body.mjml" />
+<mj-include path="__dirname/../../components/digest/map.mjml" />
+<mj-include path="__dirname/../../components/digest/description.mjml" />
+<mj-include path="__dirname/../../components/digest/gallery.mjml" />
+<mj-include path="__dirname/../../components/button.mjml" />

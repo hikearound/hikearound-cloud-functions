@@ -1,9 +1,2 @@
-<mj-column width="100%">
-    <mj-text css-class="body_text">{{{email.body}}}</mj-text>
-    <mj-button
-        css-class="action_button"
-        href="https://www.tryhikearound.com/verify?token={{token}}"
-    >
-        {{email.cta}}
-    </mj-button>
-</mj-column>
+<mj-include path="__dirname/../../components/body.mjml" />
+<mj-include path="__dirname/../../components/button.mjml" />

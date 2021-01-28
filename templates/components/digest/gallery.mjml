@@ -1,0 +1,20 @@
+<mj-column width="100%" css-class="heading">
+    <mj-text css-class="heading_text">{{{email.heading.gallery}}}</mj-text>
+</mj-column>
+<mj-column width="100%" css-class="gallery">
+    <mj-image
+        css-class="left"
+        src="{{gallery.[0].url}}"
+        href="https://www.tryhikearound.com/{{{email.cta.path}}}"
+    />
+    <mj-image
+        css-class="middle"
+        src="{{gallery.[1].url}}"
+        href="https://www.tryhikearound.com/{{{email.cta.path}}}"
+    />
+    <mj-image
+        css-class="right"
+        src="{{gallery.[2].url}}"
+        href="https://www.tryhikearound.com/{{{email.cta.path}}}"
+    />
+</mj-column>

@@ -1,0 +1,15 @@
+<mj-column width="100%" css-class="heading">
+    <mj-text css-class="heading_text">{{{email.heading.map}}}</mj-text>
+</mj-column>
+<mj-column width="100%">
+    <mj-image
+        css-class="map light"
+        src="{{map.light.url}}"
+        href="https://www.tryhikearound.com/{{{email.cta.path}}}"
+    />
+    <mj-image
+        css-class="map dark"
+        src="{{map.dark.url}}"
+        href="https://www.tryhikearound.com/{{{email.cta.path}}}"
+    />
+</mj-column>

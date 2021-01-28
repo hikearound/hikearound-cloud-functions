@@ -27,9 +27,9 @@ exports.translations = {
         digest: {
             subject:
                 'Get ready for the weekend by checking out {{name}} and other hikes we think you might like.',
-            intro:
-                'Hi {{name}},<br>We recently added some hikes near {{location}} and this is one we think you might enjoy.',
             body:
+                'Hi {{name}},<br>We recently added some hikes near {{location}} and this is one we think you might enjoy.',
+            description:
                 '<a href="https://www.tryhikearound.com/hike/{{hid}}">{{name}}</a> is a hike located in {{city}}, {{state}}. It\'s a {{distance}} mile {{route}} with a net elevation gain of {{elevation}} feet.<p>{{description}} <a href="https://www.tryhikearound.com/hike/{{hid}}">Continue Reading</a></p>',
             cta: 'View Hike',
         },

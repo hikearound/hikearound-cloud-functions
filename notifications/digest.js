@@ -11,18 +11,20 @@ const { getUserList, getUserData } = require('../utils/user');
 const { translate } = require('../utils/i18n');
 const { parseDescription, getFirstName } = require('../utils/helper');
 const { buildImageArray } = require('../utils/image');
+const { dataFormat } = require('../constants/notif');
 
 const sentUserList = [];
 const type = 'digest';
 
 const buildData = async function (user, userData, hid) {
-    const data = {};
+    const data = dataFormat;
 
     const t = translate(userData);
     const hike = await getHikeData(hid);
+    const { images, count } = await getHikeImageGallery(hid);
+
     const mapDark = await getMapUrl(hid, 'dark');
     const mapLight = await getMapUrl(hid, 'light');
-    const { images, count } = await getHikeImageGallery(hid);
 
     // Shared data
     data.t = t;
@@ -42,7 +44,8 @@ const buildData = async function (user, userData, hid) {
     data.email.toAddress = user.email;
 
     data.email.subject = t('email.digest.subject', { name: hike.name });
-    data.email.cta = t('email.digest.cta');
+    data.email.cta.text = t('email.digest.cta');
+    data.email.cta.path = `hike/${hid}`;
 
     data.email.heading = {
         description: t('common.description'),
@@ -50,12 +53,12 @@ const buildData = async function (user, userData, hid) {
         gallery: t('common.gallery'),
     };
 
-    data.email.intro = t('email.digest.intro', {
+    data.email.body = t('email.digest.body', {
         name: getFirstName(userData.name),
         location: userData.lastKnownLocation.location,
     });
 
-    data.email.body = t('email.digest.body', {
+    data.email.description = t('email.digest.description', {
         hid,
         name: hike.name,
         city: hike.city,

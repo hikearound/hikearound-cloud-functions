@@ -4,12 +4,12 @@ const { buildEmail } = require('../utils/email');
 const { getUserData } = require('../utils/user');
 const { getFirstName } = require('../utils/helper');
 const { translate } = require('../utils/i18n');
+const { dataFormat } = require('../constants/notif');
 
 const type = 'reset';
 const auth = admin.auth();
 
 const buildData = async function (userEmail) {
-    const data = {};
     let user;
 
     try {
@@ -18,6 +18,8 @@ const buildData = async function (userEmail) {
         return false;
     }
 
+    const data = dataFormat;
+
     const userData = await getUserData(user.uid);
     const token = await auth.createCustomToken(user.uid);
     const t = translate(userData);
@@ -25,7 +27,8 @@ const buildData = async function (userEmail) {
     data.email.toAddress = user.email;
     data.email.subject = t('email.reset.subject');
 
-    data.email.cta = t('email.rest.cta');
+    data.email.cta.path = `reset?token=${token}`;
+    data.email.cta.text = t('email.reset.cta');
     data.email.body = t('email.reset.body', {
         name: getFirstName(userData.name),
     });

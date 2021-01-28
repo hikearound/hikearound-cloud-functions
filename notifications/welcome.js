@@ -5,12 +5,13 @@ const { buildEmail } = require('../utils/email');
 const { getUserData } = require('../utils/user');
 const { getFirstName } = require('../utils/helper');
 const { translate } = require('../utils/i18n');
+const { dataFormat } = require('../constants/notif');
 
 const type = 'welcome';
 const auth = admin.auth();
 
 const buildData = async function (uid) {
-    const data = {};
+    const data = dataFormat;
 
     const user = await auth.getUser(uid);
     const userData = await getUserData(uid);
@@ -22,7 +23,8 @@ const buildData = async function (uid) {
         name: getFirstName(userData.name),
     });
 
-    data.email.cta = t('email.welcome.cta');
+    data.email.cta.path = `verify?token=${token}`;
+    data.email.cta.text = t('email.welcome.cta');
     data.email.body = t('email.welcome.body', {
         name: getFirstName(userData.name),
     });

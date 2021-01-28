@@ -1,0 +1,6 @@
+<mj-column width="100%" css-class="heading">
+    <mj-text css-class="heading_text">{{{email.heading.description}}}</mj-text>
+</mj-column>
+<mj-column width="100%" css-class="hike_info">
+    <mj-text css-class="hike_info_text">{{{email.description}}}</mj-text>
+</mj-column>

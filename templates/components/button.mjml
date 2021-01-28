@@ -1,0 +1,8 @@
+<mj-column width="100%">
+    <mj-button
+        css-class="action_button"
+        href="https://www.tryhikearound.com/{{{email.cta.path}}}"
+    >
+        {{email.cta.text}}
+    </mj-button>
+</mj-column>
