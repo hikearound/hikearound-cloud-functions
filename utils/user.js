@@ -15,6 +15,9 @@ exports.getUserData = async function (uid) {
         userData.lang = 'en';
     }
 
+    const user = await auth.getUser(uid);
+    userData.email = user.email;
+
     return userData;
 };
 

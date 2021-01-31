@@ -18,7 +18,9 @@
     "@firebase/testing": "^0.20.11",
     "@google-cloud/storage": "^5.7.3",
     "@sentry/node": "^5.30.0",
+    "@slack/webhook": "^6.0.0",
     "algoliasearch": "^4.8.4",
+    "axios": "^0.21.1",
     "build-url": "^6.0.1",
     "dir-glob": "^3.0.1",
     "expo-server-sdk": "^3.6.0",
@@ -51,7 +53,7 @@
     "eslint-plugin-react": "^7.22.0",
     "eslint-plugin-react-hooks": "^2.5.0",
     "firebase-functions-test": "^0.2.3",
-    "less": "^4.1.0",
+    "less": "^4.1.1",
     "less-plugin-clean-css": "^1.5.1",
     "mocha": "^8.2.1",
     "prettier": "^2.2.1"
