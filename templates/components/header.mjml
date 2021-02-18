@@ -1,4 +1,8 @@
 <mj-head>
+    <mj-raw>
+        <meta name="color-scheme" content="light dark">
+        <meta name="supported-color-schemes" content="light dark">
+    </mj-raw>
     <mj-include path="__dirname/../../styles/style.min.mjml" />
     <mj-attributes>
         <mj-all

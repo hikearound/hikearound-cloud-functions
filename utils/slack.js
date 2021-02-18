@@ -37,7 +37,7 @@ exports.sendReviewHook = async function (data) {
                 accessory: {
                     type: 'image',
                     image_url: hike.coverPhoto,
-                    alt_text: 'Hike cover photo.',
+                    alt_text: `A photo of ${hike.name}.`,
                 },
             },
         ],
