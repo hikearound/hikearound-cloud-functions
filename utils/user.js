@@ -17,6 +17,7 @@ exports.getUserData = async function (uid) {
 
     const user = await auth.getUser(uid);
     userData.email = user.email;
+    userData.uid = uid;
 
     return userData;
 };

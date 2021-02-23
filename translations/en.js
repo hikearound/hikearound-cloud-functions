@@ -10,7 +10,11 @@ exports.translations = {
         digest: {
             title: 'Check out this weeks best hikes',
             body:
-                'Get ready for the weekend by checking out {{name}} and other hikes we think you might like.',
+                'Get ready for the weekend by checking out {{name}} and other hikes we think you might like',
+        },
+        reviewLike: {
+            title: 'Liked by {{name}}',
+            body: 'Your review for {{name}} in {{city}}, {{state}}',
         },
     },
     email: {

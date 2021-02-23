@@ -10,7 +10,11 @@ exports.translations = {
         digest: {
             title: 'Mira las mejores caminatas de esta semana',
             body:
-                'Prepárate para el fin de semana visitando {{name}} y otras caminatas que creemos que te pueden gustar.',
+                'Prepárate para el fin de semana visitando {{name}} y otras caminatas que creemos que te pueden gustar',
+        },
+        reviewLike: {
+            title: 'Le gustó a {{name}}',
+            body: 'Tu reseña de {{name}} en {{city}}, {{state}}',
         },
     },
     email: {

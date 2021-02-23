@@ -5,6 +5,7 @@ const config = require('./utils/config');
 config.initializeApp();
 
 // Notifications
+const reviewLike = require('./notifications/review');
 const welcome = require('./notifications/welcome');
 const digest = require('./notifications/digest');
 const reset = require('./notifications/reset');
@@ -14,6 +15,18 @@ const map = require('./functions/map');
 const search = require('./functions/search');
 const user = require('./functions/user');
 const review = require('./functions/review');
+
+exports.reviewLikeNotif = functions.firestore
+    .document('reviews/{rid}')
+    .onUpdate(async (snapshot, context) => {
+        const { rid } = context.params;
+        try {
+            return reviewLike.send(rid, snapshot);
+        } catch (e) {
+            sentry.captureException(e);
+        }
+        return false;
+    });
 
 exports.welcomeNotif = functions.firestore
     .document('users/{uid}')
