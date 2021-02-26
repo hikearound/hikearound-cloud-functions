@@ -84,7 +84,7 @@ const maybeSendDigest = async function (user, userData, hid) {
 exports.send = async function () {
     const userList = await getUserList();
 
-    userList.forEach(async function (user) {
+    userList.forEach(async (user) => {
         const userData = await getUserData(user.uid);
 
         if (userData.lastKnownLocation) {

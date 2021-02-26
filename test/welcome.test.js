@@ -9,5 +9,5 @@ exports.buildEmail = async function () {
     data.includeTypeUnsubscribe = false;
 
     const email = buildTemplate(data, type);
-    fs.writeFile('./test/output/email.html', email, function () {});
+    fs.writeFile('./test/output/email.html', email, () => {});
 };

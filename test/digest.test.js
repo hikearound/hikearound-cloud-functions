@@ -23,5 +23,5 @@ exports.buildEmail = async function () {
     data.includeTypeUnsubscribe = true;
 
     const email = buildTemplate(data, type);
-    fs.writeFile('./test/output/email.html', email, function () {});
+    fs.writeFile('./test/output/email.html', email, () => {});
 };

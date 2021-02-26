@@ -101,7 +101,7 @@ exports.generateStaticMap = async function (hid) {
     const annotations = setAnnotations(hikeData);
     const imgs = setImageArray();
 
-    config.colorSchemes.forEach(async function (scheme) {
+    config.colorSchemes.forEach(async (scheme) => {
         const mapUrl = await buildMapUrl(
             center,
             spn,

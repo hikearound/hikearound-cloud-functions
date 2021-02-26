@@ -12,10 +12,10 @@ exports.updatePassword = async function (uid, password) {
 
     await auth
         .updateUser(uid, { password })
-        .then(function (userRecord) {
+        .then((userRecord) => {
             result = userRecord.toJSON();
         })
-        .catch(function (error) {
+        .catch((error) => {
             result = error.toJSON();
         });
 

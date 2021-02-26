@@ -48,7 +48,7 @@ exports.getUserList = async function () {
     const buildUserList = async function (nextPageToken) {
         await auth
             .listUsers(tokenIterator, nextPageToken)
-            .then(function (listUsersResult) {
+            .then((listUsersResult) => {
                 listUsersResult.users.forEach((user) => {
                     const userData = user.toJSON();
                     userList.push(userData);

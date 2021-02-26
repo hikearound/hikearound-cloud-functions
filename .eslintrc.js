@@ -1,30 +1,18 @@
 module.exports = {
-    'extends': [
-        'eslint:recommended',
-        'airbnb',
-        'prettier',
-    ],
-    'parserOptions': {
-        'ecmaVersion': 2017,
+    extends: ['eslint:recommended', 'airbnb', 'prettier'],
+    parser: '@babel/eslint-parser',
+    parserOptions: {
+        ecmaVersion: 2017,
     },
-    'plugins': [
-        'promise',
-        'prettier',
-        'jest',
-    ],
-    'env': {
+    plugins: ['promise', 'prettier', 'jest'],
+    env: {
         'jest/globals': true,
     },
-    'globals': {
-        'before': true,
-        'after': true,
+    globals: {
+        before: true,
+        after: true,
     },
-    'settings': {
-        'react': {
-            'version': 'latest',
-        },
-    },
-    'rules': {
+    rules: {
         'import/no-extraneous-dependencies': 'off',
         'guard-for-in': 'off',
         'no-continue': 'off',
@@ -33,18 +21,18 @@ module.exports = {
         'comma-dangle': ['error', 'always-multiline'],
         'no-await-in-loop': 'off',
         'no-param-reassign': 'off',
-        'semi': ['error', 'always'],
+        semi: ['error', 'always'],
         'prettier/prettier': [
             'error',
             {
-                'trailingComma': 'all',
-                'singleQuote': true,
-                'printWidth': 80,
-                'semi': true,
-                'jsxBracketSameLine': false,
-                'tabWidth': 4,
-                'arrowParens': 'always',
-            }
+                trailingComma: 'all',
+                singleQuote: true,
+                printWidth: 80,
+                semi: true,
+                jsxBracketSameLine: false,
+                tabWidth: 4,
+                arrowParens: 'always',
+            },
         ],
-    }
+    },
 };
