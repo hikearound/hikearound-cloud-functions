@@ -67,6 +67,10 @@ const buildData = async function (user, userData, hid) {
         description: parseDescription(hike.description),
     });
 
+    data.email.footer = {
+        salutation: t('email.digest.salutation'),
+    };
+
     // Settings
     data.includeTypeUnsubscribe = true;
 

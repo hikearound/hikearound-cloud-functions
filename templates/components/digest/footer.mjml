@@ -1,0 +1,3 @@
+<mj-column width="100%">
+    <mj-text css-class="body_text">{{{email.footer.salutation}}}</mj-text>
+</mj-column>

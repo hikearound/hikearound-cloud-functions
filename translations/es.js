@@ -36,6 +36,8 @@ exports.translations = {
             body:
                 '<a href="https://www.tryhikearound.com/hike/{{hid}}">{{name}}</a> es una caminata ubicada en {{city}}, {{state}}. Es una {{distance}} milla {{route}} con una ganancia de elevación neta de {{elevation}} pies.',
             cta: 'Ver caminata',
+            salutation:
+                '¡Esperamos que tengas un gran fin de semana y buena suerte! Tendremos más caminatas esperándote la próxima semana.',
         },
         reset: {
             subject: 'Restablece tu contraseña de Hikearound.',

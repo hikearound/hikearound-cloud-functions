@@ -2,4 +2,5 @@
 <mj-include path="__dirname/../../components/digest/map.mjml" />
 <mj-include path="__dirname/../../components/digest/description.mjml" />
 <mj-include path="__dirname/../../components/digest/gallery.mjml" />
+<mj-include path="__dirname/../../components/digest/footer.mjml" />
 <mj-include path="__dirname/../../components/button.mjml" />
