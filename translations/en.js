@@ -37,7 +37,7 @@ exports.translations = {
                 '<a href="https://www.tryhikearound.com/hike/{{hid}}">{{name}}</a> is a hike located in {{city}}, {{state}}. It\'s a {{distance}} mile {{route}} with a net elevation gain of {{elevation}} feet.<p>{{description}} <a href="https://www.tryhikearound.com/hike/{{hid}}">Continue Reading</a></p>',
             cta: 'View Hike',
             salutation:
-                'We hope you have a great weekend, and good luck out there! We\'ll have more hikes waiting for you next week.',
+                "We hope you have a great weekend, and good luck out there! We'll have more hikes waiting for you next week.",
         },
         reset: {
             subject: 'Reset your Hikearound password.',
