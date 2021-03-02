@@ -36,6 +36,7 @@ const buildData = async function (user, userData, hid) {
     // Notif data
     data.notif.title = t('notif.digest.title');
     data.notif.body = t('notif.digest.body', { name: data.hike.name });
+    data.notif.data = { hid, recipientUid: data.uid };
 
     // Email data
     data.email.type = type;

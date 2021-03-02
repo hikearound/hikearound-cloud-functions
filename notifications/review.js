@@ -30,11 +30,19 @@ const buildData = async function (rid, user, snapshot) {
 
     // Notif data
     data.notif.title = t('notif.reviewLike.title', { name: liker.name });
+
     data.notif.body = t('notif.reviewLike.body', {
         name: hike.name,
         city: hike.city,
         state: hike.state,
     });
+
+    data.notif.data = {
+        hid: data.hid,
+        user: { name: liker.name },
+        hike: { name: hike.name },
+        recipientUid: data.recipientUid,
+    };
 
     return data;
 };

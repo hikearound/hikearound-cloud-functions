@@ -1,3 +1,5 @@
+const admin = require('firebase-admin');
+
 exports.parseDescription = function (description) {
     if (description.includes('\\n')) {
         description = description.replace(/\\n/g, '\n');
@@ -21,4 +23,9 @@ exports.truncateText = function (text, truncationLength) {
 exports.getFirstName = function (name) {
     name = name.split(' ');
     return name[0];
+};
+
+exports.getServerTimestamp = function () {
+    const timestamp = admin.firestore.FieldValue.serverTimestamp();
+    return timestamp;
 };
