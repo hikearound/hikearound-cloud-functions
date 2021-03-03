@@ -1,10 +1,35 @@
 const { Expo } = require('expo-server-sdk');
 const sentry = require('@sentry/node');
 const admin = require('firebase-admin');
+const { getUserData } = require('./user');
 const { getServerTimestamp } = require('./helper');
 
 const expo = new Expo();
 const db = admin.firestore();
+
+const getBadgeCount = async function (recipientUid) {
+    const userData = await getUserData(recipientUid);
+
+    if (userData.notifBadgeCount) {
+        return userData.notifBadgeCount;
+    }
+
+    return 0;
+};
+
+const getAndUpdateBadgeCount = async function (data) {
+    const { recipientUid } = data.notif.data;
+
+    let badgeCount = await getBadgeCount(recipientUid);
+    badgeCount += 1;
+
+    await db
+        .collection('users')
+        .doc(recipientUid)
+        .set({ notifBadgeCount: badgeCount }, { merge: true });
+
+    return badgeCount;
+};
 
 const buildAndWriteNotification = async function (data) {
     const { recipientUid } = data.notif.data;
@@ -26,18 +51,6 @@ const buildAndWriteNotification = async function (data) {
     return notificationData;
 };
 
-const getBadgeCount = async function (data) {
-    const { recipientUid } = data.notif.data;
-
-    const notificationsRef = db
-        .collection('notifications')
-        .where('recipientUid', '==', recipientUid)
-        .orderBy('createdOn', 'desc');
-
-    const querySnapshot = await notificationsRef.get();
-    return querySnapshot.size;
-};
-
 const buildTokenList = async function (uid) {
     const pushTokens = [];
 
@@ -57,7 +70,7 @@ const buildNotifications = async function (data, pushTokens) {
     const notifications = [];
 
     const notificationData = await buildAndWriteNotification(data);
-    const badgeCount = await getBadgeCount(data);
+    const badgeCount = await getAndUpdateBadgeCount(data);
 
     for (const token of pushTokens) {
         if (Expo.isExpoPushToken(token)) {

@@ -6,10 +6,11 @@ const { getUserData } = require('../utils/user');
 
 const type = 'reviewLike';
 
-const buildLikerData = async function (review) {
+const buildSenderData = async function (review) {
     const uid = review.userLikes[review.userLikes.length - 1];
     const userData = await getUserData(uid);
 
+    userData.uid = uid;
     return userData;
 };
 
@@ -19,7 +20,7 @@ const buildData = async function (rid, user, snapshot) {
 
     const t = translate(user);
     const hike = await getHikeData(review.hid);
-    const liker = await buildLikerData(review);
+    const sender = await buildSenderData(review);
 
     // Shared data
     data.t = t;
@@ -29,7 +30,7 @@ const buildData = async function (rid, user, snapshot) {
     data.recipientUid = review.uid;
 
     // Notif data
-    data.notif.title = t('notif.reviewLike.title', { name: liker.name });
+    data.notif.title = t('notif.reviewLike.title', { name: sender.name });
 
     data.notif.body = t('notif.reviewLike.body', {
         name: hike.name,
@@ -38,9 +39,7 @@ const buildData = async function (rid, user, snapshot) {
     });
 
     data.notif.data = {
-        hid: data.hid,
-        user: { name: liker.name },
-        hike: { name: hike.name },
+        senderUid: sender.uid,
         recipientUid: data.recipientUid,
     };
 
