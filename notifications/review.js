@@ -39,6 +39,7 @@ const buildData = async function (rid, user, snapshot) {
     });
 
     data.notif.data = {
+        rid,
         senderUid: sender.uid,
         recipientUid: data.recipientUid,
     };

@@ -27,6 +27,7 @@ const buildData = async function (user, userData, hid) {
     // Shared data
     data.t = t;
     data.hid = hid;
+    data.type = type;
     data.hike = hike;
     data.uid = user.uid;
 
