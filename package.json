@@ -26,7 +26,7 @@
     "firebase-admin": "^9.5.0",
     "firebase-function-tools": "^1.1.4",
     "firebase-functions": "^3.13.2",
-    "firebase-tools": "^9.6.1",
+    "firebase-tools": "^9.7.0",
     "google-polyline": "^1.0.3",
     "handlebars": "^4.7.7",
     "i18n-js": "^3.8.0",
