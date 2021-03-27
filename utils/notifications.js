@@ -1,26 +1,22 @@
 const { Expo } = require('expo-server-sdk');
 const sentry = require('@sentry/node');
 const admin = require('firebase-admin');
-const { getUserData } = require('./user');
 const { getServerTimestamp } = require('./helper');
 
 const expo = new Expo();
 const db = admin.firestore();
 
-const getBadgeCount = async function (recipientUid) {
-    const userData = await getUserData(recipientUid);
-
+const getBadgeCount = async function (userData) {
     if (userData.notifBadgeCount) {
         return userData.notifBadgeCount;
     }
-
     return 0;
 };
 
-const getAndUpdateBadgeCount = async function (data) {
+const getAndUpdateBadgeCount = async function (data, userData) {
     const { recipientUid } = data.notif.data;
 
-    let badgeCount = await getBadgeCount(recipientUid);
+    let badgeCount = await getBadgeCount(userData);
     badgeCount += 1;
 
     await db
@@ -43,11 +39,7 @@ const buildAndWriteNotification = async function (data) {
         recipientUid,
     };
 
-    await db
-        .collection('notifications')
-        .doc()
-        .set(notificationData, { merge: true });
-
+    db.collection('notifications').doc().set(notificationData, { merge: true });
     return notificationData;
 };
 
@@ -66,11 +58,11 @@ const buildTokenList = async function (uid) {
     return pushTokens;
 };
 
-const buildNotifications = async function (data, pushTokens) {
+const buildNotifications = async function (data, userData, pushTokens) {
     const notifications = [];
 
     const notificationData = await buildAndWriteNotification(data);
-    const badgeCount = await getAndUpdateBadgeCount(data);
+    const badgeCount = await getAndUpdateBadgeCount(data, userData);
 
     for (const token of pushTokens) {
         if (Expo.isExpoPushToken(token)) {
@@ -109,45 +101,8 @@ const sendNotifications = async function (notifications) {
     return tickets;
 };
 
-const buildReceiptList = async function (tickets) {
-    const receiptIds = [];
-    for (const ticket of tickets) {
-        if (ticket.id) {
-            receiptIds.push(ticket.id);
-        }
-    }
-    return receiptIds;
-};
-
-const checkReciepts = async function (receiptIds) {
-    const receiptIdChunks = expo.chunkPushNotificationReceiptIds(receiptIds);
-    (async () => {
-        for (const chunk of receiptIdChunks) {
-            try {
-                const receipts = await expo.getPushNotificationReceiptsAsync(
-                    chunk,
-                );
-                for (const receiptId in receipts) {
-                    const { status, message, details } = receipts[receiptId];
-                    if (status === 'error') {
-                        sentry.captureMessage(
-                            `Error code '${details.error}': ${message}`,
-                        );
-                    }
-                }
-            } catch (e) {
-                sentry.captureException(e);
-            }
-        }
-    })();
-};
-
-exports.send = async function (data) {
+exports.send = async function (data, userData) {
     const pushTokens = await buildTokenList(data.uid);
-    const notifications = await buildNotifications(data, pushTokens);
-    const tickets = await sendNotifications(notifications);
-    const receiptIds = await buildReceiptList(tickets);
-
-    await checkReciepts(receiptIds);
-    return true;
+    const notifications = await buildNotifications(data, userData, pushTokens);
+    await sendNotifications(notifications);
 };

@@ -86,7 +86,8 @@ exports.send = async function (rid, snapshot) {
     if (newLikes && uniqueUsers) {
         const user = await buildRecipientData(snapshot);
         const data = await buildData(rid, user, snapshot);
+        const userData = await getUserData(user.uid);
 
-        maybeSendPushNotif(user, type, data);
+        maybeSendPushNotif(user, userData, type, data);
     }
 };

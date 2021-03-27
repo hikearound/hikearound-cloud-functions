@@ -1,11 +1,9 @@
 const { initializeMailgun } = require('./config');
 const notifications = require('./notifications');
-const { getUserData } = require('./user');
 const { buildEmail } = require('./email');
 
-exports.maybeSendEmail = async function (user, type, email) {
+exports.maybeSendEmail = async function (user, userData, type, email) {
     const mg = initializeMailgun();
-    const userData = await getUserData(user.uid);
 
     const emailPreference = userData.notifs.email;
     const emailEnabled = emailPreference.global.enabled;
@@ -25,9 +23,7 @@ exports.maybeSendEmail = async function (user, type, email) {
     return false;
 };
 
-exports.maybeSendPushNotif = async function (user, type, data) {
-    const userData = await getUserData(user.uid);
-
+exports.maybeSendPushNotif = async function (user, userData, type, data) {
     const pushPreference = userData.notifs.push;
     const pushEnabled = pushPreference.global.enabled;
 
@@ -40,7 +36,7 @@ exports.maybeSendPushNotif = async function (user, type, data) {
     }
 
     if (pushEnabled && pushTypeEnabled) {
-        notifications.send(data);
+        await notifications.send(data, userData);
     }
 
     return false;

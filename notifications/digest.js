@@ -83,8 +83,8 @@ const maybeSendDigest = async function (user, userData, hid) {
     const data = await buildData(user, userData, hid);
     const email = await buildEmail(data, type);
 
-    await maybeSendEmail(user, type, email);
-    await maybeSendPushNotif(user, type, data);
+    await maybeSendEmail(user, userData, type, email);
+    await maybeSendPushNotif(user, userData, type, data);
 };
 
 exports.send = async function () {
