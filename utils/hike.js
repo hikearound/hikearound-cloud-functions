@@ -1,8 +1,8 @@
 const admin = require('firebase-admin');
 const moment = require('moment');
+const { app } = require('../constants/app');
 
 const db = admin.firestore();
-const storage = admin.storage();
 
 exports.getHikeData = async function (hid) {
     const hikeSnapshot = await db.collection('hikes').doc(hid).get();
@@ -23,22 +23,15 @@ exports.getNearbyHikes = async function (range) {
         .where('geohash', '>=', range.lower)
         .where('geohash', '<=', range.upper)
         .orderBy('geohash')
-        .limit(20);
+        .limit(5);
 
     const querySnapshot = await hikeRef.get();
     return querySnapshot;
 };
 
-exports.getMapUrl = async function (hid, scheme) {
-    const mapUrl = await storage
-        .bucket()
-        .file(`images/maps/${scheme}/${hid}.png`)
-        .getSignedUrl({
-            action: 'read',
-            expires: '01-01-2050',
-        });
-
-    return mapUrl[0];
+exports.getMapUrl = function (hid, scheme) {
+    const path = `images/maps/${scheme}/${hid}.png`;
+    return `${app.storageUrl}${encodeURIComponent(path)}?alt=media`;
 };
 
 exports.getNewHikes = async function (userData) {

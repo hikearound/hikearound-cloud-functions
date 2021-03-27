@@ -21,8 +21,8 @@ const buildData = async function (user, userData, hid) {
     const hike = await getHikeData(hid);
     const { images, count } = await getHikeImageGallery(hid);
 
-    const mapDark = await getMapUrl(hid, 'dark');
-    const mapLight = await getMapUrl(hid, 'light');
+    const mapDark = getMapUrl(hid, 'dark');
+    const mapLight = getMapUrl(hid, 'light');
 
     // Shared data
     data.t = t;
