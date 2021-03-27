@@ -1,4 +1,3 @@
-const admin = require('firebase-admin');
 const { buildEmail } = require('../utils/email');
 const { maybeSendPushNotif, maybeSendEmail } = require('../utils/send');
 const {
@@ -8,7 +7,7 @@ const {
     getMapUrl,
     getRoute,
 } = require('../utils/hike');
-const { getUserData } = require('../utils/user');
+const { getUserList, getUserData } = require('../utils/user');
 const { translate } = require('../utils/i18n');
 const { parseDescription, getFirstName } = require('../utils/helper');
 const { buildImageArray } = require('../utils/image');
@@ -44,9 +43,6 @@ const buildData = async function (user, userData, hid) {
 
     const mapDark = getMapUrl(hid, 'dark');
     const mapLight = getMapUrl(hid, 'light');
-
-    console.log(userData.name);
-    console.log(hike.name);
 
     // Shared data
     data.t = t;
@@ -107,40 +103,24 @@ const maybeSendDigest = async function (user, userData, hid) {
     const data = await buildData(user, userData, hid);
     const email = await buildEmail(data, type);
 
-    // maybeSendEmail(user, userData, type, email);
-    // await maybeSendPushNotif(user, userData, type, data);
-};
-
-const checkUserElegibility = async function (user) {
-    const userData = await getUserData(user.uid);
-
-    if (userData.lastKnownLocation) {
-        const hikes = await getNewHikes(userData);
-
-        if (hikes.length > 0) {
-            // console.log('eligible');
-            await maybeSendDigest(user, userData, hikes[0]);
-        }
-    }
-};
-
-const buildDigestList = (nextPageToken) => {
-    admin
-        .auth()
-        .listUsers(5, nextPageToken)
-        .then((listUsersResult) => {
-            listUsersResult.users.forEach(async (userRecord) => {
-                const user = userRecord.toJSON();
-                // console.log(user.displayName)
-                await checkUserElegibility(user);
-            });
-            if (listUsersResult.pageToken) {
-                buildDigestList(listUsersResult.pageToken);
-            }
-        });
+    maybeSendEmail(user, userData, type, email);
+    await maybeSendPushNotif(user, userData, type, data);
 };
 
 exports.send = async function () {
-    console.log('buildList');
-    return buildDigestList();
+    const userList = await getUserList();
+
+    const promises = userList.map(async (user) => {
+        const userData = await getUserData(user.uid);
+
+        if (userData.lastKnownLocation) {
+            const hikes = await getNewHikes(userData);
+
+            if (hikes.length > 0) {
+                await maybeSendDigest(user, userData, hikes[0]);
+            }
+        }
+    });
+
+    return Promise.all(promises);
 };

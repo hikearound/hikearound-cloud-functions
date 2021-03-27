@@ -10,6 +10,7 @@ const getBadgeCount = async function (userData) {
     if (userData.notifBadgeCount) {
         return userData.notifBadgeCount;
     }
+
     return 0;
 };
 
@@ -43,11 +44,8 @@ const buildAndWriteNotification = async function (data) {
     return notificationData;
 };
 
-const buildTokenList = async function (uid) {
+const buildTokenList = async function (userData) {
     const pushTokens = [];
-
-    const userSnapshot = await db.collection('users').doc(uid).get();
-    const userData = userSnapshot.data();
 
     if (userData.notificationToken) {
         if (!pushTokens.includes(userData.notificationToken)) {
@@ -102,7 +100,7 @@ const sendNotifications = async function (notifications) {
 };
 
 exports.send = async function (data, userData) {
-    const pushTokens = await buildTokenList(data.uid);
+    const pushTokens = await buildTokenList(userData);
     const notifications = await buildNotifications(data, userData, pushTokens);
     await sendNotifications(notifications);
 };

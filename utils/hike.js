@@ -23,7 +23,7 @@ exports.getNearbyHikes = async function (range) {
         .where('geohash', '>=', range.lower)
         .where('geohash', '<=', range.upper)
         .orderBy('geohash')
-        .limit(5);
+        .limit(50);
 
     const querySnapshot = await hikeRef.get();
     return querySnapshot;
