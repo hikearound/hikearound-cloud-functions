@@ -118,6 +118,7 @@ const checkUserElegibility = async function (user) {
         const hikes = await getNewHikes(userData);
 
         if (hikes.length > 0) {
+            // console.log('eligible');
             await maybeSendDigest(user, userData, hikes[0]);
         }
     }
@@ -130,6 +131,7 @@ const buildDigestList = (nextPageToken) => {
         .then((listUsersResult) => {
             listUsersResult.users.forEach(async (userRecord) => {
                 const user = userRecord.toJSON();
+                // console.log(user.displayName)
                 await checkUserElegibility(user);
             });
             if (listUsersResult.pageToken) {
@@ -140,5 +142,5 @@ const buildDigestList = (nextPageToken) => {
 
 exports.send = async function () {
     console.log('buildList');
-    buildDigestList();
+    return buildDigestList();
 };

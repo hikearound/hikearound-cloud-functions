@@ -40,7 +40,7 @@ exports.deleteUserImages = async function (uid) {
 
 exports.getUserList = async function () {
     const userList = [];
-    const tokenIterator = 5;
+    const tokenIterator = 50;
 
     const buildUserList = async function (nextPageToken) {
         await auth
