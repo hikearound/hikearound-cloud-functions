@@ -25,22 +25,27 @@ const cacheData = async function (hid) {
 
     cachedHikes.hid = hike;
     cachedGalleries.hid = gallery;
+
+    return { hike, gallery };
 };
 
 const buildData = async function (user, userData, hid) {
+    let hike = cachedHikes[hid];
+    let gallery = cachedGalleries[hid];
+
     const data = dataFormat;
     const t = translate(userData);
 
-    if (!cachedHikes[hid]) {
-        await cacheData(hid);
+    if (!(hid in cachedHikes)) {
+        const result = await cacheData(hid);
+        hike = result.hike;
+        gallery = result.gallery;
     }
-
-    const hike = cachedHikes[hid];
-    const gallery = cachedGalleries[hid];
 
     const mapDark = getMapUrl(hid, 'dark');
     const mapLight = getMapUrl(hid, 'light');
 
+    console.log(userData.name);
     console.log(hike.name);
 
     // Shared data
@@ -109,14 +114,10 @@ const maybeSendDigest = async function (user, userData, hid) {
 const checkUserElegibility = async function (user) {
     const userData = await getUserData(user.uid);
 
-    // console.log(user.uid)
-    console.log(userData.name);
-
     if (userData.lastKnownLocation) {
         const hikes = await getNewHikes(userData);
 
         if (hikes.length > 0) {
-            console.log('eligible')
             await maybeSendDigest(user, userData, hikes[0]);
         }
     }
@@ -131,9 +132,9 @@ const buildDigestList = (nextPageToken) => {
                 const user = userRecord.toJSON();
                 await checkUserElegibility(user);
             });
-            // if (listUsersResult.pageToken) {
-            //     buildDigestList(listUsersResult.pageToken);
-            // }
+            if (listUsersResult.pageToken) {
+                buildDigestList(listUsersResult.pageToken);
+            }
         });
 };
 
