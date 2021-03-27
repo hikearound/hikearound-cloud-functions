@@ -83,24 +83,26 @@ const maybeSendDigest = async function (user, userData, hid) {
     const data = await buildData(user, userData, hid);
     const email = await buildEmail(data, type);
 
-    maybeSendEmail(user, type, email);
-    maybeSendPushNotif(user, type, data);
+    await maybeSendEmail(user, type, email);
+    await maybeSendPushNotif(user, type, data);
 };
 
 exports.send = async function () {
     const userList = await getUserList();
 
-    userList.forEach(async (user) => {
-        const userData = await getUserData(user.uid);
+    await Promise.all(
+        userList.map(async (user) => {
+            const userData = await getUserData(user.uid);
 
-        if (userData.lastKnownLocation) {
-            const hikes = await getNewHikes(userData);
+            if (userData.lastKnownLocation) {
+                const hikes = await getNewHikes(userData);
 
-            if (hikes.length > 0) {
-                await maybeSendDigest(user, userData, hikes[0]);
+                if (hikes.length > 0) {
+                    await maybeSendDigest(user, userData, hikes[0]);
+                }
             }
-        }
-    });
+        }),
+    );
 
     return true;
 };

@@ -40,8 +40,9 @@ exports.welcomeNotif = functions.firestore
         return false;
     });
 
-exports.digestNotif = functions.pubsub
-    .schedule('every friday 09:00')
+exports.digestNotif = functions
+    .runWith({ memory: '2GB', timeoutSeconds: 540 })
+    .pubsub.schedule('every friday 09:00')
     .timeZone('America/Los_Angeles')
     .onRun(async () => {
         try {

@@ -10,12 +10,9 @@ const storage = admin.storage();
 exports.getUserData = async function (uid) {
     const userSnapshot = await db.collection('users').doc(uid).get();
     const userData = userSnapshot.data();
-
-    if (!userData.lang) {
-        userData.lang = 'en';
-    }
-
     const user = await auth.getUser(uid);
+
+    userData.lang = 'en';
     userData.email = user.email;
     userData.uid = uid;
 
