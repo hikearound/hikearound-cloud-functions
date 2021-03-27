@@ -1,6 +1,8 @@
+const sentry = require('@sentry/node');
 const { initializeMailgun } = require('./config');
 const notifications = require('./notifications');
 const { buildEmail } = require('./email');
+const { domain } = require('../constants/email');
 
 exports.maybeSendEmail = async function (user, userData, type, email) {
     const mg = initializeMailgun();
@@ -17,7 +19,9 @@ exports.maybeSendEmail = async function (user, userData, type, email) {
     }
 
     if (user.emailVerified && emailEnabled && emailTypeEnabled) {
-        mg.messages().send(email);
+        mg.messages.create(domain.default, email).catch((e) => {
+            sentry.captureException(e);
+        });
     }
 
     return false;
@@ -45,5 +49,8 @@ exports.maybeSendPushNotif = async function (user, userData, type, data) {
 exports.sendEmail = async function (data, type) {
     const email = await buildEmail(data, type);
     const mg = initializeMailgun();
-    return mg.messages().send(email);
+
+    mg.messages.create(domain.default, email).catch((e) => {
+        sentry.captureException(e);
+    });
 };

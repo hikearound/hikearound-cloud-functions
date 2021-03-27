@@ -15,8 +15,8 @@ exports.updatePassword = async function (uid, password) {
         .then((userRecord) => {
             result = userRecord.toJSON();
         })
-        .catch((error) => {
-            result = error.toJSON();
+        .catch((e) => {
+            result = e.toJSON();
         });
 
     return result;

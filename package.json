@@ -11,7 +11,7 @@
     "buildDigestEmail": "run-func ./test/digest.test.js buildEmail"
   },
   "engines": {
-    "node": "10"
+    "node": "12"
   },
   "dependencies": {
     "@firebase/testing": "^0.20.11",
@@ -27,13 +27,14 @@
     "firebase-function-tools": "^2.0.1",
     "firebase-functions": "^3.13.2",
     "firebase-tools": "^9.8.0",
+    "form-data": "^4.0.0",
     "google-polyline": "^1.0.3",
     "handlebars": "^4.7.7",
     "i18n-js": "^3.8.0",
     "image-downloader": "^4.0.2",
     "js-base64": "^3.6.0",
     "jwa": "^2.0.0",
-    "mailgun-js": "^0.22.0",
+    "mailgun.js": "^3.3.0",
     "mjml": "^4.9.0",
     "moment": "^2.29.1",
     "run-func": "^1.0.5",
