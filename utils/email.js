@@ -48,7 +48,7 @@ exports.buildTemplate = function (data, type) {
     return html;
 };
 
-exports.buildEmail = async function (data, type) {
+exports.buildEmail = function (data, type) {
     const html = exports.buildTemplate(data, type);
     const unsubscribeHeader = exports.getUnsubscribeHeader(data.uid, type);
 

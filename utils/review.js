@@ -8,7 +8,8 @@ exports.getReviewData = async function (rid) {
 };
 
 exports.writeReviewData = async function (hid, reviewData) {
-    db.collection('hikes')
+    return db
+        .collection('hikes')
         .doc(hid)
         .set({ review: reviewData }, { merge: true });
 };

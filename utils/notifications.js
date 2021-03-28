@@ -6,29 +6,37 @@ const { getServerTimestamp } = require('./helper');
 const expo = new Expo();
 const db = admin.firestore();
 
-const getBadgeCount = async function (userData) {
+const getBadgeCount = function (userData) {
     if (userData.notifBadgeCount) {
-        return userData.notifBadgeCount;
+        return userData.notifBadgeCount + 1;
     }
-
-    return 0;
+    return 1;
 };
 
-const getAndUpdateBadgeCount = async function (data, userData) {
-    const { recipientUid } = data.notif.data;
-
-    let badgeCount = await getBadgeCount(userData);
-    badgeCount += 1;
-
-    await db
+const writeBadgeCount = function (recipientUid, badgeCount) {
+    return db
         .collection('users')
         .doc(recipientUid)
         .set({ notifBadgeCount: badgeCount }, { merge: true });
+};
+
+const getAndWriteBadgeCount = function (data, userData) {
+    const { recipientUid } = data.notif.data;
+
+    const badgeCount = getBadgeCount(userData);
+    writeBadgeCount(recipientUid, badgeCount);
 
     return badgeCount;
 };
 
-const buildAndWriteNotification = async function (data) {
+const writeNotification = function (notificationData) {
+    return db
+        .collection('notifications')
+        .doc()
+        .set(notificationData, { merge: true });
+};
+
+const buildAndWriteNotification = function (data) {
     const { recipientUid } = data.notif.data;
 
     const notificationData = {
@@ -40,11 +48,11 @@ const buildAndWriteNotification = async function (data) {
         recipientUid,
     };
 
-    db.collection('notifications').doc().set(notificationData, { merge: true });
+    writeNotification(notificationData);
     return notificationData;
 };
 
-const buildTokenList = async function (userData) {
+const buildTokenList = function (userData) {
     const pushTokens = [];
 
     if (userData.notificationToken) {
@@ -56,11 +64,11 @@ const buildTokenList = async function (userData) {
     return pushTokens;
 };
 
-const buildNotifications = async function (data, userData, pushTokens) {
+const buildNotifications = function (data, userData, pushTokens) {
     const notifications = [];
 
-    const notificationData = await buildAndWriteNotification(data);
-    const badgeCount = await getAndUpdateBadgeCount(data, userData);
+    const notificationData = buildAndWriteNotification(data);
+    const badgeCount = getAndWriteBadgeCount(data, userData);
 
     for (const token of pushTokens) {
         if (Expo.isExpoPushToken(token)) {
@@ -100,7 +108,7 @@ const sendNotifications = async function (notifications) {
 };
 
 exports.send = async function (data, userData) {
-    const pushTokens = await buildTokenList(userData);
-    const notifications = await buildNotifications(data, userData, pushTokens);
-    await sendNotifications(notifications);
+    const pushTokens = buildTokenList(userData);
+    const notifications = buildNotifications(data, userData, pushTokens);
+    return sendNotifications(notifications);
 };

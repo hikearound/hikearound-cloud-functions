@@ -29,11 +29,11 @@ const cacheData = async function (hid) {
 };
 
 const buildData = async function (user, userData, hid) {
-    let hike = cachedHikes[hid];
-    let gallery = cachedGalleries[hid];
-
     const data = dataFormat;
     const t = translate(userData);
+
+    let hike = cachedHikes[hid];
+    let gallery = cachedGalleries[hid];
 
     if (!(hid in cachedHikes)) {
         const result = await cacheData(hid);
@@ -99,12 +99,16 @@ const buildData = async function (user, userData, hid) {
     return data;
 };
 
+const testUsers = ['woEsITvCBDWiotEmNTJpLnyLU7r2'];
+
 const maybeSendDigest = async function (user, userData, hid) {
     const data = await buildData(user, userData, hid);
-    const email = await buildEmail(data, type);
+    const email = buildEmail(data, type);
 
-    maybeSendEmail(user, userData, type, email);
-    await maybeSendPushNotif(user, userData, type, data);
+    if (testUsers.includes(user.uid)) {
+        maybeSendEmail(user, userData, type, email);
+        await maybeSendPushNotif(user, userData, type, data);
+    }
 };
 
 exports.send = async function () {

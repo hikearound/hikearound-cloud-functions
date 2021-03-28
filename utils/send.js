@@ -4,7 +4,7 @@ const notifications = require('./notifications');
 const { buildEmail } = require('./email');
 const { domain } = require('../constants/email');
 
-exports.maybeSendEmail = async function (user, userData, type, email) {
+exports.maybeSendEmail = function (user, userData, type, email) {
     const mg = initializeMailgun();
 
     const emailPreference = userData.notifs.email;
@@ -47,7 +47,7 @@ exports.maybeSendPushNotif = async function (user, userData, type, data) {
 };
 
 exports.sendEmail = async function (data, type) {
-    const email = await buildEmail(data, type);
+    const email = buildEmail(data, type);
     const mg = initializeMailgun();
 
     mg.messages.create(domain.default, email).catch((e) => {

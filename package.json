@@ -6,9 +6,7 @@
     "start": "npm run shell",
     "deploy": "firebase deploy --only functions",
     "logs": "firebase functions:log",
-    "lint": "eslint .",
-    "buildWelcomeEmail": "run-func ./test/welcome.test.js buildEmail",
-    "buildDigestEmail": "run-func ./test/digest.test.js buildEmail"
+    "lint": "eslint ."
   },
   "engines": {
     "node": "12"
