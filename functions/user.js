@@ -3,7 +3,6 @@ const {
     deleteUserDocuments,
     deleteUserRecord,
     deleteUserImages,
-    getUserData,
 } = require('../utils/user');
 
 const auth = admin.auth();
@@ -23,10 +22,10 @@ exports.updatePassword = async function (uid, password) {
     return result;
 };
 
-exports.deleteUserData = async function (uid) {
-    const userData = await getUserData(uid);
+exports.deleteUserData = async function (deletedUser) {
+    const { uid, photoURL } = deletedUser;
 
-    if (userData.photoURL) {
+    if (photoURL) {
         await deleteUserImages(uid);
     }
 

@@ -17,9 +17,10 @@ const buildData = async function (userEmail) {
         return false;
     }
 
-    const data = dataFormat;
     const userData = await getUserData(user.uid);
     const token = await auth.createCustomToken(user.uid);
+
+    const data = dataFormat;
     const t = translate(userData);
 
     data.email.toAddress = user.email;

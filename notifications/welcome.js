@@ -11,10 +11,10 @@ const type = 'welcome';
 const auth = admin.auth();
 
 const buildData = async function (uid) {
-    const data = dataFormat;
-
     const user = await auth.getUser(uid);
     const userData = await getUserData(uid);
+
+    const data = dataFormat;
     const t = translate(userData);
     const token = encode(uid);
 

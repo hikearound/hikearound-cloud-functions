@@ -112,9 +112,8 @@ exports.indexUserRecord = functions.firestore
     });
 
 exports.deleteUserData = functions.auth.user().onDelete(async (deletedUser) => {
-    const { uid } = deletedUser;
     try {
-        return user.deleteUserData(uid);
+        return user.deleteUserData(deletedUser);
     } catch (e) {
         sentry.captureException(e);
     }
