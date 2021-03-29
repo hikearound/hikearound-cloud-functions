@@ -99,16 +99,12 @@ const buildData = async function (user, userData, hid) {
     return data;
 };
 
-const testUsers = ['woEsITvCBDWiotEmNTJpLnyLU7r2'];
-
 const maybeSendDigest = async function (user, userData, hid) {
     const data = await buildData(user, userData, hid);
     const email = buildEmail(data, type);
 
-    if (testUsers.includes(user.uid)) {
-        maybeSendEmail(user, userData, type, email);
-        await maybeSendPushNotif(user, userData, type, data);
-    }
+    maybeSendEmail(user, userData, type, email);
+    await maybeSendPushNotif(user, userData, type, data);
 };
 
 exports.send = async function () {

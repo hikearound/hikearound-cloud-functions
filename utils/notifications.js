@@ -87,28 +87,29 @@ const buildNotifications = function (data, userData, pushTokens) {
     return notifications;
 };
 
-const sendNotifications = async function (notifications) {
+const sendNotifications = async function (chunks) {
     const tickets = [];
-    const chunks = expo.chunkPushNotifications(notifications);
 
-    (async () => {
-        for (const chunk of chunks) {
-            try {
-                const ticketChunk = await expo.sendPushNotificationsAsync(
-                    chunk,
-                );
-                tickets.push(...ticketChunk);
-            } catch (e) {
-                sentry.captureException(e);
-            }
+    for (const chunk of chunks) {
+        try {
+            const ticketChunk = await expo.sendPushNotificationsAsync(chunk);
+            tickets.push(...ticketChunk);
+        } catch (e) {
+            sentry.captureException(e);
         }
-    })();
+    }
 
     return tickets;
+};
+
+const chunkNotifications = async function (notifications) {
+    const chunks = expo.chunkPushNotifications(notifications);
+    return sendNotifications(chunks);
 };
 
 exports.send = async function (data, userData) {
     const pushTokens = buildTokenList(userData);
     const notifications = buildNotifications(data, userData, pushTokens);
-    return sendNotifications(notifications);
+
+    chunkNotifications(notifications);
 };
