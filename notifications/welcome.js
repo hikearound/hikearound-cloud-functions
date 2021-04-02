@@ -20,13 +20,13 @@ const buildData = async function (uid) {
 
     data.email.toAddress = user.email;
     data.email.subject = t('email.welcome.subject', {
-        name: getFirstName(userData.name),
+        name: getFirstName(user.displayName),
     });
 
     data.email.cta.path = `verify?token=${token}`;
     data.email.cta.text = t('email.welcome.cta');
     data.email.body = t('email.welcome.body', {
-        name: getFirstName(userData.name),
+        name: getFirstName(user.displayName),
     });
 
     data.t = t;
@@ -37,7 +37,7 @@ const buildData = async function (uid) {
 
     await sendUserHook({
         uid,
-        name: userData.name,
+        name: user.displayName,
         email: user.email,
     });
 
