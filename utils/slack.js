@@ -2,11 +2,11 @@ const functions = require('firebase-functions');
 const axios = require('axios');
 const { getUserData } = require('./user');
 
-exports.sendUserHook = async function (data) {
-    const { name, email } = data;
+exports.sendUserHook = async function (user) {
+    const { displayName, email } = user;
 
     const options = {
-        text: `<mailto:${email}|${name}> signed up for Hikearound. :tada:`,
+        text: `<mailto:${email}|${displayName}> signed up for Hikearound. :tada:`,
     };
 
     await exports.sendMessage(options);

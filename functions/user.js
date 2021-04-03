@@ -1,4 +1,5 @@
 const admin = require('firebase-admin');
+const { sendUserHook } = require('../utils/slack');
 const {
     deleteUserDocuments,
     deleteUserRecord,
@@ -6,6 +7,10 @@ const {
 } = require('../utils/user');
 
 const auth = admin.auth();
+
+exports.notifyUserSignup = async function (user) {
+    sendUserHook(user);
+};
 
 exports.updatePassword = async function (uid, password) {
     let result;

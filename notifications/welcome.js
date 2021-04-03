@@ -5,7 +5,6 @@ const { getFirstName } = require('../utils/helper');
 const { translate } = require('../utils/i18n');
 const { dataFormat } = require('../constants/notif');
 const { sendEmail } = require('../utils/send');
-const { sendUserHook } = require('../utils/slack');
 
 const type = 'welcome';
 const auth = admin.auth();
@@ -34,12 +33,6 @@ const buildData = async function (uid) {
     data.uid = uid;
     data.email.type = type;
     data.includeTypeUnsubscribe = false;
-
-    await sendUserHook({
-        uid,
-        name: user.displayName,
-        email: user.email,
-    });
 
     return data;
 };
