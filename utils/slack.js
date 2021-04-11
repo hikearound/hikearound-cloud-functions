@@ -3,10 +3,10 @@ const axios = require('axios');
 const { getUserData } = require('./user');
 
 exports.sendUserHook = async function (user) {
-    const { displayName, email } = user;
+    const { email } = user;
 
     const options = {
-        text: `<mailto:${email}|${displayName}> signed up for Hikearound. :tada:`,
+        text: `<mailto:${email}|${email}> signed up for Hikearound. :tada:`,
     };
 
     await exports.sendMessage(options);
