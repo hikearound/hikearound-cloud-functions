@@ -111,15 +111,6 @@ exports.indexUserRecord = functions.firestore
         return false;
     });
 
-exports.notifyUserSignup = functions.auth.user().onCreate(async (newUser) => {
-    try {
-        return user.notifyUserSignup(newUser);
-    } catch (e) {
-        sentry.captureException(e);
-    }
-    return false;
-});
-
 exports.deleteUserData = functions.auth.user().onDelete(async (deletedUser) => {
     try {
         return user.deleteUserData(deletedUser);
