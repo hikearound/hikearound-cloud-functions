@@ -13,8 +13,8 @@
   },
   "dependencies": {
     "@firebase/testing": "^0.20.11",
-    "@google-cloud/storage": "^5.8.4",
-    "@sentry/node": "^6.3.5",
+    "@google-cloud/storage": "^5.8.5",
+    "@sentry/node": "^6.3.6",
     "@slack/webhook": "^6.0.0",
     "algoliasearch": "^4.9.1",
     "axios": "^0.21.1",
@@ -22,10 +22,10 @@
     "dir-glob": "^3.0.1",
     "domexception": "^2.0.1",
     "expo-server-sdk": "^3.6.0",
-    "firebase-admin": "^9.7.0",
+    "firebase-admin": "^9.8.0",
     "firebase-function-tools": "^2.0.1",
     "firebase-functions": "^3.13.2",
-    "firebase-tools": "^9.10.0",
+    "firebase-tools": "^9.10.2",
     "form-data": "^4.0.0",
     "google-polyline": "^1.0.3",
     "handlebars": "^4.7.7",
@@ -33,7 +33,7 @@
     "image-downloader": "^4.0.2",
     "js-base64": "^3.6.0",
     "jwa": "^2.0.0",
-    "mailgun.js": "^3.3.0",
+    "mailgun.js": "^3.3.2",
     "mjml": "^4.9.3",
     "moment": "^2.29.1",
     "run-func": "^1.0.5",
@@ -43,8 +43,8 @@
   "devDependencies": {
     "@babel/core": "^7.14.0",
     "@babel/eslint-parser": "^7.13.14",
-    "@babel/preset-env": "^7.14.0",
-    "eslint": "^7.25.0",
+    "@babel/preset-env": "^7.14.1",
+    "eslint": "^7.26.0",
     "eslint-config-airbnb": "^18.2.1",
     "eslint-config-prettier": "^8.3.0",
     "eslint-plugin-import": "^2.22.1",
@@ -57,7 +57,7 @@
     "firebase-functions-test": "^0.2.3",
     "less": "^4.1.1",
     "less-plugin-clean-css": "^1.5.1",
-    "prettier": "^2.2.1"
+    "prettier": "^2.3.0"
   },
   "private": true
 }
