@@ -1,11 +1,11 @@
 const admin = require('firebase-admin');
 const { encode } = require('js-base64');
-const { getUserData } = require('../utils/user');
-const { getFirstName } = require('../utils/helper');
-const { translate } = require('../utils/i18n');
-const { dataFormat } = require('../constants/notif');
-const { sendEmail } = require('../utils/send');
-const { sendUserHook } = require('../utils/slack');
+const { getUserData } = require('@utils/user');
+const { getFirstName } = require('@utils/helper');
+const { translate } = require('@utils/i18n');
+const { dataFormat } = require('@constants/notif');
+const { sendEmail } = require('@utils/send');
+const { sendUserHook } = require('@utils/slack');
 
 const type = 'welcome';
 const auth = admin.auth();

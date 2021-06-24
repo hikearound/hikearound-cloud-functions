@@ -1,17 +1,17 @@
-const { buildEmail } = require('../utils/email');
-const { maybeSendPushNotif, maybeSendEmail } = require('../utils/send');
+const { buildEmail } = require('@utils/email');
+const { maybeSendPushNotif, maybeSendEmail } = require('@utils/send');
 const {
     getHikeData,
     getHikeImageGallery,
     getNewHikes,
     getMapUrl,
     getRoute,
-} = require('../utils/hike');
-const { getUserList, getUserData } = require('../utils/user');
-const { translate } = require('../utils/i18n');
-const { parseDescription, getFirstName } = require('../utils/helper');
-const { buildImageArray } = require('../utils/image');
-const { dataFormat } = require('../constants/notif');
+} = require('@utils/hike');
+const { getUserList, getUserData } = require('@utils/user');
+const { translate } = require('@utils/i18n');
+const { parseDescription, getFirstName } = require('@utils/helper');
+const { buildImageArray } = require('@utils/image');
+const { dataFormat } = require('@constants/notif');
 
 const type = 'digest';
 

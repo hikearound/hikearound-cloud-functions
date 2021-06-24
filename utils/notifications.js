@@ -1,7 +1,7 @@
 const { Expo } = require('expo-server-sdk');
 const sentry = require('@sentry/node');
 const admin = require('firebase-admin');
-const { getServerTimestamp } = require('./helper');
+const { getServerTimestamp } = require('@utils/helper');
 
 const expo = new Expo();
 const db = admin.firestore();

@@ -3,8 +3,8 @@ const mjml2html = require('mjml');
 const fs = require('fs');
 const path = require('path');
 const { encode } = require('js-base64');
-const { unsubscribe } = require('../constants/email');
-const { senderData } = require('../constants/email');
+const { unsubscribe } = require('@constants/email');
+const { senderData } = require('@constants/email');
 
 exports.getUnsubscribeUrl = function (uid, type) {
     const token = encode(uid);

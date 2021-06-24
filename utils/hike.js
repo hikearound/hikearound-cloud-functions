@@ -1,6 +1,6 @@
 const admin = require('firebase-admin');
 const moment = require('moment');
-const { app } = require('../constants/app');
+const { app } = require('@constants/app');
 
 const db = admin.firestore();
 

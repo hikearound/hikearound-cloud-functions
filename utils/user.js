@@ -1,7 +1,7 @@
 const admin = require('firebase-admin');
 const tools = require('firebase-tools');
 const functions = require('firebase-functions');
-const search = require('../functions/search');
+const search = require('@functions/search');
 
 const db = admin.firestore();
 const auth = admin.auth();

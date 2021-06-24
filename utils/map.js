@@ -1,5 +1,5 @@
 const polyline = require('google-polyline');
-const { config } = require('../constants/map');
+const { config } = require('@constants/map');
 
 exports.setCenter = function (hikeData) {
     const { coordinates } = hikeData;

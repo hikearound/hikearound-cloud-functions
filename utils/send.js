@@ -1,8 +1,8 @@
 const sentry = require('@sentry/node');
-const { initializeMailgun } = require('./config');
-const notifications = require('./notifications');
-const { buildEmail } = require('./email');
-const { domain } = require('../constants/email');
+const { initializeMailgun } = require('@utils/config');
+const notifications = require('@utils/notifications');
+const { buildEmail } = require('@utils/email');
+const { domain } = require('@constants/email');
 
 exports.maybeSendEmail = function (user, userData, type, email) {
     const mg = initializeMailgun();

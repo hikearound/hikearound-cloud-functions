@@ -1,6 +1,6 @@
 const i18n = require('i18n-js');
-const en = require('../translations/en');
-const es = require('../translations/es');
+const en = require('@translations/en');
+const es = require('@translations/es');
 
 exports.translate = function (userData) {
     i18n.translations = {

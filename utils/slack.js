@@ -1,6 +1,6 @@
 const functions = require('firebase-functions');
 const axios = require('axios');
-const { getUserData } = require('./user');
+const { getUserData } = require('@utils/user');
 
 exports.sendUserHook = async function (user) {
     const { name, email } = user;

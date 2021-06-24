@@ -1,8 +1,8 @@
-const { maybeSendPushNotif } = require('../utils/send');
-const { getHikeData } = require('../utils/hike');
-const { translate } = require('../utils/i18n');
-const { dataFormat } = require('../constants/notif');
-const { getUserData } = require('../utils/user');
+const { maybeSendPushNotif } = require('@utils/send');
+const { getHikeData } = require('@utils/hike');
+const { translate } = require('@utils/i18n');
+const { dataFormat } = require('@constants/notif');
+const { getUserData } = require('@utils/user');
 
 const type = 'reviewLike';
 

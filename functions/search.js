@@ -1,6 +1,6 @@
 const sentry = require('@sentry/node');
-const { initializeAlgolia } = require('../utils/config');
-const { getHikeData } = require('../utils/hike');
+const { initializeAlgolia } = require('@utils/config');
+const { getHikeData } = require('@utils/hike');
 
 const writeToIndex = async function (data, indexName) {
     const client = initializeAlgolia();

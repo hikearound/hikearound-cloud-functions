@@ -1,6 +1,6 @@
-const { getReviewData, writeReviewData } = require('../utils/review');
-const { getHikeData } = require('../utils/hike');
-const { sendReviewHook } = require('../utils/slack');
+const { getReviewData, writeReviewData } = require('@utils/review');
+const { getHikeData } = require('@utils/hike');
+const { sendReviewHook } = require('@utils/slack');
 
 let average = 0;
 let count = 0;

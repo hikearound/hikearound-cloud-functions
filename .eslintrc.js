@@ -8,6 +8,23 @@ module.exports = {
     env: {
         'jest/globals': true,
     },
+    settings: {
+        'import/resolver': {
+            node: {
+                extensions: ['.js', '.jsx', '.ts', '.tsx'],
+            },
+            alias: {
+                map: [
+                    ['@constants', './constants'],
+                    ['@functions', './functions'],
+                    ['@notifications', './notifications'],
+                    ['@templates', './templates'],
+                    ['@translations', './translations'],
+                    ['@utils', './utils'],
+                ],
+            },
+        },
+    },
     globals: {
         before: true,
         after: true,

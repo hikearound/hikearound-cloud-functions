@@ -6,7 +6,7 @@ const download = require('image-downloader');
 const path = require('path');
 const os = require('os');
 const { sign } = require('jwa')('ES256');
-const { ids, api, config } = require('../constants/map');
+const { ids, api, config } = require('@constants/map');
 const {
     setCenter,
     setSpan,

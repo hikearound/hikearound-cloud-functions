@@ -1,9 +1,9 @@
 const admin = require('firebase-admin');
-const { sendEmail } = require('../utils/send');
-const { getUserData } = require('../utils/user');
-const { getFirstName } = require('../utils/helper');
-const { translate } = require('../utils/i18n');
-const { dataFormat } = require('../constants/notif');
+const { sendEmail } = require('@utils/send');
+const { getUserData } = require('@utils/user');
+const { getFirstName } = require('@utils/helper');
+const { translate } = require('@utils/i18n');
+const { dataFormat } = require('@constants/notif');
 
 const type = 'reset';
 const auth = admin.auth();

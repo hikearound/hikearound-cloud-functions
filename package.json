@@ -1,4 +1,13 @@
 {
+  "_moduleAliases": {
+    "@root": ".",
+    "@constants": "constants",
+    "@functions": "functions",
+    "@notifications": "notifications",
+    "@templates": "templates",
+    "@translations": "translations",
+    "@utils": "utils"
+  },
   "scripts": {
     "build": "tsc",
     "serve": "npm run build && firebase serve --only functions",
@@ -9,7 +18,7 @@
     "lint": "eslint ."
   },
   "engines": {
-    "node": "12"
+    "node": "14"
   },
   "dependencies": {
     "@firebase/testing": "^0.20.11",
@@ -21,6 +30,7 @@
     "build-url": "^6.0.1",
     "dir-glob": "^3.0.1",
     "domexception": "^2.0.1",
+    "eslint-import-resolver-alias": "^1.1.2",
     "expo-server-sdk": "^3.6.0",
     "firebase-admin": "^9.9.0",
     "firebase-function-tools": "^2.0.1",
@@ -35,6 +45,7 @@
     "jwa": "^2.0.0",
     "mailgun.js": "^3.4.0",
     "mjml": "^4.10.0",
+    "module-alias": "^2.2.2",
     "moment": "^2.29.1",
     "run-func": "^1.0.5",
     "typescript": "^4.3.4",

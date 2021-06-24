@@ -3,7 +3,7 @@ const {
     deleteUserDocuments,
     deleteUserRecord,
     deleteUserImages,
-} = require('../utils/user');
+} = require('@utils/user');
 
 const auth = admin.auth();
 
