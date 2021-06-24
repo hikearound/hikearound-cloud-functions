@@ -21,6 +21,7 @@
     "node": "14"
   },
   "dependencies": {
+    "@babel/runtime": "^7.14.6",
     "@firebase/testing": "^0.20.11",
     "@google-cloud/storage": "^5.8.5",
     "@sentry/node": "^6.7.2",
@@ -30,7 +31,6 @@
     "build-url": "^6.0.1",
     "dir-glob": "^3.0.1",
     "domexception": "^2.0.1",
-    "eslint-import-resolver-alias": "^1.1.2",
     "expo-server-sdk": "^3.6.0",
     "firebase-admin": "^9.9.0",
     "firebase-function-tools": "^2.0.1",
@@ -58,6 +58,7 @@
     "eslint": "^7.29.0",
     "eslint-config-airbnb": "^18.2.1",
     "eslint-config-prettier": "^8.3.0",
+    "eslint-import-resolver-alias": "^1.1.2",
     "eslint-plugin-import": "^2.23.4",
     "eslint-plugin-jest": "^24.3.6",
     "eslint-plugin-jsx-a11y": "^6.4.1",

@@ -1,7 +1,11 @@
+// Register path aliases
+require('module-alias/register');
+
 const functions = require('firebase-functions');
 const sentry = require('@sentry/node');
 const config = require('@utils/config');
 
+// Initialize app
 config.initializeApp();
 
 // Notifications
