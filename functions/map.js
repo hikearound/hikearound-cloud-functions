@@ -37,7 +37,10 @@ const buildHikeData = async function (hid) {
 };
 
 const generateSignature = function (url) {
-    const privateKey = fs.readFileSync(`${__dirname}/../mapkit.p8`, 'utf8');
+    const privateKey = fs.readFileSync(
+        `${__dirname}/../keys/mapkit.p8`,
+        'utf8',
+    );
     return sign(url, privateKey);
 };
 

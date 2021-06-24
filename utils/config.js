@@ -4,7 +4,7 @@ const sentry = require('@sentry/node');
 const algoliasearch = require('algoliasearch');
 const formData = require('form-data');
 const Mailgun = require('mailgun.js');
-const serviceAccount = require('../service-account.json');
+const serviceAccount = require('@keys/service-account.json');
 
 exports.initializeApp = function () {
     admin.initializeApp({

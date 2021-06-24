@@ -17,6 +17,7 @@ module.exports = {
                 map: [
                     ['@constants', './constants'],
                     ['@functions', './functions'],
+                    ['@keys', './keys'],
                     ['@notifications', './notifications'],
                     ['@templates', './templates'],
                     ['@translations', './translations'],
