@@ -31,6 +31,12 @@ module.exports = {
         after: true,
     },
     rules: {
+        'import/no-unresolved': [
+            2,
+            {
+                ignore: ['^@keys/'],
+            },
+        ],
         'import/no-extraneous-dependencies': 'off',
         'guard-for-in': 'off',
         'no-continue': 'off',
