@@ -1,88 +1,55 @@
-# Hikearound Cloud Functions
+# hikearound-cloud-functions
 
-This repository contains the cloud and backend functions for the Hikearound web and mobile application, built with Firebase Cloud Functions and TypeScript.
+[![CI](https://github.com/hikearound/hikearound-cloud-functions/actions/workflows/ci.yml/badge.svg?branch=master)](https://github.com/hikearound/hikearound-cloud-functions/actions/workflows/ci.yml)
+[![Node.js](https://img.shields.io/badge/Node.js-14-339933?logo=node.js&logoColor=white)](https://nodejs.org/)
+[![Firebase](https://img.shields.io/badge/Firebase-Cloud%20Functions-FFCA28?logo=firebase&logoColor=white)](https://firebase.google.com/docs/functions)
+[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg?logo=opensourceinitiative&logoColor=white)](LICENSE)
+
+Serverless functions for Hikearound's web and iOS clients, built with Firebase Cloud Functions.
 
 ## Overview
 
-The cloud functions handle various backend operations for the Hikearound web and mobile application, including:
+Backend cloud functions handling push notifications, email templates, translations, and Firebase integrations for the Hikearound hiking platform.
 
-- 📱 Push notifications
-- 📧 Email template generation
-- 🌐 Notification and email translations
-- 🔥 Firebase integrations
+## Tech Stack
 
-## Prerequisites
+- **Runtime**: Node.js 14, Firebase Cloud Functions
+- **Notifications**: Expo Server SDK
+- **Email**: Mailgun, MJML templates, Handlebars
+- **Search**: Algolia
+- **Monitoring**: Sentry
+- **Messaging**: Slack Webhooks
 
-- Node.js 14.x
-- Firebase CLI
-- npm
-
-## Setup
-
-1. Install dependencies:
+## Getting Started
 
 ```bash
 npm install
+firebase login
+firebase use <project-id>
 ```
 
-2. Configure Firebase:
+## Development
 
 ```bash
-firebase login
-firebase use <your-project-id>
+npm run serve     # Build and serve locally
+npm run shell     # Firebase Functions shell
+npm run deploy    # Deploy to Firebase
+npm run logs      # View function logs
+npm run lint      # Run ESLint
 ```
-
-3. Set up environment variables (if required)
-
-## Available Scripts
-
-- `npm run build` - Compile TypeScript code
-- `npm run serve` - Build and serve functions locally
-- `npm run shell` - Start Firebase Functions shell
-- `npm run start` - Start Firebase Functions shell
-- `npm run deploy` - Deploy functions to Firebase
-- `npm run logs` - View Firebase Functions logs
-- `npm run lint` - Run ESLint
 
 ## Project Structure
 
 ```
-├── functions/     # Cloud functions implementation
-├── notifications/ # Push notification handling and templates
-├── templates/     # Email and notification templates
-├── translations/  # Internationalization files
-├── utils/         # Shared utility functions
-└── constants/     # Application-wide constants
+constants/       Application-wide constants
+functions/       Cloud function implementations
+notifications/   Push notification handling
+templates/       Email and notification templates
+translations/    Internationalization files
+utils/           Shared utilities
 ```
 
-## Dependencies
+## Related
 
-Key dependencies include:
-
-- Firebase Admin SDK
-- Firebase Functions
-- Expo Server SDK (for push notifications)
-- Mailgun.js (for email)
-- MJML (for email templates)
-- i18n-js (for translations)
-- Algolia Search
-- Sentry (for error tracking)
-
-## Development
-
-1. Make your changes in the TypeScript files
-2. Run `npm run build` to compile
-3. Test locally using `npm run serve`
-4. Deploy using `npm run deploy`
-
-## Contributing
-
-1. Fork the repository
-2. Create your feature branch (`git checkout -b feature/amazing-feature`)
-3. Commit your changes (`git commit -m 'Add some amazing feature'`)
-4. Push to the branch (`git push origin feature/amazing-feature`)
-5. Open a Pull Request
-
-## License
-
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+- [hikearound-app](https://github.com/hikearound/hikearound-app) - iOS client
+- [hikearound-web](https://github.com/hikearound/hikearound-web) - Web client
