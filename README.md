@@ -1,9 +1,7 @@
 # hikearound-cloud-functions
 
-[![CI](https://github.com/hikearound/hikearound-cloud-functions/actions/workflows/ci.yml/badge.svg?branch=master)](https://github.com/hikearound/hikearound-cloud-functions/actions/workflows/ci.yml)
-[![Node.js](https://img.shields.io/badge/Node.js-14-339933?logo=node.js&logoColor=white)](https://nodejs.org/)
-[![Firebase](https://img.shields.io/badge/Firebase-Cloud%20Functions-FFCA28?logo=firebase&logoColor=white)](https://firebase.google.com/docs/functions)
-[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg?logo=opensourceinitiative&logoColor=white)](LICENSE)
+[![CI](https://github.com/hikearound/hikearound-cloud-functions/actions/workflows/ci.yml/badge.svg?branch=master&event=push)](https://github.com/hikearound/hikearound-cloud-functions/actions/workflows/ci.yml)
+[![License](https://img.shields.io/github/license/hikearound/hikearound-cloud-functions)](LICENSE)
 
 Serverless functions for Hikearound's web and iOS clients, built with Firebase Cloud Functions.
 
