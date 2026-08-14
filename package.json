@@ -66,7 +66,7 @@
     "eslint-plugin-prettier": "^3.4.0",
     "eslint-plugin-promise": "^5.1.0",
     "eslint-plugin-react": "^7.37.5",
-    "eslint-plugin-react-hooks": "^4.2.0",
+    "eslint-plugin-react-hooks": "^7.0.1",
     "firebase-functions-test": "^0.3.0",
     "less": "^4.5.1",
     "less-plugin-clean-css": "^1.5.1",
